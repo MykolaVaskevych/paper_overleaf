@@ -1,0 +1,33 @@
+
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\title{Summary of Chapters 1 and 2: Reinforcement Learning -- An Introduction (2nd Ed.)}
+\author{Sutton \& Barto}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Chapter 1: Introduction}
+Reinforcement learning (RL) is a computational framework for goal-directed learning via interaction with an environment, emphasizing trial-and-error search and delayed rewards. Unlike supervised learning (which uses labeled examples) or unsupervised learning (which seeks hidden structure), RL focuses on maximizing cumulative reward without explicit guidance. Key elements include: an agent interacting with an environment via states (perceived situation), actions (choices), and rewards (immediate feedback); a policy (mapping states to actions); a value function (long-term reward estimate); and optionally, a model (environment simulator for planning).
+
+The exploration-exploitation dilemma arises: agents must balance exploiting known rewarding actions with exploring uncertain ones. RL formalizes problems as Markov decision processes (MDPs), capturing sensation, action, and goals under uncertainty. Values guide decisions by estimating future rewards, enabling foresight without full models.
+
+Examples illustrate RL's breadth: chess (planning and intuition), refinery control (real-time optimization), animal locomotion (innate adaptation), robot navigation (battery management), and routine tasks like breakfast preparation (hierarchical goals). Tic-tac-toe demonstrates RL: a value function estimates win probabilities per board state, updated via temporal-difference (TD) learning after moves. Greedy play selects highest-value moves, with occasional exploration. Updates: $V(S_t) \leftarrow V(S_t) + \alpha [V(S_{t+1}) - V(S_t)]$, converging to optimal policy against imperfect opponents.
+
+RL integrates with psychology (trial-and-error, Law of Effect) and optimal control (dynamic programming, Bellman equations), evolving from separate threads in the 1950s--1980s into modern methods like Q-learning.
+
+\section{Chapter 2: Multi-armed Bandits}
+The $k$-armed bandit problem simplifies RL to a single state with $k$ actions (arms), each yielding stochastic rewards. Goal: maximize cumulative reward by selecting arms. Action-value methods estimate $Q_t(a)$, expected reward for arm $a$ at step $t$, updated incrementally: $Q_{t+1}(A_t) \leftarrow Q_t(A_t) + \alpha [R_{t+1} - Q_t(A_t)]$.
+
+The 10-armed testbed evaluates algorithms: arms drawn from normal distributions $\mathcal{N}(\mu_i, 1)$, $\mu_i \sim \mathcal{N}(0,1)$. $\epsilon$-greedy balances exploration (random action with prob. $\epsilon$) and exploitation (best estimated arm).
+
+Nonstationary problems require tracking: constant $\alpha$ or decreasing $N_t(A_t)$ in updates. Optimism: initialize $Q_*(a)=0$ (high if rewards positive) encourages exploration. Upper confidence bound (UCB): select $\arg\max_a [Q_t(a) + c\sqrt{N_t(a)/t}]$, trading off estimate and uncertainty.
+
+Gradient methods: maintain preferences $H_t(a)$, select $\pi_t(a) = \frac{e^{H_t(a)}}{\sum_b e^{H_t(b)}}$, update $H_{t+1}(A_t) \leftarrow H_t(A_t) + \alpha R_{t+1} (baseline - \pi_t(A_t))$ (softmax, with baseline for variance reduction).
+
+Contextual bandits extend to state-dependent actions (associative search). RL unifies bandits with full MDPs.
+
+\end{document}
+
