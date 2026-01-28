@@ -1,0 +1,312 @@
+% this file is called up by thesis.tex
+% content in this file will be fed into the main document
+
+\chapter{Prototypes} % top level followed by section, subsection
+
+\ifpdf
+    \graphicspath{{3_chapter3/figures/PNG/}{3_chapter3/figures/PDF/}{3_chapter3/figures/}}
+\else
+    \graphicspath{{3_chapter3/figures/EPS/}{3_chapter3/figures/}}
+\fi
+
+% ----------------------- contents from here ------------------------
+
+\section{DQN Atari Breakout}
+    
+    For the DQN prototype, I implemented a Deep Q-Network agent to solve the Atari \textit{Breakout} environment. This implementation follows the core ideas presented by DeepMind and uses the \texttt{stable-baselines3} library to ensure a reliable and standardized implementation.
+
+
+\newpage
+\subsection{Environment Setup}
+    
+    The Atari environment is created using the \textit{NoFrameskip} version of Breakout to maintain consistency with the original DQN experiments. Multiple parallel environments are instantiated to improve data collection efficiency. Frame stacking is applied so that the agent can observe temporal information across consecutive frames.
+    
+ \begin{lstlisting}[
+    language=Python,
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    numbersep=5pt,
+    breaklines=true,
+    frame=shadowbox,
+    basicstyle=\tiny\ttfamily,
+    keywordstyle=\color{c++purple}\bfseries,
+    stringstyle=\color{c++red},
+    commentstyle=\color{c++green}
+]
+import ale_py
+from stable_baselines3 import DQN
+from stable_baselines3.common.env_util import make_atari_env
+from stable_baselines3.common.vec_env import VecFrameStack
+from stable_baselines3.common.callbacks import CheckpointCallback, EvalCallback
+
+
+def main():
+    vec_env = make_atari_env(
+        "BreakoutNoFrameskip-v4",
+        n_envs=8,
+        seed=42,
+    )
+
+    vec_env = VecFrameStack(vec_env, n_stack=4)
+
+    eval_env = make_atari_env(
+        "BreakoutNoFrameskip-v4",
+        n_envs=1,
+        seed=123,
+    )
+
+    eval_env = VecFrameStack(eval_env, n_stack=4)
+\end{lstlisting}
+
+    
+
+\subsection{Callbacks and Evaluation}
+    
+    Two callbacks are used during training. The checkpoint callback periodically saves the model parameters and replay buffer, enabling training to be resumed if needed. The evaluation callback assesses the agent’s performance at fixed intervals using a separate environment and stores the best-performing model based on evaluation rewards.
+    
+ \begin{lstlisting}[
+    language=Python,
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    numbersep=5pt,
+    breaklines=true,
+    frame=shadowbox,
+    basicstyle=\tiny\ttfamily,
+    keywordstyle=\color{c++purple}\bfseries,
+    stringstyle=\color{c++red},
+    commentstyle=\color{c++green}
+]
+    checkpoint_callback = CheckpointCallback(
+    save_freq=500_000,
+    save_path="./checkpoints/",
+    name_prefix="dqn_breakout",
+    save_replay_buffer=True,
+    save_vecnormalize=True,
+    )
+    
+    eval_callback = EvalCallback(
+    eval_env,
+    best_model_save_path="./best_model/",
+    log_path="./logs/",
+    eval_freq=100_000,
+    deterministic=True,
+    render=False)
+\end{lstlisting}
+    
+
+\subsection{DQN Model Configuration}
+    
+    The DQN agent uses a convolutional neural network policy suitable for image-based input. Hyperparameters such as learning rate, replay buffer size, discount factor, and exploration schedule are selected to closely match the settings used in the original DQN paper. A target network is updated at fixed intervals to stabilize learning, and the model is trained on a GPU to improve performance.
+    
+     \begin{lstlisting}[
+    language=Python,
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    numbersep=5pt,
+    breaklines=true,
+    frame=shadowbox,
+    basicstyle=\tiny\ttfamily,
+    keywordstyle=\color{c++purple}\bfseries,
+    stringstyle=\color{c++red},
+    commentstyle=\color{c++green}
+]
+    model = DQN(
+    "CnnPolicy",
+    vec_env,
+    learning_rate=1e-4,
+    buffer_size=400_000,
+    learning_starts=50_000,
+    batch_size=64,
+    tau=1.0,
+    gamma=0.99,
+    train_freq=4,
+    gradient_steps=1,
+    target_update_interval=10_000,
+    exploration_fraction=0.1,
+    exploration_initial_eps=1.0,
+    exploration_final_eps=0.01,
+    verbose=1,
+    tensorboard_log="./tensorboard_logs/",
+    device="cuda",
+    )
+    \end{lstlisting}
+    
+
+\subsection{Training Procedure}
+    
+    The agent is trained for a total of ten million timesteps. During training, both checkpointing and evaluation callbacks are active. After training is completed, the final model is saved and all environments are properly closed.
+    
+  \begin{lstlisting}[
+    language=Python,
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    numbersep=5pt,
+    breaklines=true,
+    frame=shadowbox,
+    basicstyle=\tiny\ttfamily,
+    keywordstyle=\color{c++purple}\bfseries,
+    stringstyle=\color{c++red},
+    commentstyle=\color{c++green}
+]
+    total_timesteps = 10_000_000
+    
+    model.learn(
+    total_timesteps=total_timesteps,
+    callback=[checkpoint_callback, eval_callback],
+    progress_bar=True,
+    )
+    
+    model.save("dqn_breakout_final")
+    vec_env.close()
+    eval_env.close()
+    
+    
+    if __name__ == "__main__":
+    main()
+    \end{lstlisting}
+    
+
+\subsection{Results}
+
+    \figuremacroW{training_curves.png}{DQN 4 plots}{plot1 ,plot 2 plot 3 plot 4}{1} 
+    
+    % \figuremacroW{learning_curve_blob.png}{Title of Figure}{Description.}{0.7} 
+    
+    \figuremacroW{eval_perfomance.png}{DQN Evaluation of Perfocmance}{}{0.7} 
+    
+    \figuremacroW{eval_episode_length.png}{DQN Evaluation of Episode Lenght}{}{0.7} 
+    
+
+\subsection{Video / Images}
+
+    link to YOUTUBE:
+    \begin{itemize}
+        \item \url{https://youtube.com/shorts/hdiVVfBSX9c?feature=share}
+    \end{itemize}
+
+    \figuremacroW{game_start.png}{Title of Figure}{Description.}{0.3} 
+    \figuremacroW{game_end.png}{Title of Figure}{Description.}{0.3} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% \section{Insert a Figure}
+%  We refer to a figure in the text like this:  (Figure \ref{image02}).
+ 
+%  \figuremacroW{image02.jpg}{Title of Figure}{Description. [Source: (\Citealt{mydownloadedimage})]}{0.7} 
+ 
+
+
+% \section{Creating a list}
+
+% \begin{itemize} \itemsep1pt \parskip0pt \parsep0pt
+% \item \textbf{(2000)} item 1. 
+% \item \textbf{(2004)} item 2. 
+% \item \textbf{(2010)} item 3. 
+% \item \textbf{(2013)} item 4. 
+% \end{itemize}
+
+
+% \subsection{Creating a Table}
+
+% \begin{table}[htpp]
+% \caption{Table Title}
+% \begin{center}
+% \begin{tabular}{| p{3cm} | c | c | c |}
+% \hline 
+%  & Resolution & Min & Max \\ \hline 
+% Gyroscope & 4.5mV / {$^{\circ}$}/s & 0.27 $^{\circ}$/s & 406 $^{\circ}$/s \\ \hline
+% Accelerometer & 600mV /g &  0.002g & 2g \\ \hline
+% Magnetometer & 385mV/ gauss & 0.317 gauss & 6 gauss \\ \hline
+% \end{tabular}
+% \end{center}
+% \label{Sensors' Resolution}
+% \end{table}%
+
+
+% % here is how to do a page break
+% \pagebreak
+% %done
+
+% \section{Quote}
+%  An in-text quote is declared in the following way:
+
+% \begin{quote}
+
+% Recycling is the way forward! Recycling is the way forward! Recycling is the way forward! Recycling is the way forward! Recycling is the way forward! Recycling is the way forward! Recycling is the way forward! Recycling is the way forward! Recycling is the way forward! Recycling is the way forward! Recycling is the way forward! Recycling is the way forward! Recycling is the way forward! Recycling is the way forward! Recycling is the way forward! Recycling is the way forward! Recycling is the way forward! Recycling is the way forward! Recycling is the way forward!    (CommonSense, p. 0) 
+
+%  \end{quote}
+
+% Another way of doing it is:
+% \begin{quote}
+% \centering
+% \emph{There are in our existence spots of time, \\
+% That with distinct pre-eminence retain \\
+% A renovating virtue, whence-depressed \\
+% By false opinion and contentious thought, \\
+% Or aught of heavier or more deadly weight, \\
+% In trivial occupations, and the round \\
+% Of ordinary intercourse-our minds \\ 
+% Are nourished and invisibly repaired; \\ 
+% A virtue, by which pleasure is enhanced, \\ 
+% That penetrates, enables us to mount, \\ 
+% When high, more high, and lifts us up when fallen. \\ 
+% }
+% \vspace{3mm}
+% \raggedleft (\Citealt[verses 208-218]{poem})
+% \end{quote}
+
+
+
+
+
+
+
+
+% ---------------------------------------------------------------------------
+% ----------------------- end of thesis sub-document ------------------------
+% ---------------------------------------------------------------------------

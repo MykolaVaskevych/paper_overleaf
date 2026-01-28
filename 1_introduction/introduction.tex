@@ -1,0 +1,386 @@
+
+% this file is called up by thesis.tex
+% content in this file will be fed into the main document
+
+%: ----------------------- introduction file header -----------------------
+\chapter{Introduction}
+
+% the code below specifies where the figures are stored
+\ifpdf
+    \graphicspath{{1_introduction/figures/PNG/}{1_introduction/figures/PDF/}{1_introduction/figures/}}
+\else
+    \graphicspath{{1_introduction/figures/EPS/}{1_introduction/figures/}}
+\fi
+
+% ----------------------------------------------------------------------
+%: ----------------------- introduction content ----------------------- 
+% ----------------------------------------------------------------------
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \textbf{FIRST PARAGRAPH: WHAT IS THE OBJECTIVE OF THIS FYP?} \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Overview}
+
+%[P1: summary]
+This Final Year Project (FYP) compares and contrasts two families of Reinforcement Learning algorithms, namely Policy Gradient approaches and Value Functions. A set of gym environments for classic control and Atari are selected based on their properties, and serve as a testsuit for the comparision. Metrics are defined that take account of training time,  performance, and ability to generalise. This FYP proposes a set of guidelines for novices to follow when choosing an RL algorithm to solve their specific problem.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \textbf{2nd and 3rd paragraphs introduce RL} \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%[P2: Introduce RL]
+\textbf{Reinforcement learning} is learning what to do—how to map situations to actions—so as to maximize a numerical reward signal. The learner is not told which actions to take, but instead must discover which actions yield the most reward by trying them. In the most interesting and challenging cases, actions may affect not only the immediate reward but also the next situation and, through that, all subsequent rewards. These two characteristics—trial-and-error search and delayed reward—are the two most important distinguishing features of reinforcement learning. \cite{sutton}
+
+%[P3: RL History, Perceptron Learning, Associative Learning] --> MOVE TO CHAPTER 2
+%Reinforcement learning originates from two major sources: animal learning and optimal control. Early research in the 20th century focused on understanding how animals adapt behavior through trial-and-error processes.
+%Edward Thorndike’s experiments with cats in 1911 established the principles of behavioral reinforcement, while Pavlov’s work in 1927 laid the groundwork for stimulus-response associations. Skinner’s operant conditioning (1938) extended these ideas, demonstrating how behavior is shaped through external reinforcements.
+%By 1949, Donald Hebb introduced the concept of synaptic strengthening, influencing modern neural networks. Finally, the Rescorla-Wagner model (1972) formalized learning dynamics, providing a predictive framework for associative learning. \cite{rlhistoryPod}
+
+%[P3: RL continued]
+Learning how to play chess can be a good example of Reinforcement learning, by making discrete steps in the environment, which are called actions (moving a piece) and getting back a reward (how good your current position), we can determine how good our move was, and vice versa, learn to make better moves. The difference from other methods unique to RL is that we give a score to the actions taken rather than saying correct/incorrect as is done in supervised learning. In RL, you need to balance between exploitation of already learned actions with good reward and exploration to potentially find even better actions to exploit for better reward in the long-term goal.
+
+%[P4: RL continued part e]
+Reinforcement Learning is designed to solve problems that can
+be modelled as sequential decision processes. \cite{barto1989learning}
+Learning to play the chess is a sequential decision process as every action taken by the player (agent), transitions the environment (chess board) to a new state i.e. moving knight to the right cell may lead to check mate of enemies king and wining or opening an opportunity to your opponent to attack you instead, which may lead to losing a game.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \textbf{4th and 5th paragraphs introduce CNNs and DQN} \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%[P5: Search Spaces]
+The search space for the game of Connect 4 is $10^{12}$ and for chess is $10^{40}$. It is difficult to enumerate each board in such large search spaces using brute search approach such as breadth first or depth first search algorithms. But this was achieved  by IBM’s Deep Blue supercomputer beat the chess world champion Garry Kasparov back in 1996. However, the search space for other games such as Go is significantly larger and brute search approaches do not work. Instead one has to use function approximators and deep learning architectures in particular given the recent success of Convolutional Neural Networks (CNNs) in computer vision. 
+
+%it wasn’t until fairly recently that computers were able to reliably perform seemingly trivial tasks such as detecting a puppy in a picture or recognizing spoken words. Why are these tasks so effortless to us humans? The answer lies in the fact that perception largely takes place outside the realm of our consciousness, within specialized visual, auditory, and other sensory modules in our brains. By the time sensory information reaches our consciousness, it is already adorned with high-level features; \textbf{for example, when you look at a picture of a cute puppy, you cannot choose not to see the puppy, not to notice its cuteness. Nor can you explain how you recognize a cute puppy;} it’s just obvious to you. Thus, we cannot trust our subjective experience: perception is not trivial at all, and to understand it we must look at how our sensory modules work. \cite{geron}
+
+%Convolutional neural networks (CNNs) emerged from the study of the brain’s visual cortex, and they have been used in computer image recognition since the 1980s.
+
+%[P6: CNNs]
+Convolutional Neural Networks (CNNs) are a type of neural network designed specifically for data that comes in grid-like formats, such as images. Instead of treating every input value independently, a CNN works with small local regions of the image and learns filters that can detect useful patterns. These filters slide across the input, allowing the network to find the same pattern in different locations. This idea of local connections and shared weights is one of the core principles of CNNs, along with pooling and stacking multiple layers to build deeper feature representations \cite{lecun:hal-04206682}
+
+%[P7: Value Functions and DQN]
+There are two major families of algorithms in the RL family tree. One branch is Value Functions which estimate the value of the likely long term reward from the current position or from slecting an action in the current position. Typical of thiese is Q Learning Method, and its implementation on deep learning architecture called Deep Q Network (DQN). This was used by DeepMind with layers of tiled convolutional filters to mimic the effects of receptive fields. Reinforcement learning is unstable or divergent when a nonlinear function approximator such as a neural network is used to represent Q. This instability comes from the correlations present in the sequence of observations, the fact that small updates to Q may significantly change the policy of the agent and the data distribution, and the correlations between Q and the target values. The method can be used for stochastic search in various domains and applications.\cite{li2023reinforcement} \cite{matzliach2022detection} \\
+
+% \underline{Paragraph need on POLICY GRADIENT APPROACHES}
+
+The other major branch uses the Policy Gradient approach. Instead of learning value functions, this group of algorithms parameterizes the policy directly and returns probabilities for each possible action in the current state. Along with other distinguishing features that will be discussed later, Policy Gradient methods allow us to train networks in spaces which are not handled well by value-based algorithms—such as stochastic environments or continuous action spaces, where there is no certainty of which action is best, where functions like argmax do not work, or where the number of possible actions is enormous.
+
+% \underline{Paragraph needed on gym}
+
+For Prototypes developed in this Report I used Gymnasium which is a maintained fork of OpenAI Gym and is now the recommended standard for developing and evaluating reinforcement learning agents. Gymnasium is described as "an API standard for reinforcement learning with a diverse collection of reference environments" and provides a simple, pythonic interface capable of representing general reinforcement learning problems. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Research Questions}
+
+\textbf{RQ:} How does the performance of value-based Deep Q-Network agents compare to actor-critic agents (specifically PPO and A2C) in discrete action space environments, including their sample efficiency and training consistency during training?
+
+
+These algorithms will be compared based on several criteria: 
+\textbf{convergence speed} (number of episodes to reach the threshold)
+\textbf{sample efficiency} (performance per interaction)
+\textbf{training stability }(reward variance). 
+
+These comparison criteria will serve as the basis for evaluating the trade-off between the fast, off-policy learning of value-based methods versus the stable, on-policy learning of actor-critic methods. \\
+
+\textbf{Secondary Objective:} Achieve a solid understanding of the foundations of artificial intelligence, machine learning, and deep reinforcement learning.
+
+
+
+
+
+
+
+
+
+
+% Steps
+% \begin{enumerate}
+%     \item Approximate a Systematic Literature Review
+%     \item \subsection{Experimental Design}
+%     \item 
+%     \item Benchmarking and Visualing
+% \end{enumerate}z
+
+
+
+
+
+
+\section{Methodology}
+This section outlines the methodologies followed to ensure the successful
+execution of this project.
+
+
+
+
+
+\subsection{Systematic Literature Review}
+To ensure the prototype development and experimentation tasks were grounded in existing research, a systematic literature review approximation of artificial intelligence, machine learning, reinforcement learning, value-based, and policy based reinforcement learning relevant texts and research papers was first conducted. Google Scholar, arXiv, and IEEE Xplore were electronic databases employed during the search process. Search terms used were "Artificial Intelligence", "Machine Learning", "Reinforcement Learning", "Deep Reinforcement Learning", "Deep Q-Network", "Actor-Critic", "Policy Gradient", "A2C", and "PPO". The inclusion criteria were articles and research papers that discussed at least one fundamental machine learning or reinforcement learning concept, or value-based or actor-critic reinforcement learning algorithms examined in this final year project. Educational video content and other online resources, such as framework documentation, were also queried where applicable. "Reinforcement Learning: An Introduction" by Andrew Barto and Richard S. Sutton, and "Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow" by Aurélien Géron were two texts heavily relied upon when gaining knowledge of machine learning and reinforcement learning fundamentals.
+
+The systematic literature review approximation can be broken down into five topics, as outlined below:
+\begin{enumerate}
+
+    \item The Foundations of Artificial Intelligence and Machine Learning: History, Semantics, PSSH, POE Model, Machine Learning Approaches.
+
+    \item The Fundamental Principles and Approaches of Reinforcement Learning: Terminology, Exploitation vs Exploration, The Credit Assignment Problem, MDPs, The Bellman Equation, Dynamic Programming, GPI, Monte Carlo Algorithm, Temporal Difference Learning, Q-learning.
+
+    \item Deep Learning: Threshold Logic Unit, Perceptron, Multilayer Perceptron, Backpropagation, Hyperparameters, Gradient Instability, Batch Normalization, Convolutional Neural Networks.
+
+    \item Value-Based and Actor-Critic Reinforcement Learning Algorithms: Rationale, Deep Q-learning, Policy Gradients, Actor-Critic Methods, Advantage Estimation, On-Policy vs Off-Policy Learning, Training Stability.
+
+    \item Atari Breakout and Statistical Significance: OpenAI, History, Rationale.
+
+\end{enumerate}
+
+
+
+\subsection{Experimental Design}
+
+While there are already studies comparing several reinforcement learning architectures, no research was discovered that directly contrasts Deep Q-Network algorithms with Actor-Critic algorithms under identical experimental conditions. By implementing both approaches in this project, external factors that might influence performance could be maintained at a consistent level. Moreover, implementing both algorithm families facilitated the validation of existing research and the expansion on recent findings. Establishing a basis for future research and fostering transparency were other motivating factors for prototype development.
+
+In addition to discussing the main implementation components that comprise the DQN and Actor-Critic architectures, Chapter 3 provides a comprehensive overview of the high-level architectural decisions, equipment employed, and problems encountered during experimentation. Chapter 3 can be broken down into four topics:
+
+\begin{enumerate}
+\item High Level Architecture Decisions: Framework, Program Structure, Implementation Medium.
+\item Code Implementation: Atari Breakout Environment, DQN and Actor-Critic Architectures, Recording Training Progress.
+\item Equipment Employed.
+\item Problems Encountered: GPU Driver Compatibility, Memory Leak.
+\end{enumerate}
+
+
+
+
+\subsection{Data Collection}
+
+During training of the DQN Atari Breakout agent, several metrics were recorded to monitor learning progress, stability, and performance. Logging was handled automatically through the \texttt{stable-baselines3} framework and TensorBoard integration.
+
+The following data were collected:
+
+\begin{itemize}
+\item Reward: The mean episode reward was recorded during training and evaluation phases. This metric provides a direct measure of agent performance and learning progress.
+\item Loss: The training loss associated with Q-value updates was recorded to monitor convergence behavior and training stability.
+\item Evaluation Metrics: At fixed intervals, the agent was evaluated in a separate environment using the evaluation callback. Evaluation reward and episode length were recorded to assess generalization and performance consistency.
+\item Logs: TensorBoard logs were generated throughout training, including reward curves, loss values, and timing information.
+\item Video and Images: During evaluation runs, environment frames were captured and exported as images and short video clips to qualitatively assess agent behavior.
+\end{itemize}
+
+All data were recorded for the full duration of training, which consisted of ten million environment timesteps. These recordings form the basis for the quantitative and qualitative analysis presented in the following sections.
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Data Analysis}
+
+\begin{itemize}
+\item Kernel visualizations: The kernel visualizations gave insight into the effects of gradient descent. Kernel visualizations were compared using the root mean squared error between images.
+\item Reward: Reward fluctuations were visualised using a TensorBoard graph, from which convergence, divergence, training stability, ability to generalize, and duration could be concluded. TensorBoard also plots a smoothed reward, deduced by applying a technique known as Exponential Moving Average.
+\item Loss: Loss fluctuations were also visualised using a TensorBoard graph. Similarly to the reward plot, the loss plot allowed convergence, divergence, training stability, ability to generalize, and duration to be evaluated. TensorBoard also plots a smoothed loss, also deduced by applying the Exponential Moving Average technique.
+\end{itemize}
+
+
+
+\subsection{Contributions}
+
+This project makes two main contributions to the field of Deep Reinforcement Learning.
+
+\begin{enumerate}
+\item This project is one of the few research works explicitly comparing value-based Deep Q-Network algorithms with Actor-Critic reinforcement learning algorithms under controlled experimental conditions.
+\item By evaluating both algorithm families within the same environment and experimental setup, this project contributes empirical insight into the trade-offs between off-policy value-based learning and on-policy actor-critic learning, particularly with respect to training stability and sample efficiency.
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Project Plan}
+\subsection{Semester 1: Done}
+\textbf{Literature Review}
+\begin{itemize}
+    \item AI and Machine Learning basics
+    \item RL foundations: MDPs, Bellman equation, exploration vs exploitation
+    \item k-Armed Bandit problem
+    \item Dynamic Programming, Monte Carlo, TD Learning
+    \item Q-learning, SARSA
+    \item CNNs and DQN architecture
+    \item Policy Gradients and Actor-Critic
+\end{itemize}
+\textbf{Implementations}
+\begin{itemize}
+    \item Cliff Walking
+    \item Windy Gridworld
+    \item Random Walk (TD vs MC)
+    \item DQN on Atari Breakout
+\end{itemize}
+\subsection{Semester 2: The Comparison}
+\textbf{Weeks 1–4:} Build A2C and PPO. \\
+\textbf{Weeks 3–5:} Pick test environments for:
+\begin{enumerate}
+    \item DQN-friendly — discrete actions (Atari)
+    \item Actor-Critic-friendly — continuous control
+    \item Neutral — find crossover
+\end{enumerate}
+\textbf{Weeks 5–9:} Run experiments. Measure metrics. \\
+\textbf{Weeks 8–12:} Write thesis. \\
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% Here you can write you own text . . .  also we can write a footnote like this.\footnote{It is simple to create a footnote.} 
+
+% This document offers few basic examples on how to format tables, insert pictures, format text so that you can start using Latex immediately.
+% The main advantage of Latex is that you do not need to care about the formatting of the entire document because Latex will do the job for you! Nice!
+
+% Latex can be downloaded free here: \url{http://www.latex-project.org/}
+
+% \nomenclature{DAPI}{4',6-diamidino-2-phenylindole; a fluorescent stain that binds strongly to DNA and serves to marks the nucleus in fluorescence microscopy} 
+
+
+% \vspace{10mm}
+
+% Usually, the first Chapter of a Dissertation has the following headings (see below). Your dissertation may have different ones, so change these as you wish.
+
+% % here we declare a new section
+
+% \section{Aims and Objectives} 
+
+% The main question that this dissertation addresses is É 
+% In order to address this question, this work focuses on the following issues in the context of É :
+
+% \begin{itemize}
+
+% \item Firstly, . . .
+
+% \item Secondly, . . . 
+
+% \end{itemize}
+
+
+
+% % here we declare a new section
+% \section{Methodology} 
+
+% In order to address this question the following approach was taken. 
+ 
+ 
+% % here we declare a new section
+% \section{Research Contribution}
+
+% The primary research contribution is: 
+
+
+
+
+
+% \section{Thesis Outline} 
+
+% The remaining chapters of this dissertation are as follows:
+
+
+% \emph{Chapter Two} is an introductory discussion to . . .
+
+% \emph{Chapter Three} is a historical review of  . . .
+
+% \emph{Chapter Four} presents the  . . . 
+
+% \emph{Chapter Five} describes the . . .
+
+% \emph{Chapter Six} draws conclusions and evaluates the . . .  Lastly, it suggests possible future works. 
+
+% \vspace{5 mm}
+
+% A series of documents have been included in the Appendix section of this dissertation. These are:
+
+% \begin{itemize}
+% \item \emph{Appendix A} outlines . . .
+
+% \item \emph{Appendix B} presents . . .
+
+% \item \emph{Appendix C} includes . . .
+% \end{itemize} 
+
+% \vspace{5 mm}
+
+% Attached to this dissertation is a CD containing the following items:
+
+% \begin{itemize}
+% \item \emph{folder 1}: . . .
+
+% \item \emph{folder 2}: . . .
+
+% \end{itemize}
+
+
+% ----------------------------------------------------------------------
+
+
+

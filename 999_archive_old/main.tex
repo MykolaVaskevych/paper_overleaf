@@ -1,0 +1,1059 @@
+% \documentclass[12pt,a4paper]{article}
+% \documentclass[12pt,a4paper]{article}
+% \usepackage{graphicx}
+% \usepackage{amsmath}
+% \usepackage{hyperref}
+% \usepackage{amssymb}
+% \usepackage[margin=1in]{geometry} % Optional: tighter margins for A4 fit
+% \usepackage{bbm}
+% \usepackage{float}
+% \usepackage{array}
+% \usepackage{listings}
+% \usepackage{minted}
+% \usepackage{url}
+% \setcounter{section}{0}
+
+% \DeclareMathOperator*{\argmax}{arg\,max}
+
+% \title{RL FYP}
+% \author{Mykola Vaskevych}
+% \date{\today}
+
+% \begin{document}
+
+% \maketitle
+
+% % \newpage
+% % \begin{abstract}
+% % something abstract
+% % \end{abstract}
+
+% \newpage
+% \tableofcontents
+
+
+% \newpage
+% % \section{Introduction}
+% % \subsection{Overview}
+\section{Introduction}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \textbf{FIRST PARAGRAPH: WHAT IS THE OBJECTIVE OF THIS FYP?} \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Overview}
+
+%[P1: summary]
+This FYinal Year Project (FYP) compares and contrasts two families of Reinforcement Learning algorithms, namely Policy Gradient approaches and Value Functions. A set of gym environments for classic control and Atari are selected based on their properties, and serve as a testsuit for the comparision. Metrics are defined that take account of training time,  performance, and ability to generalise. This FYP proposes a set of guidelines for novices to follow when choosing an RL algorithm to solve their specific problem.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \textbf{2nd and 3rd paragraphs introduce RL} \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%[P2: Introduce RL]
+\textbf{Reinforcement learning} is learning what to do—how to map situations to actions—so as to maximize a numerical reward signal. The learner is not told which actions to take, but instead must discover which actions yield the most reward by trying them. In the most interesting and challenging cases, actions may affect not only the immediate reward but also the next situation and, through that, all subsequent rewards. These two characteristics—trial-and-error search and delayed reward—are the two most important distinguishing features of reinforcement learning. \cite{sutton}
+
+%[P3: RL History, Perceptron Learning, Associative Learning] --> MOVE TO CHAPTER 2
+%Reinforcement learning originates from two major sources: animal learning and optimal control. Early research in the 20th century focused on understanding how animals adapt behavior through trial-and-error processes.
+%Edward Thorndike’s experiments with cats in 1911 established the principles of behavioral reinforcement, while Pavlov’s work in 1927 laid the groundwork for stimulus-response associations. Skinner’s operant conditioning (1938) extended these ideas, demonstrating how behavior is shaped through external reinforcements.
+%By 1949, Donald Hebb introduced the concept of synaptic strengthening, influencing modern neural networks. Finally, the Rescorla-Wagner model (1972) formalized learning dynamics, providing a predictive framework for associative learning. \cite{rlhistoryPod}
+
+%[P3: RL continued]
+Learning how to play chess can be a good example of Reinforcement learning, by making discrete steps in the environment, which are called actions (moving a piece) and getting back a reward (how good your current position), we can determine how good our move was, and vice versa, learn to make better moves. The difference from other methods unique to RL is that we give a score to the actions taken rather than saying correct/incorrect as is done in supervised learning. In RL, you need to balance between exploitation of already learned actions with good reward and exploration to potentially find even better actions to exploit for better reward in the long-term goal.
+
+%[P4: RL continued part e]
+Reinforcement Learning is designed to solve problems that can
+be modelled as sequential decision processes. \cite{barto1989learning}
+Learning to play the chess is a sequential decision process as every action taken by the player (agent), transitions the environment (chess board) to a new state i.e. moving knight to the right cell may lead to check mate of enemies king and wining or opening an opportunity to your opponent to attack you instead, which may lead to losing a game.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \textbf{4th and 5th paragraphs introduce CNNs and DQN} \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%[P5: Search Spaces]
+The search space for the game of Connect 4 is $10^{12}$ and for chess is $10^{40}$. It is difficult to enumerate each board in such large search spaces using brute search approach such as breadth first or depth first search algorithms. But this was achieved  by IBM’s Deep Blue supercomputer beat the chess world champion Garry Kasparov back in 1996. However, the search space for other games such as Go is significantly larger and brute search approaches do not work. Instead one has to use function approximators and deep learning architectures in particular given the recent success of Convolutional Neural Networks (CNNs) in computer vision. 
+
+%it wasn’t until fairly recently that computers were able to reliably perform seemingly trivial tasks such as detecting a puppy in a picture or recognizing spoken words. Why are these tasks so effortless to us humans? The answer lies in the fact that perception largely takes place outside the realm of our consciousness, within specialized visual, auditory, and other sensory modules in our brains. By the time sensory information reaches our consciousness, it is already adorned with high-level features; \textbf{for example, when you look at a picture of a cute puppy, you cannot choose not to see the puppy, not to notice its cuteness. Nor can you explain how you recognize a cute puppy;} it’s just obvious to you. Thus, we cannot trust our subjective experience: perception is not trivial at all, and to understand it we must look at how our sensory modules work. \cite{geron}
+
+%Convolutional neural networks (CNNs) emerged from the study of the brain’s visual cortex, and they have been used in computer image recognition since the 1980s.
+
+%[P6: CNNs]
+Convolutional Neural Networks (CNNs) are a type of neural network designed specifically for data that comes in grid-like formats, such as images. Instead of treating every input value independently, a CNN works with small local regions of the image and learns filters that can detect useful patterns. These filters slide across the input, allowing the network to find the same pattern in different locations. This idea of local connections and shared weights is one of the core principles of CNNs, along with pooling and stacking multiple layers to build deeper feature representations \cite{lecun:hal-04206682}
+
+%[P7: Value Functions and DQN]
+There are two major families of algorithms in the RL family tree. One branch is Value Functions which estimate the value of the likely long term reward from the current position or from slecting an action in the current position. Typical of thiese is Q Learning Method, and its implementation on deep learning architecture called Deep Q Network (DQN). This was used by DeepMind with layers of tiled convolutional filters to mimic the effects of receptive fields. Reinforcement learning is unstable or divergent when a nonlinear function approximator such as a neural network is used to represent Q. This instability comes from the correlations present in the sequence of observations, the fact that small updates to Q may significantly change the policy of the agent and the data distribution, and the correlations between Q and the target values. The method can be used for stochastic search in various domains and applications.\cite{li2023reinforcement} \cite{matzliach2022detection} \\
+
+\underline{Paragraph need on POLICY GRADIENT APPROACHES}
+
+\underline{Paragraph needed on gym}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Research Questions}
+
+\textbf{RQ1:} How does the performance of value-based Deep Q-Network agents compare to actor-critic agents (specifically PPO and A2C) in discrete action space environments, including their sample efficiency and training consistency during training?
+
+
+These algorithms will be compared based on several criteria: 
+\textbf{convergence speed} (number of episodes to reach the threshold)
+\textbf{sample efficiency} (performance per interaction)
+\textbf{training stability }(reward variance). 
+
+These comparison criteria will serve as the basis for evaluating the trade-off between the fast, off-policy learning of value-based methods versus the stable, on-policy learning of actor-critic methods. \\
+
+\textbf{Secondary Objective:} Achieve a solid understanding of the foundations of artificial intelligence, machine learning, and deep reinforcement learning.
+
+\subsection{Contribution}
+
+\subsection{Methodology}
+
+Steps
+\begin{enumerate}
+    \item Approximate a Systematic Literature Review
+    \item Experimental Design
+    \item 
+    \item Benchmarking and Visualing
+\end{enumerate}
+
+\subsubsection{Risk Mitigation}
+
+\subsubsection{Light-Weight Project Plan}
+
+\begin{itemize}
+    \item (SEMESTER 1) Literature review and study of the topic
+    \item Implementation of prototypes:
+        \begin{enumerate}
+            \item (SEMESTER 1) Prototype of DQN algorith[s]
+            \item (WINTER BREAK + SEMESTER 2) Prototype of AC algorithm[s]
+        \end{enumerate}
+    \item (SEMESTER 2) Comparison
+    \item (SEMESTER 2) Analisys of Results and Conclusion writing
+\end{itemize}
+
+\subsection{Overview of FYP Report}
+
+\subsection{Motivation}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\section{Literature Review}
+
+\subsection{Artificial Intelligence and Machine Learning}
+
+Artificial Intelligence (AI) is a broad research field focused on designing and studying computational systems capable of performing tasks traditionally associated with human intelligence, such as reasoning, learning, problem-solving, perception, planning, and decision-making \cite{russell2021}.
+
+
+ Rather than relying on a single methodology, AI involves all sorts of approaches that allow machines to perceive their environment and select actions that increase the probability of achieving defined objectives.
+
+Since its formal recognition as an academic discipline in the mid-20th century, AI research has pursued objectives such as knowledge representation, logical reasoning, natural language understanding, visual perception, and autonomous control \cite{russell2021}. Achieving these objectives has required integrating diverse techniques, including symbolic logic, search and optimization methods, probabilistic modeling, artificial neural networks, and insights from related fields such as psychology, neuroscience, linguistics, and economics. Consequently, AI is best characterized as a multidisciplinary research area unified by the pursuit of intelligent behavior.
+
+From the AI sphere, the Machine Learning (ML) has emerged as one of the most significant paradigms. Rather than relying on explicitly hand-crafted rules like GOFAI, machine learning focuses on algorithms that improve performance on specific tasks through experience, without human-defined if-else rules. This shift has been critical for solving problems that involve many variables, where manual rule specification is impractical. Advances in computing power and data availability have enabled learning-based approaches to consistently improve and, in many cases, surpass classical symbolic reasoning systems across diverse application domains.
+
+Machine learning methods are typically classified into three categories, which are distinguished by the type of learning signals provided to the agent:
+
+\begin{itemize}
+
+  \item \textbf{Supervised Learning}, in which an algorithm learns a mapping from inputs to outputs using labeled data and optimizes a predefined loss function.
+
+  \item \textbf{Unsupervised Learning}, where the objective is to discover latent structure in unlabeled data, such as clusters or low-dimensional representations.
+
+  \item \textbf{Reinforcement Learning (RL)}, where an agent learns through direct interaction with an environment and receives only scalar reward signals as feedback.
+
+\end{itemize}
+
+Reinforcement learning differs fundamentally from supervised and unsupervised learning. RL is inherently interactive and sequential. The data distribution during training is not fixed; the agent's actions influence it. Each decision impacts immediate rewards, future states, and the data available for future learning. This feedback loop introduces challenges unique to RL, including delayed rewards, non-stationarity, and instability.
+
+The development of AI has been marked by alternating periods of optimism and stagnation. Early symbolic systems achieved success in restricted domains but were unable to address real-world complexity, leading to periods of reduced funding and enthusiasm known as AI winters \cite{crevier1993, russell2021, nrc1999}. Substantial progress resumed with the advent of data-driven learning, particularly after 2012, when advances in computational hardware and neural network architectures enabled deep learning methods to surpass earlier AI approaches across a wide range of tasks \cite{russell2021, goldman2022, mckinsey2018}.
+
+Many successful AI techniques become so integrated into everyday systems that they are no longer identified as AI \cite{cnn2006, kaplan2019}. This underscores that AI is defined less by specific algorithms than by its evolving capacity to address tasks once considered exclusive to human intelligence.
+
+Within this context, reinforcement learning occupies a central position in AI research. By formally addressing decision-making under uncertainty and delayed feedback, RL provides a principled framework for learning control policies in complex environments. The following sections introduce the fundamental concepts of reinforcement learning and clarify its distinctions from other machine learning paradigms.
+
+
+
+
+
+
+
+
+% \subsection{Overview of Machine Learning}
+% Machine Learning (ML) is a subfield of Artificial Intelligence that focuses on the development of algorithms capable of improving their performance on a specific task through experience. Traditionally, ML is divided into three primary paradigms, distinguished by the nature of the learning signal and the objective of the agent:
+
+% \begin{itemize}
+%     \item \textbf{Supervised Learning:} The agent learns a mapping from inputs to targets based on a labeled dataset. The objective is to minimize a loss function between the predicted and ground-truth values.
+%     \item \textbf{Unsupervised Learning:} The agent attempts to find hidden structures or patterns within unlabeled data, such as clustering or dimensionality reduction, without explicit feedback.
+%     \item \textbf{Reinforcement Learning (RL):} Unlike the previous paradigms, RL is centered on the concept of \textit{interactive learning}. The agent is not provided with correct labels but must discover optimal behavior through a sequence of actions and scalar feedback (rewards).
+% \end{itemize}
+
+% The defining characteristic of Reinforcement Learning is its focus on the \textbf{online learning process}. While supervised learning is often offline and passive, RL is active; the agent's current decisions determine the data distribution it will observe in the future.
+
+\subsection{Foundations of Reinforcement Learning}
+
+Reinforcement Learning is a sequential decision-making learning process through trial and error. It is one of the three main types of machine learning, along with supervised and unsupervised learning. In supervised learning, correct answers are given, but in reinforcement learning, agents learn what works by trying different actions and learning from the results. Let me make an example on chess game. Think of chess engines like Stockfish - they observe the board, make a move, get feedback from winning or losing, and learn optimal strategies through millions of games.
+
+
+In other words, RL learns by iteration a agent--enviroment loop. At each point of time $t$, the agent observes the current state $S_t$ of the environment and makes an action $A_t$ according to its policy.
+
+
+In response, the environment transitions to a new state $S_{t+1}$ and sends back a reward $R_{t+1}$ to determine how good the taken action was. 
+
+
+This process represents a sequence of states, actions, and rewards that constitute the agent’s experience. 
+
+
+The objective of the agent is to learn a policy that maximizes the expected cumulative reward over time rather than immediate reward alone \cite{barto1989learning}. Where policy is the set of rules that the algorithm follows.
+
+
+A challenge of reinforcement learning is the presence of \textbf{delayed rewards}. The consequences of an action may only become observable after many following interactions, making it difficult to directly attribute outcomes to individual decisions. This difficulty is known as the \textbf{reward assignment problem} and is an important problem in the design of reinforcement learning algorithms \cite{sutton}. For example, in long-term planning tasks, early actions may strongly influence final results even when they yield no immediate reward. So, reinforcement learning algorithms must reason about long-term consequences and juggle short-term and long-term rewards.
+
+Formally, reinforcement learning problems are commonly modeled as \textbf{Markov decision processes (MDPs)}, which provide a mathematical model for sequential decision-making in uncertainty. An MDP is defined by a set of states, a set of actions, possibilities of state changes, a reward function, and a discount factor. Classical dynamic programming methods assume full knowledge of these components; reinforcement learning algorithms typically operate without access to an explicit model of the environment and instead learn from sampled experience \cite{kaelbling1996}.
+
+
+
+
+Another core element of reinforcement learning is the requirement to balance \textbf{exploration} and \textbf{exploitation}. To improve performance, an agent must exploit actions that are known to get high rewards. However, discovering such actions requires exploration of actions with unknown reward. The search for an effective compromise between exploration vs exploitation is a central theme in reinforcement learning research and has been studied extensively in the context of multi-armed bandit problems and finite Markov decision processes \cite{burnetas1997}. Inadequate exploration can result in non-optimal policies, while too much exploration may prevent convergence to effective behavior.
+
+Reinforcement learning differs from other optimization-based approaches, such as evolutionary algorithms, in how it uses experience. Evolutionary methods usually evaluate complete policies as indivisible units, whereas reinforcement learning algorithms learn structured representations, such as value functions or parameterized policies, that assign credit to individual states and actions \cite{sutton}. This structure makes more efficient reuse of experience across similar situations and supports generalization to previously unseen states.
+
+
+\subsubsection{Action Selection and the $k$-Armed Bandit Problem}
+
+
+Consider the following learning problem. You are repeatedly faced with a choice among k different options or actions. After each choice, you receive a numerical reward chosen from a stationary probability distribution that depends on the action you selected. Your objective is to maximize the expected total reward over some time period, for example, over 1000 action selections or time steps. This is the original form of the k-armed bandit problem, so named by analogy to a slot machine, or “one-armed bandit,” except that it has k levers instead of one. Each action selection is like a play of one of the slot machine’s levers, and the rewards are the payoffs for hitting the jackpot. Through repeated action selections, you are to maximize your winnings by concentrating your actions on the best levers. \cite{sutton}.
+
+
+To learn the best actions, the agent keeps the value of each action, denoted by $Q_t(a)$, which represents the expected reward obtained by selecting action $a$. A common estimation approach is the \textbf{sample-average method}, defined as:
+
+\[
+Q_t(a) = \frac{\sum_{i=1}^{t-1} R_i \cdot \mathbbm{1}_{A_i=a}}{\sum_{i=1}^{t-1} \mathbbm{1}_{A_i=a}},
+\]
+
+where $\mathbbm{1}_{A_i=a}$ is the indicator function that equals 1 when action $a$ was selected at time $i$, and 0 otherwise. It converges to the true action value under the belief of fixed reward allocation.
+
+To avoid the high cost of memory for storing all the information that the agent gathers, the sample average update is used, which can be formulated as:
+
+\[
+Q_{n+1} = Q_n + \alpha \left[ R_n - Q_n \right],
+\]
+
+where $\alpha$ is a step-size parameter. The quantity $[R_n - Q_n]$ represents the estimation error,  between the reward and the current value estimate. This update follows the general pattern:
+
+\[
+\text{New Estimate} \leftarrow \text{Old Estimate} + \alpha (\text{Target} - \text{Old Estimate}),
+\]
+
+which is a common way across a wide range of reinforcement learning algorithms.
+
+The $k$-armed bandit problem highlights the fundamental \textbf{exploration--exploitation issue}. 
+
+As a real person on slot machines, an agent wants to get higher rewards possible (exploit), but also hopes to get a more profitable way by exploring other actions whose value is uncertain.
+
+While this trade-off becomes more complex in full reinforcement learning problems involving state transitions, its core nature is already present in the example of the K-bandit scenario. As such, the $k$-armed bandit provides a foundational testbed for developing and analyzing exploration strategies \cite{burnetas1997}.
+
+
+Despite the bandit problem omitting many aspects of MDP, it still plays a significant role in the theory of reinforcement learning. Many similar mechanisms of action selection, with exploration strategies involved, have been developed for bandits and generalize directly to more complex environments, making the $k$-armed bandit an important stage of progress towards understanding the full Markov decision process.
+
+
+\subsection{Markov Decision Process}
+
+The $k$-armed bandit problem  ignores an essential feature of most real-world decision-making problems that: \textbf{actions influence future states}. In the real world, actions have consequences in the future, and while some actions may be optimal right now, they might potentially harm you in the future, or just be suboptimal. Continuing with my favorite example of the chess game, where you may capture a queen of the opponent but miss a 3-move checkmate, and lose, or to put it more formally, where capturing a valuable piece may immediately increase material advantage, yet expose the player to a forced checkmate shortly afterward. Reinforcement learning algorithms must therefore reason about \emph{long-term cumulative reward}, rather than immediate reward.
+
+This category of problems, where future matters, is what \textbf{Markov Decision Process (MDP)} is about. An MDP provides a framework described mathematically for sequential decision-making processes and is defined by the Markov property: the future is conditionally independent of the past given the present state.
+
+Formally,
+\[
+P(S_{t+1} \mid S_t, A_t) = P(S_{t+1} \mid S_1, A_1, \ldots, S_t, A_t).
+\]
+
+This means that the current state $S_t$ must contain all information necessary to predict future state transitions. If the data necessary for prediction is missing, then we can say that MP is violated.
+
+
+An MDP is described by the following elements:
+\begin{itemize}
+    \item a set of states $\mathcal{S}$,
+    \item a set of actions $\mathcal{A}$,
+    \item a transition probability function $P(s' \mid s, a)$,
+    \item a reward function $R(s, a, s')$,
+    \item and a discount factor $\gamma \in [0,1]$ (more in the future, less reward meaning for the present).
+\end{itemize}
+
+At each time step $t$, the agent observes the current state $S_t$, selects an action $A_t$, and the environment reacts by moving the agent to a new state $S_{t+1}$ while ejecting a numerical reward $R_{t+1}$. This interaction loop, illustrated in Figure~\ref{fig:agent_environment}, forms the core of reinforcement learning.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{assests/agent_environment_loop.png}
+    \caption{Agent--environment interaction in a Markov Decision Process.}
+    \label{fig:agent_environment}
+\end{figure}
+
+
+
+The goal of an agent is to learn an optimal strategy how to get best rewards(policy).  The core of this goal is a concept of the \textbf{action-value function}, or \textbf{Q-value}. The Q-value $Q(s,a)$ represents the expected return of action  $a$ in specific state $s$. Basically, it responds to the question:
+\begin{quote}
+    \emph{”How good is this action in this situation”}
+\end{quote}
+
+To reason about long-term consequences, reinforcement learning introduces the concept of \textbf{return}. The return $G_t$ is defined as the total accumulated reward an agent receives from time step $t$ onward. The return $G_t$ is defined as the discounted sum of future rewards:
+$$G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + ... = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}$$
+where $\gamma \in [0,1]$ is the \textbf{discount factor} that determines the present value of future rewards.
+
+
+These values are related through the \textbf{Bellman principle}, which states that the value of a state or state--action pair depends on the immediate reward and the values of future states. In theory, this principle defines the optimal solution exactly. However, computing it directly requires full knowledge of the environment and repeated recursive updates, which is computationally infeasible for most real-world problems.  Approximation of Q-values happens from experience of an agent, and most methods of approximation are splited into 3 categories: \textbf{dynamic programming}, \textbf{Monte Carlo methods}, and \textbf{temporal-difference learning}. These approaches differ in how they use experience and feedback, and they form the foundation of the algorithms discussed in the following sections.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Value Based Reinforcement Learning Algorithms}
+
+\subsubsection{Dynamic Programming}
+
+Dynamic Programming (DP) is a class of algorithms used to compute optimal value functions and policies when the \textbf{complete environment model is known}. For DP to be applicable, the problem must be formulated as a finite Markov Decision Process (MDP), and all states, actions, rewards, and transition dynamics $p(s', r \mid s, a)$ must be available.
+
+Rather than solving the Bellman optimality equations directly, Dynamic Programming methods compute value functions iteratively using repeated updates of the form:
+
+\[
+\text{Old Value} \;\Rightarrow\; \text{Update Rule} \;\Rightarrow\; \text{New Value}
+\]
+
+These updates are applied repeatedly until the values converge.
+
+Two main Dynamic Programming methods are commonly used:
+
+\begin{itemize}
+
+  \item \textbf{Policy Iteration}: alternates between policy evaluation and policy improvement. It typically converges in fewer iterations, but each iteration is computationally expensive.
+
+  \item \textbf{Value Iteration}: combines policy evaluation and improvement into a single update. It requires more iterations, but each update is computationally cheaper.
+
+\end{itemize}
+
+Both methods are guaranteed to converge to the optimal policy and often converge quickly in small problems. However, Dynamic Programming is not very practical in real-world applications because it requires exact knowledge of the environment dynamics and becomes computationally intense for large state spaces.
+
+
+%\newpage
+\subsubsection{Monte Carlo Methods}
+
+Monte Carlo methods require only experience. \cite{sutton}, without needing a model of the environment, its main difference from Dynamic Programing which requires full environment dynamics $p(s', r \mid s, a)$. 
+
+
+
+Monte Carlo methods work only for \textbf{episodic tasks}, which means tasks that have an ending/finish.
+
+  Sutton and Barto explicitly note that “to ensure that well-defined returns are available, here we define Monte Carlo methods only for episodic tasks” \cite{sutton}. Estimated values are being updated only at the end of the episode.
+
+To make an estimation of the state -value function $v_\pi(s)$, an agent follows a policy $\pi$ and samples many episodes. Every time the agent is in state $s$, it records the return  $G_t$, which is a cumulative reward from that time step until the end of the episode, by averaging these returns, we get an estimated value of this state.  By the law of large numbers, sooner or later, this average would converge to the true expected value. 
+
+
+\paragraph{Blackjack Example}  
+
+%%%%%%%%%%%%
+%  ADD figure of black jack gradient or not?
+%%%%%%%%%%%%%%
+As an example of MC, let's overview a classical casino game, “Blackjack”. Playing blackjack is naturally formulated as an episodic finite MDP. \cite{sutton}
+
+Each game represents one episode, with rewards of $+1$, $0$, or $-1$ for a win, draw, or loss, respectively. All middle rewards are zero, and discounting is not required ($\gamma = 1$), meaning the return equals the final reward.
+
+Each state is defined as a sum of the values of players' cards, if the dealer shows his cards, and if the agent has a usable ace. By iterating game episodes over and over under a fixed policy, MC would produce an accurate approximation of the state-value function. This would highlight an important advantage of Monte Carlo methods: while calculating the exact transition probabilities is difficult, the process of generating sample episodes to get probability approximation is straightforward.
+
+Monte Carlo methods learn directly from experience and do not require a model of the environment. They do not bootstrap, meaning that value estimates are updated using complete returns rather than other estimates. MC methods are simple and intuitive, but they must wait until the end of an episode to update, which can result in high variance and slow learning. 
+
+
+%\newpage
+\subsubsection{Temporal Difference Learning}
+
+Temporal-Difference learning or TD can be seen as a combination of Monte Carlo (MC) methods and Dynamic Programming (DP) \cite{sutton}. Like Monte Carlo methods, TD learning does not require a model of the environment and learns directly from experience. Like Dynamic Programming, TD methods update value estimates using other learned estimates, a process known as \textbf{bootstrapping}.
+
+The key difference between TD and Monte Carlo methods is \textbf{when} updates are made. Monte Carlo methods must wait until the end of an episode to compute the full return and update values. In contrast, TD methods update estimates after each time step (it bootstraps), using the observed reward and the estimated value of the next state. This allows TD methods to learn \emph{online}, without waiting for the final outcome.
+
+
+
+
+\paragraph{TD Prediction}
+
+The simplest TD method is known as \textbf{TD(0)}, or one-step TD learning. The update rule for estimating the state-value function is given by:
+\[
+V(S_t) \leftarrow V(S_t) + \alpha \left[ R_{t+1} + \gamma V(S_{t+1}) - V(S_t) \right]
+\]
+where $\alpha$ is the learning rate and $\gamma$ is the discount factor.
+
+
+
+
+
+The expression inside the brackets,
+\[
+\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t),
+\]
+is called the \textbf{TD error}. It measures how different the current estimate is from a better estimate based on the next observed transition. This error signal plays a central role in almost all reinforcement learning algorithms.
+
+
+
+Unlike Monte Carlo methods, TD methods do not require episodes to terminate and can therefore be applied to \textbf{continuing tasks}. This makes TD learning applicable to a wider range of real-world problems.
+
+
+
+
+
+
+\paragraph{n-step TD and the MC--TD Connection}
+
+TD learning can be generalized to \textbf{$n$-step TD methods}, which update values using $n$ future rewards:
+\[
+V(S_t) \leftarrow V(S_t) + \alpha \left[ G_{t:t+n} - V(S_t) \right]
+\]
+where
+\[
+G_{t:t+n} = R_{t+1} + \gamma R_{t+2} + \dots + \gamma^{n-1} R_{t+n} + \gamma^n V(S_{t+n}).
+\]
+
+
+
+
+
+These methods form a bridge between TD and Monte Carlo learning:
+\begin{itemize}
+\item $n = 1$ corresponds to TD(0),
+\item $n \to \infty$ (or $n$ equal to episode length) corresponds to Monte Carlo learning.
+\end{itemize}
+
+
+
+
+
+
+
+\paragraph{Advantages of TD Learning}
+
+TD methods offer several important advantages over Monte Carlo and Dynamic Programming approaches:
+\begin{itemize}
+\item Updates are performed after every step rather than once per episode.
+\item TD methods can be applied to non-episodic (continuing) tasks.
+\item Previously learned estimates can be reused immediately through bootstrapping.
+\item In practice, TD methods often converge faster than Monte Carlo methods on stochastic problems \cite{sutton}.
+\end{itemize}
+
+These advantages are demonstrated in classical examples such as the random walk problem, where TD(0) is shown to achieve lower prediction error than constant-step-size Monte Carlo methods.
+
+
+
+
+
+
+
+\paragraph{TD Control Methods}
+
+TD learning can also be applied to the control problem by learning action-value functions $Q(s,a)$.
+
+\textbf{Sarsa} is an on-policy TD control algorithm that updates values using the actual action taken by the agent:
+\[
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[ R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \right].
+\]
+Because Sarsa accounts for the agent’s exploration behavior, it often learns safer policies.
+
+
+
+
+\textbf{Q-learning} is an off-policy TD control algorithm that directly learns the optimal action-value function:
+\[
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[ R_{t+1} + \gamma \max_a Q(S_{t+1}, a) - Q(S_t, A_t) \right].
+\]
+Q-learning learns the optimal policy independently of the agent’s behavior, but its online performance can be unstable due to exploration.
+
+
+
+
+\textbf{Expected Sarsa} replaces the maximum operator with an expectation over the policy, reducing variance and often improving performance in practice.
+
+
+
+
+
+\subsubsection{From TD to DQN}
+Within the TD framework, \textbf{Q-Learning} stands out as an off-policy algorithm that learns the optimal action-value function $Q^*(s, a)$ independently of the agent's behavior. The Q-learning update is:
+$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha [R_{t+1} + \gamma \max_a Q(S_{t+1}, a) - Q(S_t, A_t)]$$
+
+This specific equation is the direct mathematical ancestor of the **Deep Q-Network (DQN)**. By replacing the lookup table of $Q(s, a)$ with a deep neural network, DQN allowed RL to scale to high-dimensional environments like Atari games, which is a core focus of this project.
+
+
+\subsection{Convolution Neural Networks and Deep Q Networks}
+
+The main problem with Q-learning is that it does not scale well to large (or even medium) MDPs with many states and actions. For example, suppose you wanted to use Q-learning to train an agent to play Ms. Pac-Man (see Figure~\ref{fig:pacman}). There are about 150 pellets that Ms. Pac-Man can eat, each of which can be present or absent (i.e., already eaten). So, the number of possible states is greater than $2150 \approx 1045$. And if you add all the possible combinations of positions for all the ghosts and Ms. Pac-Man, the number of possible states becomes larger than the number of atoms in our planet, so there’s absolutely no way you can keep track of an estimate for every single Q-value. \cite{geron}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\linewidth]{assests/pacman.jpg}
+\caption{Pacman Game Example. Source: \cite{pacman_figure}}
+\label{fig:pacman}
+\end{figure}
+
+The Solution is was suggested in 2013 by DeepMind when they published paper about DQN. \cite{mnih2015human}.
+What they did is cobmined CNN with Q-learning and called it DQN.
+
+\subsubsection{What is CNN}
+
+
+
+Convolutional Neural Networks (CNNs) are a type of neural network designed specifically for data that comes in grid-like formats, such as images. Instead of treating every input value independently, a CNN works with small local regions of the image and learns filters that can detect useful patterns. These filters slide across the input, allowing the network to find the same pattern in different locations. This idea of local connections and shared weights is one of the core principles of CNNs, along with pooling and stacking multiple layers to build deeper feature representations \cite{lecun:hal-04206682}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\linewidth]{assests/cnn_1.png}
+\caption{ Inside a convolutional network}
+\label{fig:cnn_1}
+\end{figure}
+
+A typical CNN architecture, like the one shown in Figure~\ref{fig:cnn_1}, begins with convolutional layers that extract simple features such as edges or textures. These are followed by pooling layers, which reduce spatial resolution and make the representation more robust to small shifts in the input. By stacking several convolution–activation–pooling stages, the network gradually learns more abstract features: edges combine into motifs, motifs into shapes, and shapes into full objects. Finally, fully-connected layers interpret these features to produce the final output. This hierarchical processing makes CNNs especially powerful for visual tasks.
+
+This ability to automatically extract meaningful features from raw images is exactly why CNNs became so important in reinforcement learning. Instead of trying to manually define state features—as classical Q-learning would require—a CNN can learn them directly from the raw game frames.
+
+%\newpage
+\subsection{DQN}
+
+DeepMind were first who combined CNN and Q-learning algorithms, which made revolution in Reinforcment learning as their agent was first to learn directly from high-dimensional sensory input.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{assests/dqn_1.png}
+\caption{DQN Architercture on attari breakout \cite{mnih2015human}}
+\label{fig:dqn_1}
+\end{figure}
+
+The CNN works by learning visual features automatically through repeated patterns - convolutional layers start with basic features like edges, then stack to detect increasingly complex objects. Starting from the left, raw game frames pass through these convolutional layers that extract visual features like edges and objects. They feed into fully connected layers that integrate spatial information, and Q-values for each action emerge on the right.
+DQN also stabilized training with two key techniques: experience replay, which stores and randomly samples past experiences to break correlations, and a target network that updates slowly to provide stable learning targets. These innovations achieved human-level performance across 49 Atari games with a single algorithm.
+
+Lets go through it in more details now.
+
+In the original DeepMind system which is shown in Figure~\ref{fig:dqn_1} the input image (screenshot of the Atary game) consisted of 4 grayscale game frames staked together with dimensions of $84 \times 84$ pixels. This game agent knowledge not only of object positions but their velocity and motion directly without need to hand-craft this features. \cite{mnih2015human}
+
+That input frames are passing to CNN network, first layer applies $32$ filters(kernels) of size $8 \times 8$ with stride size of 4, following by ReLu. Then on the third layer network applies 64 filters of size $4 \times 4$ with stride size of 2, following again by ReLu. The third layer applies another 64 filters but with cubic size of 3 this time and stride of 1. As a result we are getting mashed mozaic something which is flattened and fet into a fully–connected layer of 512 units, and finally into an output layer containing one
+Q-value for each possible action in the game.
+
+Training DQN uses a modified Q-learning loss function:
+\[
+L_i = \mathbb{E}_{(s,a,r,s')\sim U(D)}\left[ \big(r + \gamma \max_{a'} Q(s',a';\theta^{-})
+- Q(s,a;\theta) \big)^2 \right],
+\]
+where $\theta$ are the network parameters and $\theta^{-}$ are the parameters of the
+target network.
+
+
+To make Q-learning stable with deep networks, DeepMind introduced two key innovations.
+The first is \textit{experience replay}, which stores the agent’s past transitions and samples
+them uniformly at random. This breaks the strong correlations between consecutive game
+frames and allows the network to be trained using \textbf{\textit{minibatches}}, improving stability and data
+efficiency. The second innovation is the use of a \textit{target network} whose parameters
+$\theta^{-}$ are updated only every $C$ steps. This delays the bootstrapping updates and
+prevents harmful feedback loops that would otherwise cause divergence when the network
+tries to predict its own moving targets.
+
+With these components combined, DQN became the first reinforcement learning agent to
+achieve human-level performance across 49 Atari 2600 games using a single neural network
+architecture and minimal prior knowledge. This result demonstrated that combining deep
+learning with reinforcement learning enables agents to learn effective policies directly from
+high-dimensional sensory input.
+
+
+\subsection{Policy Gradients and Actor--Critic Methods}
+
+\subsection{RL in (Specify Domain) $<$- games?}
+
+\subsection{Measuring Performance}
+
+
+% To properly compare DQN and Actor-Critic algorithms, we need metrics that work fairly across different environment types. The problem is that different papers use different metrics, making comparison difficult. As pointed out by Jordan et al. \cite{jordan2020evaluating}, the choice of metrics can completely change which algorithm appears best. This section describes the metrics we will use and why they matter for our comparison.
+
+% \subsubsection{Core Performance Metrics}
+
+% The most basic metric is \textbf{episode return}, which is just the sum of all rewards in one episode. But single episodes have high variance, especially in stochastic environments. Following the methodology from Duan et al. \cite{duan2016benchmarking}, we average returns over multiple evaluation episodes - 100 episodes for Atari games and 30 for MuJoCo environments. The difference comes from MuJoCo being more deterministic than Atari.
+
+% Sample efficiency measures how many environment interactions an algorithm needs to learn. Henderson et al. \cite{henderson2018deep} showed this is critical because in real applications, each interaction might be expensive or dangerous. We measure sample efficiency as the area under the learning curve up to a fixed number of steps, normalized between random and optimal performance:
+
+% \[
+% \text{Sample Efficiency} = \frac{1}{T} \sum_{t=1}^{T} \frac{R_t - R_{\text{random}}}{R_{\text{optimal}} - R_{\text{random}}}
+% \]
+
+% where $R_t$ is the return at timestep $t$. For Atari, we use 10 million frames following the standard from Mnih et al. \cite{mnih2015human}. For MuJoCo, we use 1 million steps as established by Schulman et al. \cite{schulman2017proximal}.
+
+% Wall-clock time matters for practical applications. DQN and Actor-Critic have different computational costs - DQN needs expensive replay buffer sampling while A2C/PPO can parallelize environment steps. We measure time on our RTX 4090 GPU, reporting both total training time and time to reach performance thresholds.
+
+% \subsubsection{Statistical Reliability}
+
+% Single runs are not enough. Reinforcement learning has high variance from random initialization, exploration noise, and environment stochasticity. Islam et al. \cite{islam2017reproducibility} found that reported results often cannot be reproduced due to this variance. 
+
+% Following recommendations from Agarwal et al. \cite{agarwal2021deep}, we use stratified bootstrap confidence intervals with 1000 bootstrap samples. These predict what results we would get if we repeated the experiment. For $N$ runs with scores $X = \{x_1, ..., x_N\}$, the bootstrap process samples $N$ scores with replacement from $X$, computes the mean, and repeats 1000 times. The 95\% confidence interval uses the 2.5 and 97.5 percentiles of these bootstrap means.
+
+% We also report the Inter-Quantile Mean (IQM), which is more robust than regular mean. IQM discards the bottom and top 25\% of scores and averages the middle 50\%. As shown by Agarwal et al. \cite{agarwal2021deep}, IQM is less affected by outliers than mean or median, giving a better picture of typical performance.
+
+% \subsubsection{Algorithm-Specific Metrics}
+
+% For DQN, we track Q-value estimation quality. Van Hasselt et al. \cite{van2016deep} showed that DQN often overestimates Q-values, which can hurt performance. We measure this overestimation by comparing predicted Q-values with actual returns:
+
+% \[
+% \text{Overestimation} = \frac{1}{N} \sum_{i=1}^{N} \left( Q(s_i, a_i) - G_i \right)
+% \]
+
+% where $G_i$ is the actual discounted return from state $s_i$ after taking action $a_i$.
+
+% For Actor-Critic methods, we track policy entropy and advantage estimation quality. Schulman et al. \cite{schulman2017proximal} showed that entropy regularization prevents premature convergence to suboptimal policies. We monitor entropy throughout training:
+
+% \[
+% H(\pi) = -\sum_{a} \pi(a|s) \log \pi(a|s)
+% \]
+
+% Low entropy means the policy is deterministic, which might indicate it stopped exploring too early.
+
+% \subsubsection{Environment-Specific Considerations}
+
+% Different environments need different metrics. For Atari games, we use human-normalized scores from Mnih et al. \cite{mnih2015human}:
+
+% \[
+% \text{Normalized Score} = \frac{\text{Agent Score} - \text{Random Score}}{\text{Human Score} - \text{Random Score}} \times 100\%
+% \]
+
+% This puts all games on the same scale - 0\% means random play, 100\% means human-level. Scores above 100\% mean superhuman performance.
+
+% For continuous control in MuJoCo, we follow Duan et al. \cite{duan2016benchmarking} and report final performance, sample efficiency, and stability. Some tasks like Reacher have clear success conditions (reaching the target), so we also report success rate. Energy efficiency matters for robotics applications, measured as the sum of squared actions over an episode.
+
+% \subsubsection{Hyperparameter Sensitivity}
+
+% Default hyperparameters can favor certain algorithms. Engstrom et al. \cite{engstrom2020implementation} showed that implementation details can matter more than algorithmic improvements. We test sensitivity by varying:
+% \begin{itemize}
+%     \item Learning rates from $10^{-5}$ to $10^{-3}$ in log scale
+%     \item Batch sizes from 32 to 256 in powers of 2
+%     \item Network architectures from small (2 layers, 64 units) to large (3 layers, 512 units)
+% \end{itemize}
+
+% For each configuration, we run 5 seeds and report the performance drop from optimal hyperparameters. An algorithm that maintains good performance across more hyperparameter settings is more robust and easier to use in practice.
+
+% \subsubsection{Computational Requirements}
+
+% We track computational resources following Huang et al. \cite{huang2022cleanrl}:
+% \begin{itemize}
+%     \item GPU memory usage (impacts maximum batch size)
+%     \item Training time per million frames
+%     \item Experience replay buffer size (DQN requires gigabytes for 1 million transitions)
+%     \item Number of network parameters
+% \end{itemize}
+
+% This helps understand the practical cost of each algorithm. For example, Rainbow DQN \cite{hessel2018rainbow} achieves better performance than vanilla DQN but requires 5x more computation.
+
+% \subsubsection{Implementation and Reproducibility}
+
+% All implementations use Stable Baselines3 \cite{raffin2021stable} for standardization. We verify our implementations match published results before starting comparisons. Code and hyperparameters will be available at \url{https://github.com/username/rl-comparison}.
+
+% Following Tucker et al. \cite{tucker2018mirage}, we use identical preprocessing for fair comparison:
+% \begin{itemize}
+%     \item Atari: 4 frame stack, frame skip of 4, resize to $84 \times 84$ grayscale
+%     \item MuJoCo: observation normalization, action clipping to $[-1, 1]$
+%     \item Seeds: 0-9 for all experiments
+% \end{itemize}
+
+% These metrics give a complete picture of algorithm performance without cherry-picking. As emphasized by Henderson et al. \cite{henderson2018deep}, reporting only favorable metrics has been a major problem in reinforcement learning research. Our comprehensive evaluation avoids this issue.
+
+\newpage
+\section{Prototypes}
+
+\subsection{DQN Atari Breakout}
+
+For the DQN prototype, I implemented a Deep Q-Network agent to solve the Atari \textit{Breakout} environment. This implementation follows the core ideas presented by DeepMind and uses the \texttt{stable-baselines3} library to ensure a reliable and standardized implementation.
+
+\subsubsection{Environment Setup}
+
+The Atari environment is created using the \textit{NoFrameskip} version of Breakout to maintain consistency with the original DQN experiments. Multiple parallel environments are instantiated to improve data collection efficiency. Frame stacking is applied so that the agent can observe temporal information across consecutive frames.
+
+\begin{minted}[linenos, breaklines=true]{python}
+import ale_py
+from stable_baselines3 import DQN
+from stable_baselines3.common.env_util import make_atari_env
+from stable_baselines3.common.vec_env import VecFrameStack
+from stable_baselines3.common.callbacks import CheckpointCallback, EvalCallback
+
+
+def main():
+vec_env = make_atari_env(
+"BreakoutNoFrameskip-v4",
+n_envs=8,
+seed=42,
+)
+
+vec_env = VecFrameStack(vec_env, n_stack=4)
+
+eval_env = make_atari_env(
+"BreakoutNoFrameskip-v4",
+n_envs=1,
+seed=123,
+)
+
+eval_env = VecFrameStack(eval_env, n_stack=4)
+\end{minted}
+
+\newpage
+\subsubsection{Callbacks and Evaluation}
+
+Two callbacks are used during training. The checkpoint callback periodically saves the model parameters and replay buffer, enabling training to be resumed if needed. The evaluation callback assesses the agent’s performance at fixed intervals using a separate environment and stores the best-performing model based on evaluation rewards.
+
+\begin{minted}[linenos, breaklines=true]{python}
+checkpoint_callback = CheckpointCallback(
+save_freq=500_000,
+save_path="./checkpoints/",
+name_prefix="dqn_breakout",
+save_replay_buffer=True,
+save_vecnormalize=True,
+)
+
+eval_callback = EvalCallback(
+eval_env,
+best_model_save_path="./best_model/",
+log_path="./logs/",
+eval_freq=100_000,
+deterministic=True,
+render=False,
+)
+\end{minted}
+
+\newpage
+\subsubsection{DQN Model Configuration}
+
+The DQN agent uses a convolutional neural network policy suitable for image-based input. Hyperparameters such as learning rate, replay buffer size, discount factor, and exploration schedule are selected to closely match the settings used in the original DQN paper. A target network is updated at fixed intervals to stabilize learning, and the model is trained on a GPU to improve performance.
+
+\begin{minted}[linenos, breaklines=true]{python}
+model = DQN(
+"CnnPolicy",
+vec_env,
+learning_rate=1e-4,
+buffer_size=400_000,
+learning_starts=50_000,
+batch_size=64,
+tau=1.0,
+gamma=0.99,
+train_freq=4,
+gradient_steps=1,
+target_update_interval=10_000,
+exploration_fraction=0.1,
+exploration_initial_eps=1.0,
+exploration_final_eps=0.01,
+verbose=1,
+tensorboard_log="./tensorboard_logs/",
+device="cuda",
+)
+\end{minted}
+
+\newpage
+\subsubsection{Training Procedure}
+
+The agent is trained for a total of ten million timesteps. During training, both checkpointing and evaluation callbacks are active. After training is completed, the final model is saved and all environments are properly closed.
+
+\begin{minted}[linenos, breaklines=true]{python}
+total_timesteps = 10_000_000
+
+model.learn(
+total_timesteps=total_timesteps,
+callback=[checkpoint_callback, eval_callback],
+progress_bar=True,
+)
+
+model.save("dqn_breakout_final")
+vec_env.close()
+eval_env.close()
+
+
+if __name__ == "__main__":
+main()
+\end{minted}
+
+\newpage
+\subsection{Results}
+\begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{assests//dqn_prototype/training_curves.png}
+\caption{Enter Caption}
+\label{fig:placeholder}
+\end{figure}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{assests//dqn_prototype/learning_curve.png}
+\caption{Enter Caption}
+\label{fig:placeholder}
+\end{figure}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{assests//dqn_prototype/learning_curve.png}
+\caption{Enter Caption}
+\label{fig:placeholder}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.66\linewidth]{assests//dqn_prototype/dqn2/eval_episode_length.png}
+\caption{Enter Caption}
+\label{fig:placeholder}
+\end{figure}
+\newpage
+
+\subsection{Video / Images}
+link to YOUTUBE:
+\begin{itemize}
+\item \url{https://youtube.com/shorts/hdiVVfBSX9c?feature=share}
+\end{itemize}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.33\linewidth]{assests//dqn_prototype/image.png}
+\caption{Enter Caption}
+\label{fig:placeholder}
+\end{figure}
+
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.33\linewidth]{assests//dqn_prototype/image1.png}
+\caption{Enter Caption}
+\label{fig:placeholder}
+\end{figure}
+
+\newpage
+\section{Discussion and Conclusions}
+
+% \section{Experiments}
+
+
+% \newpage
+% \section{Discussions}
+
+
+% \newpage
+% \section{Conclusions}
+
+
+\newpage
+\bibliographystyle{plain}
+\bibliography{ref}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%     Scraps FROM PAST       %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%     Scraps FROM PAST       %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%     Scraps FROM PAST       %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%     Scraps FROM PAST       %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%     Scraps FROM PAST       %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+\newpage
+\section{OLD, DELETE ME}
+
+\subsection{chunk of something}
+RL has (from webpage' geeks for geeks' \cite{GeeksforGeeks2018RL}):  
+
+\begin{itemize}
+\item Agent: The decision-maker who performs actions.
+\item Environment: The world or system in which the agent operates.
+\item State: The situation or condition in which the agent is currently situated.
+\item Action: The possible moves or decisions that the agent can make.
+\item Reward: The feedback or result from the environment based on the agent's action.
+\end{itemize} 
+
+
+The hardest part is estimating the values that reinforcement learning (RL) uses to obtain a reward, as these values need to be recalculated repeatedly, while something like the reward is simply provided by the environment. Thus, this is the most important aspect of any reinforcement learning (RL)
+
+
+RL can be similar to evolutionary algorithms in some cases, but it is usually better, while evolutionary algorithms do not notice why certain samples "survived" and moved to the next generation, RL utilizes policy knowledge and a reward system to understand exactly why certain decisions are better.
+
+\subsection{Reinforcement Learning Basics}
+
+Reinforcement Learning is a Machine Learning approach that teaches machines to understand and automate goal-directed learning and decision-making in specific tasks, such as optimizing data center management or playing the tic-tac-toe game. Its main difference from Supervised or unsupervised learning is that RL does not require supervision or a complete environment model. It's the first ML approach that learns from interactions with the environment to achieve long-term goals.
+
+RL defines the interaction between an agent and the environment and is based on a framework of Markov decision processes. Its main components are: Agent, Environment, State, Action, and Reward. The concept of value and the key value function is the main concept for many RL algorithms, including those that we will discuss later, value functions are important for efficient search in the space of policies, and they are the main difference that separates evolutionary algorithms from RL, since evolutionary algorithms search directly in the policy space.
+
+
+
+%\newpage
+%\subsection{Chapter 2}
+The difference from other methods unique to RL is that we give a score to the actions taken rather than saying correct/incorrect.
+In RL, you need to balance between exploitation of already learned actions with good reward and exploration to potentially find even better actions to exploit for better reward in the long-term goal.
+\begin{itemize}
+\item Exploitation: Playing the machine that seems best so far
+\item Exploration: Trying other machines to see if they're actually better
+\end{itemize}
+
+
+
+\subsubsection{Action Selection and the K-armed bandit problem}
+
+
+\begin{enumerate}
+
+\item \textbf{Sample-Average Method}
+\begin{itemize}
+\item Estimates action value by getting the average of all previous rewards
+\item $$Q_t(a) = \frac{\sum_{i=1}^{t-1} R_i \cdot \mathbbm{1}_{A_i=a}}{\sum_{i=1}^{t-1} \mathbbm{1}_{A_i=a}}$$
+\item Simple but slow to adapt
+\end{itemize}
+
+\item \textbf{Greedy Action Selection}
+\begin{itemize}
+\item Always selects action with highest estimated value
+\item $$A_t = \arg\max_a Q_t(a)$$
+\item Pure exploitation and no exploration can get stuck on suboptimal actions
+\end{itemize}
+
+\item \textbf{$\varepsilon$-Greedy Method}
+\begin{itemize}
+\item Selects best action with probability $1-\varepsilon$, random action with probability $\varepsilon$
+\item $$A_t = \begin{cases} \arg\max_a Q_t(a) & \text{prob } 1-\varepsilon \\ \text{random} & \text{prob } \varepsilon \end{cases}$$
+\item Balances exploration and exploitation, ensures all actions sampled infinitely
+\end{itemize}
+
+\item \textbf{Incremental Implementation}
+\begin{itemize}
+\item Efficient update without storing all rewards
+\item $$Q_{n+1} = Q_n + \frac{1}{n}[R_n - Q_n]$$
+\item General form: 
+$$\text{NewEstimate} \leftarrow \text{OldEstimate} + \text{StepSize}[\text{Target} - \text{OldEstimate}]$$
+\item Constant memory and computation per step
+\end{itemize}
+
+\item \textbf{Constant Step-Size Method}
+\begin{itemize}
+\item Uses fixed step-size for nonstationary problems
+\item $$Q_{n+1} = Q_n + \alpha[R_n - Q_n], \quad \alpha \in (0,1]$$
+\item Exponential recency-weighted average: 
+$$Q_{n+1} = (1-\alpha)^n Q_1 + \sum_{i=1}^{n} \alpha(1-\alpha)^{n-i} R_i$$
+\item Weights recent rewards more; doesn't fully converge but adapts to changes
+\item Convergence conditions: 
+$$\sum_{n=1}^{\infty} \alpha_n(a) = \infty \quad \text{and} \quad \sum_{n=1}^{\infty} \alpha_n^2(a) < \infty$$
+\end{itemize}
+
+\item \textbf{Optimistic Initial Values}
+\begin{itemize}
+\item Initialize all $Q_1(a)$ to high values (e.g., $+5$)
+\item No new formula, uses standard updates with optimistic initialization
+\item Encourages exploration through "disappointment", temporary effect, not good for problems that change over time
+\end{itemize}
+
+\item \textbf{Upper Confidence Bound (UCB)}
+\begin{itemize}
+\item Selects options with the highest potential to be best
+\item $$A_t = \arg\max_a \left[Q_t(a) + c\sqrt{\frac{\ln t}{N_t(a)}}\right]$$
+\item Where $N_t(a)$ = times action $a$ selected, $c > 0$ controls exploration
+\item Deterministic exploration, favors uncertain actions, difficult to extend beyond bandits problems type
+\end{itemize}
+
+\item \textbf{Gradient Bandit Algorithm}
+\begin{itemize}
+\item Learns preferences $H_t(a)$, not values
+\item Soft-max distribution: 
+$$\pi_t(a) = \frac{e^{H_t(a)}}{\sum_{b=1}^{k} e^{H_t(b)}}$$
+\item Update rule: 
+$$H_{t+1}(a) = H_t(a) + \alpha(R_t - \bar{R}_t)(\mathbbm{1}_{a=A_t} - \pi_t(a))$$
+\item Baseline $\bar{R}_t$ is average reward, stochastic gradient ascent method
+\item Performance gradient: 
+$$\frac{\partial \mathbb{E}[R_t]}{\partial H_t(a)} = \mathbb{E}[(R_t - \bar{R}_t)(\mathbbm{1}_{a=A_t} - \pi_t(a))]$$
+\end{itemize}
+
+\item \textbf{Associative Search (Contextual Bandits)}
+\begin{itemize}
+\item Learn policy mapping situations to actions
+\item $$\pi: \mathcal{S} \to \mathcal{A}$$
+\item Bridge between bandits and full RL; actions don't affect next situation
+\item True action value: 
+$$q_*(a) = \mathbb{E}[R_t \mid A_t = a]$$
+\item Expected reward: 
+$$\mathbb{E}[R_t] = \sum_x \pi_t(x) q_*(x)$$
+\end{itemize}
+
+\end{enumerate}
+
+\subsubsection{Comparison}
+
+
+\begin{table}[H]
+\centering
+\caption{Comparison of K-Armed Bandit Algorithms}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Algorithm} & \textbf{Exploration Type} & \textbf{Adapts to Changes} & \textbf{Complexity} \\ \hline
+Greedy & None & No & Simplest \\ \hline
+$\varepsilon$-greedy & Random & With constant $\alpha$ & Simple \\ \hline
+Optimistic Init & Early only & No & Simple \\ \hline
+UCB & Intelligent & Difficult & Medium \\ \hline
+Gradient Bandit & Probabilistic & Yes & Medium \\ \hline
+\end{tabular}
+\end{table}
+
+%\subsubsection{summary of chapter 2}
+This section explains some of the methods for deciding which actions should be taken. Although these methods are considered basic and simple by the book, they are still useful. The book states that there are more advanced methods. However, they are much more complex and are not covered in this book. 
+
+From graphs that I haven't included here, we can see that all algos introduced work the best when values in formulas are somewhere in the middle all are u shaped, but UCB so far the best performer
+
+\subsection{Markov Decision Processes}
+Introduced Markov's decision processes, or MDPs. It's an idealized version of Reinforcment learning where brute force math can be applied, basically its a way how to formulate desigion making sequence, where sequence means not only action taken now, but in current situation. this itroduces to us delayed reward and state.
+
+
+MDP math proof tells us that any problem that has a clear goal can be reduced to three signals that go back and forth between the agent and the environment: one for the state, one for the agent, and one for the reward.
+
+usage of reward signal is the most certain difference of RL in comparison to other methods of ML.
+
+policies are hard to compute; they require powerful hardware and a lot of time, so most of the time we need to do an approximation.
+
+Terms like policy, value function, reward and two types of tasks: episodic and continuing were introduced and explained. later they were combined in one formula: Bellman optimality equation, which allows us to define optimal values, without having optimal policy first.
+
+\end{document}  

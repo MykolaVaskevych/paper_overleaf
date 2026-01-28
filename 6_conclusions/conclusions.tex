@@ -1,0 +1,33 @@
+% this file is called up by thesis.tex
+% content in this file will be fed into the main document
+
+\chapter{Discussions \& Conclusions} % top level followed by section, subsection
+
+
+% ----------------------- paths to graphics ------------------------
+
+% change according to folder and file names
+\ifpdf
+    \graphicspath{{6_conclusions/figures/PNG/}{6_conclusions/figures/PDF/}{6_conclusions/figures/}}
+\else
+    \graphicspath{{6_conclusions/figures/EPS/}{6_conclusions/figures/}}
+\fi
+
+
+% ----------------------- contents from here ------------------------
+
+
+% \section{Summary}
+
+
+%\section{Conclusions} % add specific dqn a2c/a3c ppo etc ? todo later maybe
+In section 1.2, the research question, "How does the performance of value-based Deep Q-Network agents compare to actor-critic agent" was raised.
+To begin answering the question, the project began with an approximated systematic literature review of relevant literature. 
+This ensured the prototype development and experimentation tasks were grounded in existing research. 
+The foundations of artificial intelligence, the fundamental principles and approaches of reinforcement learning, Deep Q-learning, Gradient Policy were some of the main topics discussed. Following acquiring in-depth expertise in Deep Q-learning and Actor Critic, the high-level architectural decisions, code implementation, and employed equipment were discussed with respect to the prototype development. \\
+
+This project will make one contribution to the field of Deep Reinforcement Learning.  It will explicitly compare DQN with AC across a range of problems that challenge the RL paradigm with respect to sample efficiency, state space, delayed reward, and other issues. Given that performance is highly dependent on the choice of hyperparameters, this research will also focus on hyperparameter tuning to assess how these variants compare when employing the optimal hyperparameters.
+
+% ---------------------------------------------------------------------------
+% ----------------------- end of thesis sub-document ------------------------
+% ---------------------------------------------------------------------------
