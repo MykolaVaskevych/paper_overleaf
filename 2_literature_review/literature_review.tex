@@ -9,9 +9,9 @@
 
 % change according to folder and file names
 \ifpdf
-    \graphicspath{{2_chapter2/figures/PNG/}{2_chapter2/figures/PDF/}{2_chapter2/figures/}}
+    \graphicspath{{2_literature_review/figures/PNG/}{2_literature_review/figures/PDF/}{2_literature_review/figures/}}
 \else
-    \graphicspath{{2_chapter2/figures/EPS/}{2_chapter2/figures/}}
+    \graphicspath{{2_literature_review/figures/EPS/}{2_literature_review/figures/}}
 \fi
 
 %: ----------------------- contents from here ------------------------
@@ -95,7 +95,7 @@ Another core element of reinforcement learning is the requirement to balance \te
 Reinforcement learning differs from other optimization-based approaches, such as evolutionary algorithms, in how it uses experience. Evolutionary methods usually evaluate complete policies as indivisible units, whereas reinforcement learning algorithms learn structured representations, such as value functions or parameterized policies, that assign credit to individual states and actions \cite{sutton}. This structure makes more efficient reuse of experience across similar situations and supports generalization to previously unseen states.
 
 
-\section{Action Selection and the $k$-Armed Bandit Problem}
+\section{Action Selection and the \texorpdfstring{$k$}{k}-Armed Bandit Problem}
 
 
 Consider the following learning problem. You are repeatedly faced with a choice among k different options or actions. After each choice, you receive a numerical reward chosen from a stationary probability distribution that depends on the action you selected. Your objective is to maximize the expected total reward over some time period, for example, over 1000 action selections or time steps. This is the original form of the k-armed bandit problem, so named by analogy to a slot machine, or “one-armed bandit,” except that it has k levers instead of one. Each action selection is like a play of one of the slot machine’s levers, and the rewards are the payoffs for hitting the jackpot. Through repeated action selections, you are to maximize your winnings by concentrating your actions on the best levers. \cite{sutton}.
@@ -158,9 +158,9 @@ An MDP is described by the following elements:
 
 At each time step $t$, the agent observes the current state $S_t$, selects an action $A_t$, and the environment reacts by moving the agent to a new state $S_{t+1}$ while ejecting a numerical reward $R_{t+1}$. This interaction loop, illustrated in Figure~\ref{fig:agent_environment}, forms the core of reinforcement learning.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.8\linewidth]{assests/agent_environment_loop.png}
+    \includegraphics[width=0.8\linewidth]{agent_environment_loop.png}
     \caption{Agent--environment interaction in a Markov Decision Process.}
     \label{fig:agent_environment}
 \end{figure}
@@ -355,9 +355,9 @@ This specific equation is the direct mathematical ancestor of the **Deep Q-Netwo
 
 The main problem with Q-learning is that it does not scale well to large (or even medium) MDPs with many states and actions. For example, suppose you wanted to use Q-learning to train an agent to play Ms. Pac-Man (see Figure~\ref{fig:pacman}). There are about 150 pellets that Ms. Pac-Man can eat, each of which can be present or absent (i.e., already eaten). So, the number of possible states is greater than $2150 \approx 1045$. And if you add all the possible combinations of positions for all the ghosts and Ms. Pac-Man, the number of possible states becomes larger than the number of atoms in our planet, so there’s absolutely no way you can keep track of an estimate for every single Q-value. \cite{geron}
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\linewidth]{assests/pacman.jpg}
+\includegraphics[width=0.5\linewidth]{pacman.jpg}
 \caption{Pacman Game Example. Source: \cite{pacman_figure}}
 \label{fig:pacman}
 \end{figure}
@@ -371,9 +371,9 @@ What they did is cobmined CNN with Q-learning and called it DQN.
 
 Convolutional Neural Networks (CNNs) are a type of neural network designed specifically for data that comes in grid-like formats, such as images. Instead of treating every input value independently, a CNN works with small local regions of the image and learns filters that can detect useful patterns. These filters slide across the input, allowing the network to find the same pattern in different locations. This idea of local connections and shared weights is one of the core principles of CNNs, along with pooling and stacking multiple layers to build deeper feature representations \cite{lecun:hal-04206682}
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=1\linewidth]{assests/cnn_1.png}
+\includegraphics[width=1\linewidth]{cnn_1.png}
 \caption{ Inside a convolutional network}
 \label{fig:cnn_1}
 \end{figure}
@@ -387,9 +387,9 @@ This ability to automatically extract meaningful features from raw images is exa
 
 DeepMind were first who combined CNN and Q-learning algorithms, which made revolution in Reinforcment learning as their agent was first to learn directly from high-dimensional sensory input.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=1\linewidth]{assests/dqn_1.png}
+\includegraphics[width=1\linewidth]{dqn_1.png}
 \caption{DQN Architercture on attari breakout \cite{mnih2015human}}
 \label{fig:dqn_1}
 \end{figure}

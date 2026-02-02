@@ -110,8 +110,8 @@
 %--> http://www.uni-giessen.de/partosch/eurotex99/ oberdiek/print/sli4a4col.pdf
 %--> http://me.in-berlin.de/~miwie/tex-refs/html/latex-packages.html
 %-->
-    \usepackage[ pdftex, plainpages = false, pdfpagelabels, 
-                 pdfpagelayout = useoutlines,
+    \usepackage[ pdftex, plainpages = false, pdfpagelabels,
+                 pdfpagelayout = OneColumn,
                  bookmarks,
                  bookmarksopen = true,
                  bookmarksnumbered = true,
