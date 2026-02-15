@@ -445,7 +445,7 @@ L_i = \mathbb{E}_{(s,a,r,s')\sim U(D)}\left[ \big(r + \gamma \max_{a'} Q(s',a';\
 \]
 
 
-But it's different. In DQN, theta represented the network's weights that estimated the score (Q-value) of an action, whereas in Policy Gradient, theta represented the network's weights that directly determined the probability of an action. With Policy gradient, we don't need argmax anymore, because the network doesn't yield scores; it gives you the probability of each possible action, and we just sample from that distribution. 
+But it's different. In DQN, $\theta$ represented the network's weights that estimated the score (Q-value) of an action, whereas in Policy Gradient, theta represented the network's weights that directly determined the probability of an action. With Policy gradient, we don't need argmax anymore, because the network doesn't yield scores; it gives you the probability of each possible action, and we just sample from that distribution. 
 
 
 By knowing the probabilities of each state in the environment, all that is needed for training is a slight nudge to parameter theta at each step, so the model can understand in which direction it should shift the probabilities. Unlike DQN, we don't need to know true values; all that matters is shifting theta based on the reward returned by the environment: higher reward -> higher shift in theta, to increase the probability of taking the same action next time.
@@ -461,6 +461,137 @@ Guarantees that we only need to compute the gradient of our own policy, which is
 
 
 
+\subsection{REINFORCE Algorithm}
+
+
+The simplest implementation of Policy Gradient methods is REINFORCE, presented by Williams in 1988, which established a mathematical foundation for policy gradient methods \cite{Williams1988}. The name is an acronym for ``REward Increment = Nonnegative Factor $\times$ Offset Reinforcement $\times$ Characteristic Eligibility,'' which describes the form of the algorithm.
+
+
+REINFORCE is a method used in reinforcement learning to improve how decisions are made. It learns by trying actions and then adjusting the chances of those actions based on the total reward received afterwards. Unlike other methods that estimate how good each action is, REINFORCE directly learns the best way to choose actions. This makes it useful for tasks where there are many possible actions or continuous choices and when it is hard to estimate the value of each action.
+
+
+The core challenge REINFORCE addresses is that the environment is not differentiable. In reinforcement learning, an agent interacts with an environment that can be viewed as a black box: it processes an action and produces the next state and a reward. Since we cannot compute derivatives through the environment, we cannot backpropagate through it. The agent contains a neural network with learnable weights, and to update these weights, gradients are required. Because gradients through the environment are unavailable, we must find alternative ways to perform learning.
+
+
+An intuitive analogy is a dog receiving treats. If an action leads to a good outcome, that action should be taken more often in the future. If one action produces a large reward, the probability distribution over actions should be adjusted so that this action becomes more likely while others become less likely. More generally, reward is used as a learning signal. When differentiation through the process that consumes network outputs is impossible, behavior is adjusted directly in the direction of reward. This is the core idea of REINFORCE.
+
+
+Formally, consider a network facing an associative immediate-reinforcement learning task. Suppose that the learning algorithm for this network is such that at the end of each trial each parameter $w_{ij}$ in the network is incremented by an amount
+
+\[
+\Delta w_{ij} = \alpha_{ij}(r - b_{ij}) e_{ij},
+\]
+
+where $\alpha_{ij}$ is a learning rate factor, $b_{ij}$ is a reinforcement baseline, and
+
+\[
+e_{ij} = \frac{\partial \ln g_i}{\partial w_{ij}}
+\]
+
+is called the characteristic eligibility of $w_{ij}$. Suppose further that the reinforcement baseline $b_{ij}$ is conditionally independent of $y_i$, given $W$ and $x_i$, and the rate factor $\alpha_{ij}$ is nonnegative and depends at most on $w_{ij}$ and $t$. Any learning algorithm having this particular form will be called a REINFORCE algorithm \cite{williamsSimpleStatisticalGradientfollowing1992}.
+
+
+In practice, REINFORCE operates on a policy $\pi_\theta(a|s)$ parameterized by $\theta$, which outputs an action given a state. The algorithm proceeds as follows. Initialize the policy parameters and step size $\alpha$. Then repeat:
+
+
+\begin{enumerate}
+
+\item Generate a full episode by following the policy:
+
+$(s_0,a_0,r_1,s_1,\ldots,s_T)$.
+
+
+\item For each timestep $t$, compute the discounted return:
+
+\[
+G_t = \sum_{k=0}^{T-t} \gamma^k r_{t+k+1}.
+\]
+
+
+\item Update parameters:
+
+\[
+\theta \leftarrow \theta + \alpha\, G_t \nabla_\theta \log \pi_\theta(a_t|s_t).
+\]
+
+\end{enumerate}
+
+
+Actions are obtained by sampling from the policy distribution, typically produced via a softmax over network outputs. After sampling, the selected action is evaluated by computing its log-probability under the same policy. The loss is formed as:
+
+\[
+L = -G_t \log \pi_\theta(a_t|s_t).
+\]
+
+The negative sign is required because optimization minimizes loss while REINFORCE seeks to maximize expected return. REINFORCE uses reward as a surrogate gradient, allowing policy learning even when the environment is non-differentiable by directly increasing the probability of actions that lead to favorable outcomes.
+
+REINFORCE algorithms are useful in their own right and, perhaps more importantly, may serve as a sound basis for developing other more effective reinforcement learning algorithms. One major advantage of the REINFORCE approach is that it represents a prescription for devising statistical gradient-following algorithms for reinforcement-learning networks of units that compute their random output in essentially any arbitrary fashion. Also, because it is a gradient-based approach, it integrates well with other gradient computation techniques such as backpropagation. The main disadvantages are the lack of a general convergence theory applicable to this class of algorithms and, as with all gradient algorithms, an apparent susceptibility to convergence to false optima \cite{williamsSimpleStatisticalGradientfollowing1992}.
+
+
+\subsection{REINFORCE with Baseline}
+
+One limitation of the basic REINFORCE algorithm is that it can exhibit unbounded behaviour \cite{Phansalkar1990optimization}. One improvement to address this is the introduction of a baseline. The policy gradient theorem can be generalized to include a comparison of the action value to an arbitrary baseline $b(s)$.
+
+The baseline can be any function, even a random variable, as long as it does not vary with $a$; the equation remains valid because the subtracted quantity is zero. The update rule that we end up with is a new version of REINFORCE that includes a general baseline:
+\[
+\theta \leftarrow \theta + \alpha_\theta (G_t - b(S_t)) \nabla_\theta \log \pi(A_t|S_t,\theta).
+\]
+
+Because the baseline could be uniformly zero, this update is a strict generalization of REINFORCE. In general, the baseline leaves the expected value of the update unchanged, but it can have a large effect on its variance. This effect is demonstrated in Figure~\ref{fig:reinforce_baseline}, where adding a baseline significantly accelerates learning compared to plain REINFORCE.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\linewidth]{ReinforceVSbaseline.png}
+    \caption{Adding a baseline to REINFORCE can make it learn much faster. The step size used for plain REINFORCE is that at which it performs best. Source: \cite{sutton}.}
+    \label{fig:reinforce_baseline}
+\end{figure}
+
+For Markov decision processes, the baseline should vary with state. In some states all actions have high values and a high baseline is needed to differentiate the higher valued actions from the less highly valued ones; in other states all actions have low values and a low baseline is appropriate.
+
+One natural choice for the baseline is an estimate of the state value, $\hat v(S_t,w)$, where $w \in \mathbb{R}^m$ is a weight vector learned by one of the methods presented previously. Because REINFORCE is a Monte Carlo method for learning the policy parameters $\theta$, it is natural to also use a Monte Carlo method to learn the state-value weights $w$.
+
+\newpage
+\subsubsection{REINFORCE with Baseline (episodic)}
+
+
+Input: a differentiable policy parameterization $\pi(a|s,\theta)$
+
+
+Input: a differentiable state-value function parameterization $\hat v(s,w)$
+
+
+Algorithm parameters: step sizes $\alpha_\theta > 0$, $\alpha_w > 0$
+
+
+Initialize policy parameter $\theta \in \mathbb{R}^{d'}$ and state-value weights $w \in \mathbb{R}^d$
+
+
+For each episode:
+
+\begin{enumerate}
+\item Generate an episode $(S_0,A_0,R_1,\ldots,S_T)$ following $\pi(\cdot|\cdot,\theta)$
+\item For each timestep $t = 0,1,\ldots,T-1$:
+    \begin{enumerate}
+    \item Compute return:
+    \[
+    G_t= \sum_{k=t+1}^{T} \gamma^{k-t-1} R_k
+    \]
+    \item Update state-value weights:
+    \[
+    w \leftarrow w + \alpha_w (G_t - \hat v(S_t,w)) \nabla_w \hat v(S_t,w)
+    \]
+    \item Update policy parameters:
+    \[
+    \theta \leftarrow \theta + \alpha_\theta (G_t - \hat v(S_t,w)) \nabla_\theta \log \pi(A_t|S_t,\theta)
+    \]
+    \end{enumerate}
+\end{enumerate}
+
+This algorithm has two step sizes, $\alpha_\theta$ and $\alpha_w$. Choosing the step size for the value function is relatively straightforward. It is less clear how to set the step size for the policy parameters, whose best value depends on the range of variation of rewards and on the policy parameterization \cite{sutton}.
+
+Although the REINFORCE-with-baseline method learns both a policy and a state-value function, we do not consider it to be an actor–critic method because its state-value function is used only as a baseline, not as a critic. That is, it is not used for bootstrapping (updating the value estimate for a state from the estimated values of subsequent states), but only as a baseline for the state whose estimate is being updated \cite{sutton}.
+
+\newpage
 \subsection{Actor -- Critic Methods}
 
 
@@ -494,23 +625,25 @@ Actor update: adjust $\theta$ using the critic's judgment:
 
 Note that $\delta_t$ appears in both formulas—the critic's judgment guides everything, and this is how the two networks are connected.
 
-\section{Advantages of Actor-Critic}
+\subsubsection{Advantages of Actor-Critic}
 
 Actor-Critic methods combine the strengths of both value-based and policy-based approaches. Because they are built on policy gradients, they can learn stochastic policies, which is useful in environments requiring randomness (such as games with incomplete information). DQN, in contrast, is deterministic—it always selects the action with the maximum Q-value. Additionally, actor-critic methods can handle continuous action spaces (such as controlling a steering angle), whereas value-based methods require computing argmax over all possible actions, which is infeasible when actions are continuous.
 
 Compared to pure policy gradient methods, actor-critic has lower variance because it uses TD estimates rather than waiting for full episode returns. This also means updates happen at every time step, enabling faster, online learning.
 
+
+
+
+
+
+
+
+
 \newpage
 \section{Conclusion}
 
 
-This chapter provided a high-level coverage of the basics of Reinforcement Learning, and should be sufficient for any reader to understand the idea of further implementations. It began with an overview of artificial intelligence and machine learning, then moved on to the core concepts of RL: MDPs, the Bellman equation, and exploration versus exploitation. Value-based methods came next—Dynamic Programming, Monte Carlo, TD Learning, and DQN. Finally, Policy Gradients and Actor-Critic methods showed a different path: learning policy directly rather than through value estimation.
-
-
-
-%\section{RL in (Specify Domain) $<$- games?}
-
-%\section{Measuring Performance}
+This chapter provided a high-level coverage of the basics of Reinforcement Learning, and should be sufficient for any reader to understand the idea of further implementations. It began with an overview of artificial intelligence and machine learning, then moved on to the core concepts of RL: MDPs, the Bellman equation, and exploration versus exploitation. Value-based methods came next—Dynamic Programming, Monte Carlo, TD Learning, and DQN. Finally, Policy, REINFORCE and Actor-Critic methods showed a different path: learning policy directly rather than through value estimation.
 
 
 
@@ -526,55 +659,4 @@ This chapter provided a high-level coverage of the basics of Reinforcement Learn
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-% Latex will automatically renumber sections! Also it creates list of figures, list of tables and references! Nice job!
-
-
-% This document is formatted according to the University of Limerick specification for the submission of a Master or PhD dissertation.
-% Double-page printing is already in the code!
-% If you want to change things  you need to modify the `PhDthesisPSnPDF.cls' file found in Latex/Classes 
-
-
-
-
-% \section{Font}
-
-% Normal font \textbf{Bold Font} \emph{italics}.  List of \textcolor{blue}{colours} \textcolor{red}{for} \textcolor{ForestGreen}{font} can be found at: \url{http://en.wikibooks.org/wiki/LaTeX/Colors}
-
-% \subsection{Special characters}
-
-% Special characters such as \& and \% need to be treated in a special way. Check the full list of special characters here: \url{http://en.wikibooks.org/wiki/LaTeX/Special_Characters}
-% \subsubsection{Subsubsection Title}
-
-% \subsection{Wiki page}
-
-% You can learn more about Latex by clicking \href{http://en.wikibooks.org/wiki/LaTeX}{here}.
-
-
-% \section{Another Section}
-
-% \subsection{Another Subsection}
-
-% \subsubsection{Another Subsubsection Title}
-
-
-
-
-% ---------------------------------------------------------------------------
-%: ----------------------- end of thesis sub-document ------------------------
-% ---------------------------------------------------------------------------
 

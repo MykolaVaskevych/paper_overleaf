@@ -1,18 +1,3 @@
-
-% ----------------------------------------------------------------------------------------------------------------
-%                   LATEX TEMPLATE FOR PhD THESIS AT UNIVERSITY OF LIMERICK
-% -----------------------------------------------------------------------------------------------------------------
-
-% based on Harish Bhanderi's PhD/MPhil template, then Uni Cambridge
-% http://www-h.eng.cam.ac.uk/help/tpl/textprocessing/ThesisStyle/
-% corrected and extended in 2007 by Jakob Suckale, then MPI-CBG PhD programme
-% and made available through OpenWetWare.org - the free biology wiki
-% corrected and extended in2013 by Giuseppe Torre, University of Limerick
-% available at:  
-
-%: Style file for Latex
-% Most style definitions are in the external file PhDthesisPSnPDF.
-% In this template package, it can be found in ./Latex/Classes/
 \documentclass[twoside,12pt]{Latex/Classes/PhDthesisPSnPDF}
 
 \usepackage{natbib}
@@ -28,9 +13,9 @@
 \urlstyle{same}\url{#1}
 }
 
-% to display Math
+
 \usepackage{mathtools}
-\usepackage{bbm}  % for \mathbbm indicator function
+\usepackage{bbm}
 
 % to Display C++ code
 \definecolor{c++red}{rgb}{0.6,0,0} % for strings
@@ -40,18 +25,12 @@
 \lstset{language=C++}
 
 
-%% Define a new 'leo' style for the package that will use a smaller font.
 \makeatletter  
 \def\url@leostyle{%
   \@ifundefined{selectfont}{\def\UrlFont{\sf}}{\def\UrlFont{\small\ttfamily}}}
 \makeatother
-%% Now actually use the newly defined style.
 \urlstyle{leo}
 
-%: Macro file for Latex
-% Macros help you summarise frequently repeated Latex commands.
-% Here, they are placed in an external file /Latex/Macros/MacroFile1.tex
-% An macro that you may use frequently is the figuremacro (see introduction.tex)
 \input{Latex/Macros/MacroFile1}
 
 
@@ -285,12 +264,12 @@
 % Parts of the thesis are included below. Rename the files as required.
 % But take care that the paths match. You can also change the order of appearance by moving the include commands.
 
-\include{1_introduction/introduction}	
-\include{2_literature_review/literature_review}
-\include{3_prototypes/prototypes}			
-% \include{4_chapter4/chapter4}
+% \include{1_introduction/introduction}	
+% \include{2_literature_review/literature_review}
+% \include{3_prototypes/prototypes}			
+\include{4_chapter/chapter}
 % \include{5_chapter5/chapter5}	
-\include{6_conclusions/conclusions}             
+% \include{6_conclusions/conclusions}             
 
 % description of lab methods
 
@@ -387,7 +366,7 @@ commentstyle=\color{c++green},}  % edit these parameters if you want to change t
 %\bibliographystyle{Latex/Classes/jmb}
 
 % \bibliographystyle{agsm}
-\renewcommand{\bibname}{References (TODO:zotaro/zenodo fix)} % changes the header; default: Bibliography
+\renewcommand{\bibname}{References (zotaro)} % changes the header; default: Bibliography
 \bibliography{7_references/ref} % adjust this to fit your BibTex file
 
 \end{small}

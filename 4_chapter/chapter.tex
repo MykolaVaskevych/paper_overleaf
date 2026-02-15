@@ -1,0 +1,193 @@
+
+
+
+
+\chapter{Metrics}
+
+
+
+
+\section{seeds}
+\paragraph{Seeding Strategy.}
+To ensure reproducibility while avoiding correlations induced by sequential seeding,
+all experimental runs were initialized from a single \emph{master seed}.
+Individual run seeds were deterministically derived using NumPy's
+\texttt{SeedSequence} spawning mechanism.
+This approach avoids linear relationships between seeds (e.g., $0,1,\dots,14$),
+which may introduce inter-stream correlations in certain pseudorandom number
+generators
+\cite{matsumotoCommonDefectsInitialization2007}.
+All randomness sources (environment, NumPy, and PyTorch) were seeded
+using the derived run-specific seeds.
+
+
+
+\section{intro}
+This section defines what data are produced by reinforcement learning training, how we extract
+meaningful evaluation scores from that data, and what metrics we compute to compare algorithms.
+Because this study uses a small set of $M=3$ environments, \emph{per-environment} results are
+the primary evidence, and cross-environment aggregates are treated as descriptive summaries
+of the three chosen tasks rather than universal generalizations. \cite{agarwal2021precipice,patterson2024edrl}
+
+
+
+\section{Data produced by RL interaction}
+
+During training, at each time step $k$ the agent–environment interaction yields the transition tuple:
+\[
+(s_k,\,a_k,\,r_k,\,s_{k+1},\,d_k),
+\]
+where:
+\begin{itemize}
+  \item $s_k$ is the state (or observation) at time step $k$;
+  \item $a_k$ is the action taken by the agent in state $s_k$;
+  \item $r_k$ is the scalar reward received after taking action $a_k$;
+  \item $s_{k+1}$ is the next state resulting from that action;
+  \item $d_k\!\in\!\{0,1\}$ is a terminal indicator: $d_k=1$ if the episode ends after this transition
+        (by environment termination or truncation).
+\end{itemize}
+
+From this trajectory data, we do \emph{not} make algorithm comparisons directly on training rewards
+because training behavior (e.g., exploration noise, replay buffer dynamics, on- vs off-policy sampling)
+is algorithm-dependent and not a stable measure of generalization. Instead, we define a fixed
+\textbf{evaluation protocol} under which every algorithm is assessed.
+
+\section{Evaluation scores: definitions and notation}
+
+An evaluation episode has an (environment-defined) length $H$, and the \textbf{episodic return}
+is defined as:
+\[
+G \;=\; \sum_{k=0}^{H-1} r_k,
+\]
+i.e., the accumulated reward over the episode. Although many algorithms optimize discounted returns
+internally, we report undiscounted $G$ unless otherwise specified by the benchmark.
+
+We use the following index conventions throughout:
+
+\begin{itemize}
+  \item $m\in\{1,2,3\}$: index over evaluated environments (tasks),
+  \item $n\in\{1,\dots,N\}$: index over independent training runs (random seeds),
+  \item $t$: evaluation checkpoint index associated with training budget (e.g., environment steps),
+  \item $T$: the final evaluation checkpoint (end of training budget),
+  \item $E$: number of evaluation episodes at each checkpoint.
+\end{itemize}
+
+At each checkpoint $t$, we evaluate a frozen policy for $E$ episodes and store the mean
+episodic return:
+\[
+x_{m,n}(t)\;=\;\frac{1}{E}\sum_{e=1}^{E}G^{(e)}_{m,n}(t),
+\]
+where $G^{(e)}_{m,n}(t)$ is the return of the $e$-th evaluation episode on environment $m$
+for seed $n$ at checkpoint $t$.
+
+This $x_{m,n}(t)$ is the \textbf{atomic evaluation score}: all metrics below are computed from
+these logged values. At a fixed checkpoint $t$, we can organize these values into a score matrix
+\[
+X(t)\in\mathbb{R}^{N\times M},\qquad X_{n,m}(t)=x_{m,n}(t),
+\]
+with rows indexing seeds and columns indexing environments.
+
+\paragraph{Evaluation action rule.}
+We fix a single evaluation policy selection rule for all algorithms
+(e.g., greedy action for value-based methods; mean/mode action or stochastic sampling for
+policy-based methods). This rule must be explicitly documented because it affects reported
+performance. \cite{patterson2024edrl}
+
+\section{Uncertainty quantification: 95\% stratified bootstrap}
+
+Reinforcement learning exhibits high variance across independent training runs. To quantify
+statistical uncertainty in aggregate summaries, we report \textbf{95\% stratified bootstrap
+confidence intervals} for all non-point-estimate metrics. In stratified bootstrap, for each
+environment $m$ we resample the set of seeds with replacement to form a bootstrap replicate
+of the score matrix; we recompute the statistic on each replicate and take the 2.5\% and
+97.5\% percentile bounds. This procedure is recommended in the few-run regime. \cite{agarwal2021precipice}
+
+\section{Per-environment metrics (primary)}
+
+Per-environment metrics operate on the set $\{x_{m,n}(t)\}_{n=1}^N$ for a fixed environment $m$.
+
+\begin{itemize}
+
+\item \textbf{Learning curve (with uncertainty).}  
+  \textbf{Definition:} plot the central tendency (mean or median over seeds) of $x_{m,n}(t)$
+  against training budget $t$, with pointwise uncertainty bands across seeds.  
+  \textbf{Purpose:} reveals the dynamics of learning (speed, plateaus, instability) that a
+  single final number cannot capture.
+
+\item \textbf{Final performance at fixed budget $T$ (with CI).}  
+  \textbf{Definition:} summarize the set $\{x_{m,n}(T)\}_{n=1}^N$ with a central tendency
+  (mean or median) and attach a 95\% stratified bootstrap confidence interval.  
+  \textbf{Purpose:} answers ``how good is the agent after the same amount of experience?''
+  and avoids incomparable reporting based on best-ever checkpoints. \cite{agarwal2021precipice}
+
+\item \textbf{Sample efficiency.}  
+  \textbf{Definition:} one common choice is the discrete area under the curve:
+  \[
+    \mathrm{AUC}_{m,n}=\sum_{j=1}^{J}x_{m,n}(t_j)\,\bigl(t_j-t_{j-1}\bigr),
+  \]
+  optionally normalized by the total budget $t_J=T$.  
+  \textbf{Purpose:} captures how quickly the agent acquires reward; higher AUC indicates
+  faster learning under the same interaction budget.
+
+\item \textbf{Reliability across seeds (variability + tail).}  
+  \textbf{Definition:} compute the interquartile range (IQR) of $\{x_{m,n}(T)\}_n$, and, if
+  supported by enough seeds, the conditional value at risk (CVaR$_\alpha$) of the worst
+  $\alpha$ fraction of seeds.  
+  \textbf{Purpose:} captures robustness and worst-case behavior across independent runs.
+  \cite{chan2020reliability}
+
+\item \textbf{Success rate (optional).}  
+  \textbf{Definition:} if the environment defines a binary success condition, define
+  $\mathrm{SR}_{m,n}(t)=\frac{1}{E}\sum_{e=1}^E\mathbb{I}[\text{episode $e$ is success}]$.  
+  \textbf{Purpose:} success rate can be more interpretable than raw returns on sparse-goal tasks.
+
+\end{itemize}
+
+\section{Cross-environment metrics (secondary summaries)}
+
+Cross-environment metrics summarize the score matrix $X(T)$ at the final budget. With
+$M=3$ diagnostic environments, these are descriptive summaries rather than claims of
+general performance across all tasks. \cite{agarwal2021precipice,patterson2024edrl}
+
+\begin{itemize}
+
+\item \textbf{Interquartile mean (IQM) + CI.}  
+  \textbf{Definition:} pool the $MN$ values in $X(T)$, trim the lowest 25\% and highest 25\%,
+  and average the remaining middle 50\%.  
+  \textbf{Purpose:} a robust overall score that discounts extremes and often yields tighter
+  uncertainty in the few-run regime. \cite{agarwal2021precipice}
+
+\item \textbf{Aggregate mean and median + CI.}  
+  \textbf{Definition:} per-env mean $\bar{x}_m=\frac{1}{N}\sum_{n}x_{m,n}(T)$,
+  Mean$=\frac{1}{M}\sum_m\bar{x}_m$, Median$=\mathrm{median}(\bar{x}_1,\dots,\bar{x}_M)$.  
+  \textbf{Purpose:} traditional summaries included for comparability; interpret with caution
+  when $M$ is small or score scales differ.
+
+\item \textbf{Probability of improvement (pairwise A vs B) + CI.}  
+  \textbf{Definition:} for each environment $m$, estimate
+  $P_m=\Pr(x^A_{m,\cdot}>x^B_{m,\cdot})$ across seeds; report $\frac{1}{M}\sum_mP_m$ with bootstrap
+  uncertainty.  
+  \textbf{Purpose:} interpretable probability that A outperforms B on a randomly chosen seed
+  and environment. \cite{agarwal2021precipice}
+
+\item \textbf{Performance profile (tail distribution).}  
+  \textbf{Definition:} for threshold $\tau$, define
+  $\hat{F}(\tau)=\frac{1}{MN}\sum_{m,n}\mathbb{I}[x_{m,n}(T)\ge\tau]$, with pointwise CI bands.  
+  \textbf{Purpose:} visualizes the spectrum of outcomes (including failure probabilities).
+  \cite{agarwal2021precipice}
+
+\item \textbf{Optimality gap (if a meaningful target).}  
+  \textbf{Definition:} for target $\tau$, compute
+  $\mathrm{Gap}(\tau)=\tau-\frac{1}{MN}\sum_{m,n}\min(x_{m,n}(T),\tau)$.  
+  \textbf{Purpose:} measures shortfall from a predefined target while clipping large outliers.
+
+\end{itemize}
+
+\section{Reporting and reproducibility}
+
+For each experiment we report: number of seeds $N$, evaluation episodes $E$,
+total training budget and evaluation frequency, evaluation action rule, and hyperparameter
+configuration. To support reproducibility and meaningful comparison, we will provide
+code, fixed random seeds, configuration files, and software/hardware details. \cite{henderson2018matters,colas2018seeds}
+
+

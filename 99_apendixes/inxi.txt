@@ -1,0 +1,181 @@
+System:
+  Kernel: 6.18.7-zen1-1-zen arch: x86_64 bits: 64 compiler: gcc v: 15.2.1
+    clocksource: tsc avail: hpet,acpi_pm
+    parameters: BOOT_IMAGE=/vmlinuz-linux-zen
+    root=/dev/mapper/ArchinstallVg-root rw rootflags=subvol=@
+    root=/dev/ArchinstallVg/root zswap.enabled=0 rootfstype=btrfs loglevel=3
+    quiet
+  Desktop: KDE Plasma v: 6.5.5 tk: Qt v: N/A info: frameworks v: 6.22.0
+    wm: kwin_wayland vt: 1 dm: SDDM Distro: Arch Linux
+Machine:
+  Type: Desktop System: Gigabyte product: B650M AORUS ELITE AX v: -CF
+    serial: <superuser required>
+  Mobo: Gigabyte model: B650M AORUS ELITE AX v: x.x
+    serial: <superuser required> uuid: <superuser required> Firmware: UEFI
+    vendor: American Megatrends LLC. v: F4 date: 03/22/2023
+Battery:
+  Device-1: hidpp_battery_0 model: Logitech MX Vertical Advanced Ergonomic
+    Mouse serial: <filter> charge: 50% (should be ignored) rechargeable: yes
+    status: N/A
+CPU:
+  Info: model: AMD Ryzen 7 7800X3D bits: 64 type: MT MCP arch: Zen 4 gen: 4
+    level: v4 note: check built: 2022+ process: TSMC n5 (5nm) family: 0x19 (25)
+    model-id: 0x61 (97) stepping: 2 microcode: 0xA60120A
+  Topology: cpus: 1x dies: 1 clusters: 1 cores: 8 threads: 16 tpc: 2
+    smt: enabled cache: L1: 512 KiB desc: d-8x32 KiB; i-8x32 KiB L2: 8 MiB
+    desc: 8x1024 KiB L3: 96 MiB desc: 1x96 MiB
+  Speed (MHz): avg: 2983 min/max: 426/5053 boost: enabled scaling:
+    driver: amd-pstate-epp governor: performance cores: 1: 2983 2: 2983 3: 2983
+    4: 2983 5: 2983 6: 2983 7: 2983 8: 2983 9: 2983 10: 2983 11: 2983 12: 2983
+    13: 2983 14: 2983 15: 2983 16: 2983 bogomips: 134403
+  Flags-basic: avx avx2 ht lm nx pae sse sse2 sse3 sse4_1 sse4_2 sse4a
+    ssse3 svm
+  Vulnerabilities:
+  Type: gather_data_sampling status: Not affected
+  Type: ghostwrite status: Not affected
+  Type: indirect_target_selection status: Not affected
+  Type: itlb_multihit status: Not affected
+  Type: l1tf status: Not affected
+  Type: mds status: Not affected
+  Type: meltdown status: Not affected
+  Type: mmio_stale_data status: Not affected
+  Type: old_microcode status: Not affected
+  Type: reg_file_data_sampling status: Not affected
+  Type: retbleed status: Not affected
+  Type: spec_rstack_overflow mitigation: Safe RET
+  Type: spec_store_bypass mitigation: Speculative Store Bypass disabled via
+    prctl
+  Type: spectre_v1 mitigation: usercopy/swapgs barriers and __user pointer
+    sanitization
+  Type: spectre_v2 mitigation: Enhanced / Automatic IBRS; IBPB:
+    conditional; STIBP: always-on; PBRSB-eIBRS: Not affected; BHI: Not
+    affected
+  Type: srbds status: Not affected
+  Type: tsa mitigation: Clear CPU buffers
+  Type: tsx_async_abort status: Not affected
+  Type: vmscape mitigation: IBPB before exit to userspace
+Graphics:
+  Device-1: NVIDIA AD102 [GeForce RTX 4090] vendor: Micro-Star MSI
+    driver: nvidia v: 590.48.01 alternate: nouveau,nvidia_drm
+    non-free: 550-580.xx+ status: current (as of 2025-11) arch: Lovelace
+    code: AD1xx process: TSMC n4 (5nm) built: 2022+ pcie: gen: 4
+    speed: 16 GT/s lanes: 16 ports: active: DP-2 empty: DP-1,DP-3,HDMI-A-1
+    bus-ID: 01:00.0 chip-ID: 10de:2684 class-ID: 0300
+  Device-2: Advanced Micro Devices [AMD/ATI] Raphael vendor: Gigabyte
+    driver: amdgpu v: kernel arch: RDNA-2 code: Navi-2x process: TSMC n7 (7nm)
+    built: 2020-22 pcie: gen: 4 speed: 16 GT/s lanes: 16 ports: active: none
+    empty: DP-4, DP-5, DP-6, HDMI-A-2, Writeback-1 bus-ID: 11:00.0
+    chip-ID: 1002:164e class-ID: 0300 temp: 45.0 C
+  Device-3: Remo Tech OBSBOT Tiny 2 Lite driver: snd-usb-audio,uvcvideo
+    type: USB rev: 2.0 speed: 480 Mb/s lanes: 1 mode: 2.0 bus-ID: 3-1:2
+    chip-ID: 3564:fef9 class-ID: 0102
+  Display: wayland server: X.org v: 1.21.1.21 with: Xwayland v: 24.1.9
+    compositor: kwin_wayland driver: X: loaded: modesetting,nvidia
+    alternate: fbdev,nouveau,nv,vesa dri: radeonsi
+    gpu: nv_platform,nvidia,nvidia-nvswitch display-ID: 0
+  Monitor-1: DP-2 model: Gigabyte M32U serial: <filter> built: 2022 res:
+    mode: 3840x2160 hz: 144 scale: 145% (1.45) to: 2648x1490 dpi: 140 gamma: 1.2
+    size: 697x392mm (27.44x15.43") diag: 800mm (31.5") ratio: 16:9 modes:
+    max: 3840x2160 min: 640x480
+  API: EGL v: 1.5 hw: drv: nvidia drv: amd radeonsi platforms: device: 0
+    drv: nvidia device: 1 drv: radeonsi device: 3 drv: swrast gbm: drv: radeonsi
+    surfaceless: drv: nvidia wayland: drv: nvidia x11: drv: nvidia
+    inactive: device-2
+  API: OpenGL v: 4.6.0 compat-v: 4.5 vendor: nvidia mesa v: 25.3.4-arch1.1
+    glx-v: 1.4 direct-render: yes renderer: NVIDIA GeForce RTX 4090/PCIe/SSE2
+    memory: 23.43 GiB display-ID: :0.0
+  API: Vulkan v: 1.4.335 layers: 6 device: 0 type: discrete-gpu
+    name: NVIDIA GeForce RTX 4090 driver: nvidia v: 590.48.01
+    device-ID: 10de:2684 surfaces: N/A
+  Info: Tools: api: clinfo, eglinfo, glxinfo, vulkaninfo
+    de: kscreen-console,kscreen-doctor gpu: nvidia-smi wl: wayland-info
+    x11: xdpyinfo, xprop, xrandr
+Audio:
+  Device-1: NVIDIA AD102 High Definition Audio vendor: Micro-Star MSI
+    driver: snd_hda_intel v: kernel pcie: gen: 4 speed: 16 GT/s lanes: 16
+    bus-ID: 01:00.1 chip-ID: 10de:22ba class-ID: 0403
+  Device-2: Advanced Micro Devices [AMD/ATI] Radeon High Definition Audio
+    driver: snd_hda_intel v: kernel pcie: gen: 4 speed: 16 GT/s lanes: 16
+    bus-ID: 11:00.1 chip-ID: 1002:1640 class-ID: 0403
+  Device-3: Advanced Micro Devices [AMD] Ryzen HD Audio vendor: Gigabyte
+    driver: snd_hda_intel v: kernel pcie: gen: 4 speed: 16 GT/s lanes: 16
+    bus-ID: 11:00.6 chip-ID: 1022:15e3 class-ID: 0403
+  Device-4: fifine Microphone driver: hid-generic,snd-usb-audio,usbhid
+    type: USB rev: 1.1 speed: 12 Mb/s lanes: 1 mode: 1.1 bus-ID: 1-4.2:6
+    chip-ID: 3142:a008 class-ID: 0300
+  Device-5: Logitech PRO X 2 LIGHTSPEED
+    driver: hid-generic,snd-usb-audio,usbhid type: USB rev: 2.0 speed: 12 Mb/s
+    lanes: 1 mode: 1.1 bus-ID: 1-4.3.1:8 chip-ID: 046d:0af7 class-ID: 0300
+    serial: <filter>
+  Device-6: Remo Tech OBSBOT Tiny 2 Lite driver: snd-usb-audio,uvcvideo
+    type: USB rev: 2.0 speed: 480 Mb/s lanes: 1 mode: 2.0 bus-ID: 3-1:2
+    chip-ID: 3564:fef9 class-ID: 0102
+  API: ALSA v: k6.18.7-zen1-1-zen status: kernel-api tools: N/A
+  Server-1: sndiod v: N/A status: off tools: aucat,midicat,sndioctl
+  Server-2: PipeWire v: 1.4.10 status: active with: 1: pipewire-pulse
+    status: active 2: wireplumber status: active 3: pipewire-alsa type: plugin
+    4: pw-jack type: plugin tools: pactl,pw-cat,pw-cli,wpctl
+Network:
+  Device-1: Realtek RTL8125 2.5GbE vendor: Gigabyte driver: r8169 v: kernel
+    pcie: gen: 2 speed: 5 GT/s lanes: 1 port: e000 bus-ID: 0c:00.0
+    chip-ID: 10ec:8125 class-ID: 0200
+  IF: enp12s0 state: up speed: 100 Mbps duplex: full mac: <filter>
+  Device-2: MEDIATEK MT7922 802.11ax PCI Express Wireless Network Adapter
+    driver: mt7921e v: kernel pcie: gen: 2 speed: 5 GT/s lanes: 1
+    bus-ID: 0d:00.0 chip-ID: 14c3:0616 class-ID: 0280
+  IF: wlan0 state: down mac: <filter>
+  IF-ID-1: br-e3554bc6abd9 state: up speed: 10000 Mbps duplex: unknown
+    mac: <filter>
+  IF-ID-2: docker0 state: down mac: <filter>
+  IF-ID-3: veth5ca5eee state: up speed: 10000 Mbps duplex: full
+    mac: <filter>
+  Info: services: NetworkManager, systemd-timesyncd, wpa_supplicant
+Bluetooth:
+  Device-1: MediaTek Wireless_Device driver: btusb v: 0.8 type: USB rev: 2.1
+    speed: 480 Mb/s lanes: 1 mode: 2.0 bus-ID: 1-6:3 chip-ID: 0e8d:0616
+    class-ID: e001 serial: <filter>
+  Report: hciconfig ID: hci0 rfk-id: 2 state: up address: <filter> bt-v: 5.3
+    lmp-v: 12 sub-v: 2511 hci-v: 12 rev: 1816 class-ID: 6c0104
+  Info: acl-mtu: 1021:6 sco-mtu: 240:8 link-policy: rswitch sniff
+    link-mode: peripheral accept service-classes: rendering, capturing, audio,
+    telephony
+Drives:
+  Local Storage: total: 4.55 TiB used: 1.71 TiB (37.5%)
+  SMART Message: Unable to run smartctl. Root privileges required.
+  ID-1: /dev/nvme0n1 maj-min: 259:1 vendor: Western Digital
+    model: WD BLACK SN850X 4000GB size: 3.64 TiB block-size: physical: 512 B
+    logical: 512 B speed: 63.2 Gb/s lanes: 4 tech: SSD serial: <filter>
+    fw-rev: 624311WD temp: 39.9 C
+  ID-2: /dev/nvme1n1 maj-min: 259:0 vendor: Western Digital
+    model: WD BLACK SN850X 1000GB size: 931.51 GiB block-size: physical: 512 B
+    logical: 512 B speed: 63.2 Gb/s lanes: 4 tech: SSD serial: <filter>
+    fw-rev: 620331WD temp: 39.9 C scheme: GPT
+Partition:
+  ID-1: / raw-size: 4.55 TiB size: 4.55 TiB (100.00%) used: 1.71 TiB (37.5%)
+    fs: btrfs dev: /dev/dm-0 maj-min: 253:0 mapped: ArchinstallVg-root
+  ID-2: /boot raw-size: 1024 MiB size: 1022 MiB (99.80%)
+    used: 550.6 MiB (53.9%) fs: vfat dev: /dev/nvme1n1p1 maj-min: 259:2
+  ID-3: /home raw-size: 4.55 TiB size: 4.55 TiB (100.00%)
+    used: 1.71 TiB (37.5%) fs: btrfs dev: /dev/dm-0 maj-min: 253:0
+    mapped: ArchinstallVg-root
+  ID-4: /var/log raw-size: 4.55 TiB size: 4.55 TiB (100.00%)
+    used: 1.71 TiB (37.5%) fs: btrfs dev: /dev/dm-0 maj-min: 253:0
+    mapped: ArchinstallVg-root
+Swap:
+  Kernel: swappiness: 60 (default) cache-pressure: 100 (default) zswap: no
+  ID-1: swap-1 type: zram size: 4 GiB used: 3.7 GiB (92.5%) priority: 100
+    comp: zstd avail: lzo-rle,lzo,lz4,lz4hc,deflate,842 dev: /dev/zram0
+Sensors:
+  System Temperatures: cpu: 53.8 C mobo: 38.0 C gpu: amdgpu temp: 45.0 C
+  Fan Speeds (rpm): N/A
+Info:
+  Memory: total: 32 GiB note: est. available: 30.49 GiB
+    used: 13.25 GiB (43.4%)
+  Processes: 479 Power: uptime: 1d 19h 7m states: freeze,mem,disk
+    suspend: deep avail: s2idle wakeups: 1 hibernate: platform avail: shutdown,
+    reboot, suspend, test_resume image: 12.1 GiB services: org_kde_powerdevil,
+    power-profiles-daemon, upowerd Init: systemd v: 259 default: graphical
+    tool: systemctl
+  Packages: 1609 pm: pacman pkgs: 1597 libs: 328 tools: paru pm: flatpak
+    pkgs: 12 Compilers: clang: 21.1.6 gcc: 15.2.1 Shell: Bash v: 5.3.9
+    running-in: kitty inxi: 3.3.40
