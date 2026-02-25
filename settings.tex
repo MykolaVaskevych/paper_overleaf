@@ -1,0 +1,74 @@
+\documentclass[twoside,12pt]{Latex/Classes/PhDthesisPSnPDF}
+
+\usepackage{natbib}
+\usepackage{url}
+\usepackage{alltt}
+\usepackage{multirow}
+\usepackage{color}
+
+
+
+\newcommand{\urlwofont}[1]
+{
+\urlstyle{same}\url{#1}
+}
+
+
+\usepackage{mathtools}
+\usepackage{bbm}
+\usepackage{booktabs}
+\usepackage{subcaption}
+
+% to Display C++ code
+\definecolor{c++red}{rgb}{0.6,0,0} % for strings
+\definecolor{c++green}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{c++purple}{rgb}{0.5,0,0.35} % keyword
+\usepackage{listings}
+\lstset{language=C++}
+
+
+\makeatletter
+\def\url@leostyle{%
+  \@ifundefined{selectfont}{\def\UrlFont{\sf}}{\def\UrlFont{\small\ttfamily}}}
+\makeatother
+\urlstyle{leo}
+
+\input{Latex/Macros/MacroFile1}
+
+
+
+%: ----------------------------------------------------------------------
+%:                  TITLE PAGE: name, degree,..t
+% ----------------------------------------------------------------------
+
+\title{A Comparative Analysis of Deep Q-Network and Actor--Critic Reinforcement Learning Algorithms}
+\renewcommand{\submittedtext}{\Large Interim Report}
+
+
+% ----------------------------------------------------------------------
+% The section below defines www links/email for author and institutions
+% They will appear on the title page of the PDF and can be clicked
+\ifpdf
+  \author{\href{mailto: 22372199@studentmail.ul.ie}{Mykola Vaskevych}}
+
+\researchcentre{}
+  \faculty{\href{http://www.ul.ie}{Department of Computer Science \& Information Systems}}
+  \department{\href{http://www.csis.ul.ie}{Faculty of Science and Engineering}}
+  \university{\href{http://www.ul.ie}{University of Limerick}}
+
+  % The crest is a graphics file of the logo of your research institution.
+  % Place it in ./0_frontmatter/figures and specify the width
+  \crest{\includegraphics[scale=.45]{logonew2020.jpg}}
+
+\else
+  \fi
+
+\degree{Bachelor of Science in Computer Systems}
+\degreedate{2025 - 2026}
+
+
+% ----------------------------------------------------------------------
+
+% turn of those nasty overfull and underfull hboxes
+\hbadness=10000
+\hfuzz=50pt
