@@ -8,3 +8,8 @@ rewrite why cpu and not gpu parts (also has dubs)
 
 increase M = 3 to something more?
 
+regenerate plots to fix nicely
+
+fix red text
+
+ask JJ todo proper
