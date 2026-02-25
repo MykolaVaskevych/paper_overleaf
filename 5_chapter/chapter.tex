@@ -56,16 +56,20 @@ execution.
 This shift has a reproducibility trade-off. PyTorch's deterministic
 mode guarantees bitwise reproducibility only on CPU; GPU kernel
 scheduling introduces non-deterministic floating-point accumulation
-order \citep{pytorch_reproducibility}. To compensate, Experiment~2
+order \citep{pytorch_reproducibility}. 
+
+To compensate, Experiment~2
 uses \emph{statistical validity} via 10 independent seeds rather than
-the bitwise reproducibility strategy of Experiment~1.
+the bitwise reproducibility strategy of Experiment~1. \textbf{\textit{(rephrase this)}}
 
 One procedural note: DQN$\times$Pong seeds~1--7 were trained with
 \texttt{n\_envs=8} (8 parallel sub-environments via
 \texttt{SubprocVecEnv}), while all remaining runs used
 \texttt{n\_envs=16}. The evaluation pipeline truncates to the minimum
 checkpoint count across seeds, so all metrics remain comparable. The
-impact on learning dynamics is expected to be minimal.
+impact on learning dynamics is expected to be minimal. 
+
+\textbf{\textit{TODO: redo this seeds if not forget about it, gosh its tiresome}}
 
 \subsection{Algorithms, Environments, and Protocol}
 \label{sec:atari-protocol}
