@@ -1,0 +1,10 @@
+remove dqn with memory
+
+remove unused metrics from list
+
+regenerate plots due to dqn removal
+
+rewrite why cpu and not gpu parts (also has dubs)
+
+increase M = 3 to something more?
+

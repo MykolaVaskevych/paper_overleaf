@@ -100,7 +100,7 @@ statistical uncertainty in aggregate summaries, we report \textbf{95\% stratifie
 confidence intervals} for all non-point-estimate metrics. In stratified bootstrap, for each
 environment $m$ we resample the set of seeds with replacement to form a bootstrap replicate
 of the score matrix; we recompute the statistic on each replicate and take the 2.5\% and
-97.5\% percentile bounds. This procedure is recommended in the few-run regime. \cite{agarwal2021precipice}
+97.5\% percentile bounds. This procedure is recommended in the few-run scenarios. \cite{agarwal2021precipice}
 
 \section{Per-environment metrics (primary)}
 
@@ -246,13 +246,13 @@ An early design decision was whether to train locally or on Google
 Colab. I chose local training for four reasons:
 
 \begin{enumerate}
-  \item \textbf{RL bottlenecks on CPU, not GPU.}
+  \item \textbf{RL bottlenecks on CPU, not GPU. (REMOVE?)}
         Classic-control environments are simulated entirely on the CPU,
         and the MLP policies used here are small enough that GPU
         offloading provides no throughput benefit---the PCIe transfer
         latency dominates.
 
-  \item \textbf{Deterministic seeding requires CPU-only execution.}
+  \item \textbf{Deterministic seeding requires CPU-only execution. (REMOVE?)}
         PyTorch's deterministic mode guarantees bitwise reproducibility
         only when all computation stays on the CPU; the same seeds
         produce different trajectories on GPU due to non-deterministic
@@ -292,8 +292,11 @@ Five algorithms spanning two families were evaluated:
 All implementations are from Stable-Baselines3 (v2.7.1) \citep{raffin2021sb3},
 with QR-DQN and RecurrentPPO from the \texttt{sb3-contrib} extension.
 Default hyperparameters were used throughout; no algorithm-specific tuning
-was performed. All algorithms used \texttt{MlpPolicy} except RPPO, which
-used \texttt{MlpLstmPolicy}.
+was performed.
+\textcolor{red}{\textbf{TODO:} Explain why no hypers where tuned, blah blah}
+
+All algorithms used \texttt{MlpPolicy} except RPPO, which
+used \texttt{MlpLstmPolicy}. cite(https://stable-baselines.readthedocs.io/en/master/modules/policies.html)
 
 \textcolor{red}{\textbf{TODO:} Cross-reference Literature Review (Ch.\ 2) for algorithm descriptions.}
 
