@@ -8,10 +8,12 @@ deterministic seeding. This chapter scales the comparison to
 pixel-based Atari games, narrowing the algorithm set to the two
 most representative families---DQN (off-policy, value-based) and PPO
 (on-policy, actor--critic)---and training with convolutional neural
-networks on GPU. The purpose is to test whether the DQN-vs-PPO
+networks on GPU. I wanted to test whether the DQN-vs-PPO
 relationship observed in Experiment~1 holds when the observation space
 shifts from low-dimensional vectors to raw pixel frames processed by
-CNNs.
+CNNs. I begin with the experimental setup and hypotheses, then present
+per-environment and cross-environment results, and close with a
+discussion of what matched my expectations and what surprised me.
 
 %% ------------------------------------------------------------------
 \section{Experimental Setup}
@@ -56,11 +58,12 @@ execution.
 This shift has a reproducibility trade-off. PyTorch's deterministic
 mode guarantees bitwise reproducibility only on CPU; GPU kernel
 scheduling introduces non-deterministic floating-point accumulation
-order \citep{pytorch_reproducibility}. 
-
-To compensate, Experiment~2
-uses \emph{statistical validity} via 10 independent seeds rather than
-the bitwise reproducibility strategy of Experiment~1. \textbf{\textit{(rephrase this)}}
+order \citep{pytorch_reproducibility}. Both experiments use multiple
+independent seeds for statistical validity, but Experiment~1
+additionally achieves bitwise determinism---any researcher can re-run a
+seed and obtain identical results. I compensated for the loss of bitwise
+reproducibility by relying entirely on the 10-seed ensemble and its
+resulting confidence intervals to establish robust conclusions.
 
 One procedural note: DQN$\times$Pong seeds~1--7 were trained with
 \texttt{n\_envs=8} (8 parallel sub-environments via
@@ -69,7 +72,7 @@ One procedural note: DQN$\times$Pong seeds~1--7 were trained with
 checkpoint count across seeds, so all metrics remain comparable. The
 impact on learning dynamics is expected to be minimal. 
 
-\textbf{\textit{TODO: redo this seeds if not forget about it, gosh its tiresome}}
+\textcolor{red}{\textbf{TODO:} Retrain DQN$\times$Pong seeds 1--7 with \texttt{n\_envs=16} for consistency.}
 
 \subsection{Algorithms, Environments, and Protocol}
 \label{sec:atari-protocol}
@@ -110,7 +113,7 @@ SB3's \texttt{evaluate\_policy()}, which reads the true episode returns
 from the \texttt{Monitor} wrapper, bypassing the
 \texttt{ClipRewardEnv} that clips training rewards to $\{-1, 0, +1\}$.
 
-Raw returns were normalised using the same formula as Chapter~5:
+Raw returns were normalised using the same formula as Chapter~4:
 \[
   \bar{x}_{m,n} = \frac{x_{m,n} - x^{\text{random}}_m}
                        {x^{\max}_m - x^{\text{random}}_m},
@@ -155,14 +158,40 @@ Before viewing the results, I formed the following expectations:
 \section{Training Summary}
 \label{sec:atari-training}
 
-PPO training times were recorded for all 10 Breakout seeds and 3 Pong
-seeds (the remaining Pong seeds predated the timing instrumentation).
-The total recorded PPO training time was approximately
-\textbf{55{,}927\,s ($\approx$15.5~hours)}: Pong averaged
-${\sim}5{,}771$\,s/seed and Breakout averaged ${\sim}3{,}861$\,s/seed.
-DQN training times were not recorded, as training predated the timing
-instrumentation added to the pipeline. Based on similar compute
-profiles, total DQN training is estimated at 8--15~hours.
+Table~\ref{tab:atari-training-time} reports the wall-clock training
+times for all 40 runs (2 algorithms $\times$ 2 environments $\times$
+10 seeds). The total compute was approximately
+\textbf{52~hours}: PPO required $98{,}073$\,s (${\approx}27$\,h)
+and DQN $89{,}031$\,s (${\approx}25$\,h).
+
+\begin{table}[htbp!]
+\centering
+\caption{Wall-clock training time (seconds) per algorithm, summed over
+         10 seeds per environment.}
+\label{tab:atari-training-time}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Environment} & \textbf{PPO} & \textbf{DQN} \\
+\midrule
+Pong      & 59{,}569 & 68{,}542 \\
+Breakout  & 38{,}504 & 20{,}489 \\
+\midrule
+\textbf{Total} & 98{,}073 & 89{,}031 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+DQN$\times$Pong appears slower than PPO$\times$Pong
+($68{,}542$\,s vs $59{,}569$\,s), but this comparison is confounded:
+seeds~1--7 used \texttt{n\_envs=8} rather than~16, roughly halving
+their throughput.
+
+\textcolor{red}{\textbf{TODO:} Retrain DQN$\times$Pong seeds 1--7
+with \texttt{n\_envs=16}; this will also produce fair timing data.}
+
+\textcolor{red}{\textbf{TODO:} Add timing instrumentation to
+\texttt{train.py}/\texttt{run.sh} so all future runs capture
+wall-clock time automatically.}
 
 %% ------------------------------------------------------------------
 \section{Per-Environment Results}
@@ -171,7 +200,7 @@ profiles, total DQN training is estimated at 8--15~hours.
 \subsection{Pong}
 \label{sec:pong}
 
-PPO nearly solves Pong, achieving a mean raw return of $20.05$ out of
+As I expected, PPO nearly solved Pong, achieving a mean raw return of $20.05$ out of
 a maximum of $21$. The normalised IQM is $0.983$
 $[0.963,\;0.993]$---all 10 seeds fall between $17.90$ and $21.00$
 with an IQR of just $1.08$. This level of consistency matches PPO's
@@ -195,8 +224,8 @@ Figure~\ref{fig:atari-lc-pong} shows the learning curves.
 \subsection{Breakout}
 \label{sec:breakout}
 
-The surprise of this experiment: DQN outperforms PPO on Breakout.
-DQN achieves a mean raw return of $43.62$ versus PPO's $32.51$, with
+The surprise was that DQN outperformed PPO on Breakout.
+DQN achieved a mean raw return of $43.62$ versus PPO's $32.51$, with
 normalised IQM $0.100$ $[0.080,\;0.131]$ for DQN and $0.078$
 $[0.062,\;0.095]$ for PPO. However, both algorithms achieve less than
 11\% of the maximum return ($400$)---Breakout is far from solved.
@@ -419,6 +448,8 @@ deficit, preventing a clear-cut verdict.
 \subsection{Wall-Clock Timing Analysis}
 \label{sec:atari-timing}
 
+Training times are reported in Table~\ref{tab:atari-training-time}
+(Section~\ref{sec:atari-training}). Here I focus on evaluation timing.
 Figure~\ref{fig:atari-timing} shows the evaluation timing breakdown.
 PPO evaluation took $1{,}256$\,s total ($823$\,s Pong, $434$\,s
 Breakout); DQN evaluation took $2{,}133$\,s total ($1{,}704$\,s Pong,
@@ -426,6 +457,11 @@ $429$\,s Breakout). DQN's Pong evaluation is disproportionately slow
 because lower scores mean longer episodes (the opponent scores points
 more slowly when the agent puts up some resistance, but not enough
 to win quickly).
+
+Combining training and evaluation, the total wall-clock cost of
+Experiment~2 was approximately $190{,}462$\,s (${\approx}53$\,h):
+$99{,}329$\,s for PPO and $91{,}164$\,s for DQN. Training dominates
+the budget---evaluation accounts for less than 2\% of the total.
 
 \begin{figure}[htbp!]
   \centering
@@ -493,14 +529,14 @@ environment accurately.
 In Experiment~1, PPO dominated across all three classic-control
 environments (cross-environment IQM $0.981$, $P > 0.89$ against
 every competitor). In Experiment~2, PPO still leads overall (IQM
-$0.529$ vs $0.130$), but the picture is more nuanced. The key
-difference is the observation space: pixel-based observations with
+$0.529$ vs $0.130$), but the picture is more nuanced. I attribute
+this to the observation space: pixel-based observations with
 longer horizons and sparser rewards (Breakout) create conditions
-where DQN's replay buffer provides a genuine advantage. DQN's
-failure on classic-control was a budget issue---200K steps with
-SB3's default $\varepsilon$-greedy schedule was insufficient. On
-Atari with 5M steps, DQN has enough data to show its strengths,
-at least on Breakout.
+where DQN's replay buffer provides a genuine advantage. I now
+believe DQN's failure on classic-control was a budget issue---200K
+steps with SB3's default $\varepsilon$-greedy schedule was
+insufficient. On Atari with 5M steps, DQN has enough data to show
+its strengths, at least on Breakout.
 
 \paragraph{Methodological notes.}
 The standard Atari wrapper stack includes \texttt{ClipRewardEnv},
@@ -513,12 +549,11 @@ returns from the \texttt{Monitor} wrapper, bypassing
 \texttt{ClipRewardEnv}. This distinction was critical for obtaining
 meaningful Breakout scores.
 
-The \texttt{n\_envs} mismatch for DQN$\times$Pong seeds~1--7 (8 vs
-16 parallel sub-environments) is acknowledged. The evaluation pipeline
-truncates to the minimum checkpoint count, ensuring metric
-comparability. The effect on final performance is expected to be
-minimal, as the total training budget (5M steps) is identical across
-all seeds.
+I acknowledge the \texttt{n\_envs} mismatch for DQN$\times$Pong
+seeds~1--7 (8 vs 16 parallel sub-environments). The evaluation
+pipeline truncates to the minimum checkpoint count, ensuring metric
+comparability. I expect the effect on final performance to be minimal,
+as the total training budget (5M steps) is identical across all seeds.
 
 \paragraph{Limitations.}
 Several limitations constrain the generalisability of these results:
@@ -539,9 +574,6 @@ Several limitations constrain the generalisability of these results:
   \item \textbf{GPU non-determinism.} Unlike Experiment~1, bitwise
         reproducibility is not possible. Results depend on statistical
         validity from 10~seeds rather than deterministic verification.
-  \item \textbf{Missing DQN training times.} DQN training predated
-        the timing instrumentation, so training cost cannot be compared
-        fairly between algorithms.
 \end{itemize}
 
 \paragraph{Future work.}
