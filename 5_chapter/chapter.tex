@@ -25,7 +25,7 @@ Experiment~1 (Table~\ref{tab:hardware}), but this time the GPU was
 actively used for training. Table~\ref{tab:atari-hardware} summarises
 the configuration.
 
-\begin{table}[ht]
+\begin{table}[htbp!]
 \centering
 \caption{Hardware and software configuration for Experiment~2.}
 \label{tab:atari-hardware}
@@ -183,7 +183,7 @@ negative, with scores ranging from $-18.90$ to $10.72$ (IQR $8.87$).
 The best DQN seed ($10.72$) is still well below PPO's worst ($17.90$).
 Figure~\ref{fig:atari-lc-pong} shows the learning curves.
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{5_chapter/assets/learning_curves_pong.png}
   \caption{Learning curves for Pong. PPO converges near the maximum
@@ -208,7 +208,7 @@ it can revisit rare brick-breaking trajectories that an on-policy
 method like PPO discards after each update.
 Figure~\ref{fig:atari-lc-breakout} shows the learning curves.
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{5_chapter/assets/learning_curves_breakout.png}
   \caption{Learning curves for Breakout. DQN slightly outperforms PPO,
@@ -225,7 +225,7 @@ a steep rise to near $1.0$; the Breakout curves for both algorithms
 remain compressed near the bottom of the scale, with DQN slightly
 ahead.
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{5_chapter/assets/combined_learning_curves.png}
   \caption{Combined normalised learning curves for Pong and Breakout.
@@ -247,7 +247,7 @@ the Breakout column is uniformly red for both algorithms. The
 box-and-swarm plot (Figure~\ref{fig:atari-boxswarm}) highlights DQN's
 wide spread on both environments.
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{5_chapter/assets/score_distribution.png}
   \caption{Distribution of normalised scores per environment. PPO Pong
@@ -256,7 +256,7 @@ wide spread on both environments.
   \label{fig:atari-score-dist}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{5_chapter/assets/per_seed_heatmap.png}
   \caption{Heatmap of normalised final scores by seed and environment.
@@ -265,7 +265,7 @@ wide spread on both environments.
   \label{fig:atari-heatmap}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{5_chapter/assets/per_seed_boxswarm.png}
   \caption{Box-and-swarm plot of per-seed normalised scores. DQN
@@ -276,7 +276,7 @@ wide spread on both environments.
 Table~\ref{tab:atari-per-env-iqm} summarises the per-environment
 normalised IQM with 95\% bootstrap confidence intervals.
 
-\begin{table}[ht]
+\begin{table}[htbp!]
 \centering
 \caption{Per-environment normalised IQM with 95\% bootstrap CIs.}
 \label{tab:atari-per-env-iqm}
@@ -302,7 +302,7 @@ metrics at the final training budget. PPO achieves a higher IQM
 ($0.529$) than DQN ($0.130$), but this is heavily driven by PPO's
 near-perfect Pong performance. Both optimality gaps are large.
 
-\begin{table}[ht]
+\begin{table}[htbp!]
 \centering
 \caption{Cross-environment aggregate metrics (normalised scores). IQM,
          mean, and median are reported with 95\% bootstrap CIs.}
@@ -322,7 +322,7 @@ DQN & $0.130\;[0.098,\;0.184]$ & $0.195\;[0.129,\;0.272]$
 \end{tabular}
 \end{table}
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{5_chapter/assets/final_performance.png}
   \caption{Cross-environment IQM, mean, and median with 95\% bootstrap
@@ -340,7 +340,7 @@ $\tau = 0.92$: half its runs (the Pong seeds) score near $1.0$
 while the other half (Breakout seeds) cluster near $0.08$, with
 nothing in between. DQN drops below $0.50$ at $\tau = 0.12$.
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{5_chapter/assets/performance_profile.png}
   \caption{Performance profiles with 95\% bootstrap CIs. PPO's flat
@@ -348,7 +348,7 @@ nothing in between. DQN drops below $0.50$ at $\tau = 0.12$.
   \label{fig:atari-perf-profile}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{5_chapter/assets/optimality_gap.png}
   \caption{Optimality gap with 95\% bootstrap CIs. Both algorithms
@@ -359,7 +359,7 @@ nothing in between. DQN drops below $0.50$ at $\tau = 0.12$.
 \subsection{Sample Efficiency}
 \label{sec:atari-sample-eff}
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \begin{subfigure}[b]{0.48\linewidth}
     \includegraphics[width=\linewidth]{5_chapter/assets/sample_efficiency_pong.png}
@@ -383,7 +383,7 @@ On Pong, PPO's AUC ($0.876$) is nearly $10\times$ that of DQN
 ($0.090$), reflecting PPO's rapid convergence. On Breakout, the gap
 is much smaller: PPO $0.070$ versus DQN $0.048$.
 
-\begin{table}[ht]
+\begin{table}[htbp!]
 \centering
 \caption{Sample efficiency (normalised AUC) per environment.}
 \label{tab:atari-sample-eff}
@@ -407,7 +407,7 @@ than Experiment~1, where PPO had $P > 0.89$ against all
 competitors. DQN's Breakout advantage partially offsets its Pong
 deficit, preventing a clear-cut verdict.
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=0.8\linewidth]{5_chapter/assets/poi_heatmap.png}
   \caption{Probability-of-improvement heatmap. PPO wins overall
@@ -427,7 +427,7 @@ because lower scores mean longer episodes (the opponent scores points
 more slowly when the agent puts up some resistance, but not enough
 to win quickly).
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{5_chapter/assets/timing_analysis.png}
   \caption{Wall-clock evaluation time per algorithm and environment.

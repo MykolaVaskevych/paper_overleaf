@@ -72,3 +72,13 @@
 % turn of those nasty overfull and underfull hboxes
 \hbadness=10000
 \hfuzz=50pt
+
+% Keep figures close to their in-text references
+\usepackage[section]{placeins}          % \FloatBarrier at every \section
+\renewcommand{\topfraction}{0.9}        % max fraction of page for top floats
+\renewcommand{\bottomfraction}{0.9}     % max fraction of page for bottom floats
+\renewcommand{\textfraction}{0.1}       % min fraction of page for text
+\renewcommand{\floatpagefraction}{0.8}  % min fraction to justify a float-only page
+\setcounter{topnumber}{3}               % max floats at top of page
+\setcounter{bottomnumber}{3}            % max floats at bottom of page
+\setcounter{totalnumber}{5}             % max floats per page

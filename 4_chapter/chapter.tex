@@ -218,7 +218,7 @@ Table~\ref{tab:hardware}. Although the machine is equipped with a
 high-end GPU, \emph{all training and evaluation ran on CPU only}
 for reasons explained in Section~\ref{sec:why-local}.
 
-\begin{table}[ht]
+\begin{table}[htbp!]
 \centering
 \caption{Hardware and software configuration.}
 \label{tab:hardware}
@@ -379,7 +379,7 @@ was approximately \textbf{19.3~hours} of wall-clock time on the
 workstation described in Table~\ref{tab:hardware}. Table~\ref{tab:training-time}
 breaks this down by algorithm and environment.
 
-\begin{table}[ht]
+\begin{table}[htbp!]
 \centering
 \caption{Wall-clock training time (seconds) per algorithm, summed over
          15 seeds per environment.}
@@ -419,7 +419,7 @@ two-action task with a four-dimensional observation. I expected every
 algorithm to solve it. Figure~\ref{fig:lc-cartpole} tells a different
 story.
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_chapter/assets/learning_curves_cartpole-v1.png}
   \caption{Learning curves for CartPole-v1. PPO and A2C converge to the
@@ -454,7 +454,7 @@ negative (closer to zero is better), with the truncation limit at
 $-500$. I expected this to be a moderately difficult task for all
 algorithms. Figure~\ref{fig:lc-acrobot} shows the learning curves.
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_chapter/assets/learning_curves_acrobot-v1.png}
   \caption{Learning curves for Acrobot-v1. A2C and PPO both converge
@@ -485,7 +485,7 @@ separate the strong algorithms from the weak ones.
 Figure~\ref{fig:lc-lunarlander} confirms this expectation, but with
 an unexpected twist.
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_chapter/assets/learning_curves_lunarlander-v3.png}
   \caption{Learning curves for LunarLander-v3. PPO achieves the highest
@@ -515,7 +515,7 @@ normalised $y$-axis, making the overall pattern clear: PPO and A2C are
 the only algorithms that consistently rise above the random baseline
 across all tasks.
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_chapter/assets/combined_learning_curves.png}
   \caption{Combined normalised learning curves across all three
@@ -538,7 +538,7 @@ The box-and-swarm plot (Figure~\ref{fig:boxswarm}) highlights
 anomalous seeds (marked with red crosses) that fall below the random
 baseline.
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_chapter/assets/score_distribution.png}
   \caption{Distribution of normalised scores per environment. PPO is
@@ -549,7 +549,7 @@ baseline.
   \label{fig:score-dist}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_chapter/assets/per_seed_heatmap.png}
   \caption{Heatmap of normalised final scores by seed and environment.
@@ -560,7 +560,7 @@ baseline.
   \label{fig:heatmap}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_chapter/assets/per_seed_boxswarm.png}
   \caption{Box-and-swarm plot of per-seed normalised scores. Individual
@@ -575,7 +575,7 @@ baseline.
 Table~\ref{tab:per-env-iqm} summarises the per-environment normalised
 IQM with 95\% bootstrap confidence intervals.
 
-\begin{table}[ht]
+\begin{table}[htbp!]
 \centering
 \caption{Per-environment normalised IQM with 95\% bootstrap CIs.}
 \label{tab:per-env-iqm}
@@ -609,7 +609,7 @@ Table~\ref{tab:cross-env} reports the cross-environment aggregate metrics
 at the final training budget. PPO achieves the highest IQM ($0.981$) with
 the tightest confidence interval and the smallest optimality gap ($0.078$).
 
-\begin{table}[ht]
+\begin{table}[htbp!]
 \centering
 \caption{Cross-environment aggregate metrics (normalised scores). IQM,
          mean, and median are reported with 95\% bootstrap CIs.}
@@ -633,7 +633,7 @@ QR-DQN & $0.080\;[0.045,\;0.121]$ & $0.168\;[0.115,\;0.225]$
 \end{tabular}
 \end{table}
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_chapter/assets/final_performance.png}
   \caption{Cross-environment IQM, mean, and median with 95\% bootstrap
@@ -650,7 +650,7 @@ fraction of runs exceeding normalised score $\tau$. PPO maintains
 $\hat{F}(\tau) > 0.9$ up to $\tau \approx 0.8$, whereas DQN and QR-DQN
 drop below 50\% at $\tau = 0.3$.
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_chapter/assets/performance_profile.png}
   \caption{Performance profiles with 95\% bootstrap CIs. Higher curves
@@ -659,7 +659,7 @@ drop below 50\% at $\tau = 0.3$.
   \label{fig:perf-profile}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_chapter/assets/optimality_gap.png}
   \caption{Optimality gap with 95\% bootstrap CIs. Lower values indicate
@@ -674,7 +674,7 @@ drop below 50\% at $\tau = 0.3$.
 Figures~\ref{fig:se-cartpole}--\ref{fig:se-combined} show sample
 efficiency as normalised AUC over the training budget.
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \begin{subfigure}[b]{0.48\linewidth}
     \includegraphics[width=\linewidth]{4_chapter/assets/sample_efficiency_cartpole-v1.png}
@@ -711,7 +711,7 @@ the highest sample efficiency on CartPole ($0.910$) and Acrobot ($0.853$).
 On LunarLander, all algorithms achieve similar AUC ($0.17$--$0.24$),
 reflecting the difficulty of this environment.
 
-\begin{table}[ht]
+\begin{table}[htbp!]
 \centering
 \caption{Sample efficiency (normalised AUC) per environment.}
 \label{tab:sample-eff}
@@ -735,7 +735,7 @@ QR-DQN & $-0.025$ & 0.115 & 0.229 \\
 Table~\ref{tab:poi} and Figure~\ref{fig:poi} report the pairwise probability of improvement $P(A > B)$, averaged across environments. PPO has $P > 0.89$ against every other algorithm.
 
 
-\begin{table}[ht]
+\begin{table}[htbp!]
 \centering
 \caption{Pairwise probability of improvement $P(\text{row} > \text{col})$,
          averaged across environments.}
@@ -754,7 +754,7 @@ QR-DQN & 0.000 & 0.061 & 0.256 & 0.279 & ---   \\
 \end{tabular}
 \end{table}
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=0.8\linewidth]{4_chapter/assets/poi_heatmap.png}
   \caption{Probability-of-improvement heatmap. PPO dominates all pairwise
@@ -765,7 +765,7 @@ QR-DQN & 0.000 & 0.061 & 0.256 & 0.279 & ---   \\
 \subsection{Wall-Clock Timing Analysis}
 \label{sec:timing}
 
-\begin{figure}[ht]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_chapter/assets/timing_analysis.png}
   \caption{Wall-clock training time per algorithm and environment. RPPO
