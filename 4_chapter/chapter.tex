@@ -2,7 +2,7 @@
 
 
 
-\chapter{Metrics}
+\chapter{Metrics (BAD!!!)}
 
 
 
@@ -24,7 +24,7 @@ using the derived run-specific seeds.
 
 \section{intro}
 This section defines what data are produced by reinforcement learning training, how we extract
-meaningful evaluation scores from that data, and what metrics we compute to compare algorithms.
+meaningful evaluation scores from that data, and what metrics I computed to compare algorithms.
 Because this study uses a small set of $M=3$ environments, \emph{per-environment} results are
 the primary evidence, and cross-environment aggregates are treated as descriptive summaries
 of the three chosen tasks rather than universal generalizations. \cite{agarwal2021precipice,patterson2024edrl}
@@ -47,9 +47,9 @@ where:
         (by environment termination or truncation).
 \end{itemize}
 
-From this trajectory data, we do \emph{not} make algorithm comparisons directly on training rewards
+From this trajectory data, I do \emph{not} make algorithm comparisons directly on training rewards
 because training behavior (e.g., exploration noise, replay buffer dynamics, on- vs off-policy sampling)
-is algorithm-dependent and not a stable measure of generalization. Instead, we define a fixed
+is algorithm-dependent and not a stable measure of generalization. Instead, I define a fixed
 \textbf{evaluation protocol} under which every algorithm is assessed.
 
 \section{Evaluation scores: definitions and notation}
@@ -60,9 +60,9 @@ is defined as:
 G \;=\; \sum_{k=0}^{H-1} r_k,
 \]
 i.e., the accumulated reward over the episode. Although many algorithms optimize discounted returns
-internally, we report undiscounted $G$ unless otherwise specified by the benchmark.
+internally, I report undiscounted $G$ unless otherwise specified by the benchmark.
 
-We use the following index conventions throughout:
+I use the following index conventions throughout:
 
 \begin{itemize}
   \item $m\in\{1,2,3\}$: index over evaluated environments (tasks),
@@ -72,7 +72,7 @@ We use the following index conventions throughout:
   \item $E$: number of evaluation episodes at each checkpoint.
 \end{itemize}
 
-At each checkpoint $t$, we evaluate a frozen policy for $E$ episodes and store the mean
+At each checkpoint $t$, I evaluate a frozen policy for $E$ episodes and store the mean
 episodic return:
 \[
 x_{m,n}(t)\;=\;\frac{1}{E}\sum_{e=1}^{E}G^{(e)}_{m,n}(t),
@@ -81,14 +81,14 @@ where $G^{(e)}_{m,n}(t)$ is the return of the $e$-th evaluation episode on envir
 for seed $n$ at checkpoint $t$.
 
 This $x_{m,n}(t)$ is the \textbf{atomic evaluation score}: all metrics below are computed from
-these logged values. At a fixed checkpoint $t$, we can organize these values into a score matrix
+these logged values. At a fixed checkpoint $t$, I can organize these values into a score matrix
 \[
 X(t)\in\mathbb{R}^{N\times M},\qquad X_{n,m}(t)=x_{m,n}(t),
 \]
 with rows indexing seeds and columns indexing environments.
 
 \paragraph{Evaluation action rule.}
-We fix a single evaluation policy selection rule for all algorithms
+I fix a single evaluation policy selection rule for all algorithms
 (e.g., greedy action for value-based methods; mean/mode action or stochastic sampling for
 policy-based methods). This rule must be explicitly documented because it affects reported
 performance. \cite{patterson2024edrl}
@@ -96,10 +96,10 @@ performance. \cite{patterson2024edrl}
 \section{Uncertainty quantification: 95\% stratified bootstrap}
 
 Reinforcement learning exhibits high variance across independent training runs. To quantify
-statistical uncertainty in aggregate summaries, we report \textbf{95\% stratified bootstrap
+statistical uncertainty in aggregate summaries, I report \textbf{95\% stratified bootstrap
 confidence intervals} for all non-point-estimate metrics. In stratified bootstrap, for each
-environment $m$ we resample the set of seeds with replacement to form a bootstrap replicate
-of the score matrix; we recompute the statistic on each replicate and take the 2.5\% and
+environment $m$ I resample the set of seeds with replacement to form a bootstrap replicate
+of the score matrix; I recompute the statistic on each replicate and take the 2.5\% and
 97.5\% percentile bounds. This procedure is recommended in the few-run scenarios. \cite{agarwal2021precipice}
 
 \section{Per-environment metrics (primary)}
@@ -185,9 +185,9 @@ general performance across all tasks. \cite{agarwal2021precipice,patterson2024ed
 
 \section{Reporting and reproducibility}
 
-For each experiment we report: number of seeds $N$, evaluation episodes $E$,
+For each experiment I report: number of seeds $N$, evaluation episodes $E$,
 total training budget and evaluation frequency, evaluation action rule, and hyperparameter
-configuration. To support reproducibility and meaningful comparison, we will provide
+configuration. To support reproducibility and meaningful comparison, I will provide
 code, fixed random seeds, configuration files, and software/hardware details. \cite{henderson2018matters,colas2018seeds}
 
 
