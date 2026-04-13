@@ -1,5 +1,6 @@
 
-\chapter{Literature Review (mixed)}
+\chapter{Literature Review}
+\label{chap:lit-review}
 \ifpdf
     \graphicspath{{2_literature_review/figures/PNG/}{2_literature_review/figures/PDF/}{2_literature_review/figures/}}
 \else
@@ -382,7 +383,7 @@ DeepMind were first who combined CNN and Q-learning algorithms, which made revol
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=1\linewidth]{dqn_1.png}
-\caption{DQN Architercture on attari breakout \cite{mnih2015human}}
+\caption{DQN Architecture on Atari Breakout \cite{mnih2015human}}
 \label{fig:dqn_1}
 \end{figure}
 
@@ -623,14 +624,81 @@ Actor-Critic methods combine the strengths of both value-based and policy-based 
 
 Compared to pure policy gradient methods, actor-critic has lower variance because it uses TD estimates rather than waiting for full episode returns. This also means updates happen at every time step, enabling faster, online learning.
 
+\subsection{Advantage Actor-Critic (A2C)}
+\label{subsec:a2c}
+
+Advantage Actor-Critic (A2C) is a synchronous variant of the Asynchronous Advantage Actor-Critic (A3C) method \citep{mnih2016a3c}, using the advantage function $A(s,a) = Q(s,a) - V(s)$ as the policy gradient signal to reduce variance while maintaining unbiased updates. Unlike A3C, which runs multiple actors in parallel threads with asynchronous gradient updates, A2C collects experience from all parallel environments synchronously before performing a single update, making it simpler to implement and reason about.
+\textcolor{red}{TODO: Expand this subsection with full description of A2C, advantage estimation, generalised advantage estimation (GAE), and comparison with A3C.}
+
+\subsection{Proximal Policy Optimisation (PPO)}
+\label{subsec:ppo}
+
+Proximal Policy Optimisation \citep{schulman2017ppo} is an actor-critic method that improves on A2C and REINFORCE by using a clipped surrogate objective to prevent excessively large policy updates, achieving stable training without the complexity of second-order trust-region methods (such as TRPO). PPO is currently one of the most widely used deep RL algorithms and serves as the primary actor-critic representative in the experiments of this thesis.
+\textcolor{red}{TODO: Expand this subsection with full description of the PPO clipped objective, generalised advantage estimation, epoch-level minibatch updates, and key hyperparameters.}
 
 
 
 
 
 
+%% ================================================================
+%%  EVALUATION FRAMEWORK
+%% ================================================================
+\newpage
+\section{Evaluation Framework}
+\label{sec:eval-framework}
 
+This section defines what data are produced by reinforcement learning training, how evaluation scores are extracted from that data, and what metrics are used to compare algorithms throughout this thesis. Because this study uses a small set of $M \leq 3$ environments, \emph{per-environment} results are the primary evidence, and cross-environment aggregates are treated as descriptive summaries of the chosen tasks rather than universal generalisations \citep{agarwal2021precipice,patterson2024edrl}.
 
+\paragraph{Seeding strategy.}
+To ensure reproducibility while avoiding correlations induced by sequential seeding, all experimental runs were initialised from a single \emph{master seed}. Individual run seeds were deterministically derived using NumPy's \texttt{SeedSequence} spawning mechanism, which avoids linear relationships between seeds that may introduce inter-stream correlations in certain pseudorandom number generators \citep{matsumotoCommonDefectsInitialization2007}. All randomness sources (environment, NumPy, and PyTorch) were seeded using the derived run-specific seeds.
+
+\subsection{Data Produced by RL Interaction}
+\label{subsec:rl-data}
+
+During training, at each time step $k$ the agent--environment interaction yields the transition tuple $(s_k,\,a_k,\,r_k,\,s_{k+1},\,d_k)$, where $s_k$ is the state, $a_k$ the action, $r_k$ the scalar reward, $s_{k+1}$ the next state, and $d_k\!\in\!\{0,1\}$ a terminal indicator. Algorithm comparisons are not made on training rewards directly, because training behaviour (exploration noise, replay buffer dynamics, on- vs off-policy sampling) is algorithm-dependent and not a stable measure of generalisation. Instead, a fixed \textbf{evaluation protocol} is used under which every algorithm is assessed identically.
+
+\subsection{Evaluation Scores: Definitions and Notation}
+\label{subsec:eval-scores}
+
+An evaluation episode has an (environment-defined) length $H$, and the \textbf{episodic return} is $G = \sum_{k=0}^{H-1} r_k$. I report undiscounted $G$ throughout. Index conventions: $m$ over environments, $n$ over seeds, $t$ over evaluation checkpoints, $T$ the final checkpoint, $E$ the number of evaluation episodes. At each checkpoint $t$, the mean episodic return over $E$ episodes is:
+\[
+x_{m,n}(t)\;=\;\frac{1}{E}\sum_{e=1}^{E}G^{(e)}_{m,n}(t).
+\]
+These values form the \textbf{score matrix} $X(t)\in\mathbb{R}^{N\times M}$, with rows indexing seeds and columns indexing environments. All metrics below are computed from $X(T)$ at the final checkpoint.
+
+\subsection{Uncertainty Quantification: Stratified Bootstrap}
+\label{subsec:bootstrap}
+
+Reinforcement learning exhibits high variance across independent training runs. To quantify statistical uncertainty, \textbf{95\% stratified bootstrap confidence intervals} are reported for all non-point-estimate metrics. For each environment $m$, seeds are resampled with replacement; the statistic is recomputed on each replicate and the 2.5\% and 97.5\% percentile bounds are taken. This procedure is recommended for the few-run regime \citep{agarwal2021precipice}.
+
+\subsection{Per-Environment Metrics (Primary)}
+\label{subsec:per-env-metrics}
+
+Per-environment metrics operate on $\{x_{m,n}(t)\}_{n=1}^N$ for a fixed environment $m$:
+
+\begin{itemize}
+\item \textbf{Learning curve}: central tendency (mean or median over seeds) of $x_{m,n}(t)$ against training budget $t$, with pointwise uncertainty bands. Reveals learning dynamics that a single final number cannot capture.
+\item \textbf{Final performance at fixed budget $T$}: central tendency of $\{x_{m,n}(T)\}$ with 95\% bootstrap CI. Answers ``how good is the agent after the same amount of experience?'' \citep{agarwal2021precipice}
+\item \textbf{Sample efficiency}: normalised area under the learning curve, $\mathrm{AUC}_{m,n}=\sum_{j}x_{m,n}(t_j)(t_j-t_{j-1})/T$. Higher AUC indicates faster learning under the same budget.
+\item \textbf{Reliability}: interquartile range (IQR) of $\{x_{m,n}(T)\}_n$ captures robustness across seeds \citep{chan2020reliability}.
+\end{itemize}
+
+\subsection{Cross-Environment Aggregate Metrics (Secondary)}
+\label{subsec:cross-env-metrics}
+
+Cross-environment metrics summarise the score matrix $X(T)$. With $M \leq 3$ environments, these are descriptive summaries rather than claims of general performance \citep{agarwal2021precipice,patterson2024edrl}:
+
+\begin{itemize}
+\item \textbf{Interquartile mean (IQM)}: pool all $MN$ values, trim the lowest and highest 25\%, average the middle 50\%. Robust to outliers and often yields tighter uncertainty in the few-run regime \citep{agarwal2021precipice}.
+\item \textbf{Probability of improvement (POI)}: $P(A>B) = \frac{1}{M}\sum_m \Pr(x^A_{m,\cdot}>x^B_{m,\cdot})$. Interpretable probability that algorithm A outperforms B on a randomly chosen seed and environment.
+\item \textbf{Performance profile}: fraction of runs $\hat{F}(\tau) = \frac{1}{MN}\sum_{m,n}\mathbb{I}[x_{m,n}(T)\ge\tau]$ at each threshold $\tau$. Visualises the full spectrum of outcomes.
+\item \textbf{Optimality gap}: $\mathrm{Gap}(\tau) = \tau - \frac{1}{MN}\sum_{m,n}\min(x_{m,n}(T),\tau)$. Measures shortfall from a predefined target while clipping large outliers.
+\end{itemize}
+
+%% ================================================================
+%%  CHAPTER CONCLUSION
+%% ================================================================
 \newpage
 \section{Conclusion}
 

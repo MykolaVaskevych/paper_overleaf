@@ -1,5 +1,5 @@
 
-\chapter{Introduction (good)}
+\chapter{Introduction}
 
 
 \ifpdf
@@ -210,34 +210,10 @@ This project makes two main contributions to the field of Deep Reinforcement Lea
 
 
 \section{Project Plan}
-\subsection{Semester 1: Done}
-\textbf{Literature Review}
-\begin{itemize}
-    \item AI and Machine Learning basics
-    \item RL foundations: MDPs, Bellman equation, exploration vs exploitation
-    \item k-Armed Bandit problem
-    \item Dynamic Programming, Monte Carlo, TD Learning
-    \item Q-learning, SARSA
-    \item CNNs and DQN architecture
-    \item Policy Gradients and Actor-Critic
-\end{itemize}
-\textbf{Implementations}
-\begin{itemize}
-    \item Cliff Walking
-    \item Windy Gridworld
-    \item Random Walk (TD vs MC)
-    \item DQN on Atari Breakout
-\end{itemize}
-\subsection{Semester 2: The Comparison}
-\textbf{Weeks 1–4:} Build A2C and PPO. \\
-\textbf{Weeks 3–5:} Pick test environments for:
-\begin{enumerate}
-    \item DQN-friendly — discrete actions (Atari)
-    \item Actor-Critic-friendly — continuous control
-    \item Neutral — find crossover
-\end{enumerate}
-\textbf{Weeks 5–9:} Run experiments. Measure metrics. \\
-\textbf{Weeks 8–12:} Write thesis. \\
+
+The first semester was spent building the theoretical foundation. This involved working through the literature on reinforcement learning fundamentals --- MDPs, Bellman equations, Q-learning, policy gradients, and actor-critic methods --- as well as implementing several small-scale environments (Cliff Walking, Windy Gridworld, Random Walk) to build intuition before tackling anything larger. The semester ended with a working DQN agent on Atari Breakout as a proof of concept.
+
+The second semester moved into the main comparison. Three experiments were run in sequence, each extending the scope of the previous one. Experiment~1 covered five algorithms on classic-control environments using MLP policies. Experiment~2 narrowed the focus to DQN vs PPO on Atari with CNN policies at a 5M-step budget. Experiment~3 extended that to 20M steps and added Seaquest as a third environment. The results of all three are reported in Chapters~4, 5, and 6 respectively.
 
 
 
