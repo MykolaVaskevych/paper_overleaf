@@ -1,37 +1,25 @@
 
-% this file is called up by thesis.tex
-% content in this file will be fed into the main document
-
-%: ----------------------- introduction file header -----------------------
 \chapter{Introduction (good)}
 
-% the code below specifies where the figures are stored
+
 \ifpdf
     \graphicspath{{1_introduction/figures/PNG/}{1_introduction/figures/PDF/}{1_introduction/figures/}}
 \else
     \graphicspath{{1_introduction/figures/EPS/}{1_introduction/figures/}}
 \fi
 
-% ----------------------------------------------------------------------
-%: ----------------------- introduction content ----------------------- 
-% ----------------------------------------------------------------------
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \textbf{FIRST PARAGRAPH: WHAT IS THE OBJECTIVE OF THIS FYP?} \\
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Overview}
 
-%[P1: summary]
-This Final Year Project (FYP) compares and contrasts two families of Reinforcement Learning algorithms, namely Policy Gradient approaches and Value Functions. A set of gym environments for classic control and Atari are selected based on their properties, and serve as a testsuit for the comparision. Metrics are defined that take account of training time,  performance, and ability to generalise. This FYP proposes a set of guidelines for novices to follow when choosing an RL algorithm to solve their specific problem.
+
+This Final Year Project (FYP) compares and contrasts two families of Reinforcement Learning algorithms: Policy Gradient approaches and Value-based Functions. A set of gym environments for classic control and Atari are selected based on their properties, and serve as a test suit for the comparision. Metrics are defined that take account of training time,  performance, and ability to generalise. This FYP proposes a set of guidelines for novices to follow when choosing an RL algorithm to solve their specific problem.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \textbf{2nd and 3rd paragraphs introduce RL} \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %[P2: Introduce RL]
-\textbf{Reinforcement learning} is learning what to do—how to map situations to actions—so as to maximize a numerical reward signal. The learner is not told which actions to take, but instead must discover which actions yield the most reward by trying them. In the most interesting and challenging cases, actions may affect not only the immediate reward but also the next situation and, through that, all subsequent rewards. These two characteristics—trial-and-error search and delayed reward—are the two most important distinguishing features of reinforcement learning. \cite{sutton}
+\textbf{Reinforcement learning} is learning what to do — how to map situations to actions — so as to maximize a numerical reward signal. The learner is not told which actions to take, but instead must discover which actions yield the most reward by trying them. In the most interesting and challenging cases, actions may affect not only the immediate reward but also the next situation and, through that, all subsequent rewards. These two characteristics—trial-and-error search and delayed reward—are the two most important distinguishing features of reinforcement learning. \cite{sutton}
 
 %[P3: RL History, Perceptron Learning, Associative Learning] --> MOVE TO CHAPTER 2
 %Reinforcement learning originates from two major sources: animal learning and optimal control. Early research in the 20th century focused on understanding how animals adapt behavior through trial-and-error processes.
@@ -43,8 +31,8 @@ Learning how to play chess can be a good example of Reinforcement learning, by m
 
 %[P4: RL continued part e]
 Reinforcement Learning is designed to solve problems that can
-be modelled as sequential decision processes. \cite{barto1989learning}
-Learning to play the chess is a sequential decision process as every action taken by the player (agent), transitions the environment (chess board) to a new state i.e. moving knight to the right cell may lead to check mate of enemies king and wining or opening an opportunity to your opponent to attack you instead, which may lead to losing a game.
+be modeled as sequential decision processes. \cite{barto1989learning}
+Learning to play chess is a sequential decision process, as every action taken by the player (agent) transitions the environment (chess board) to a new state. For example, moving the knight to the right cell may lead to checkmate of the enemy's king and winning or open an opportunity for your opponent to attack you instead, which may lead to losing the game.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -52,7 +40,7 @@ Learning to play the chess is a sequential decision process as every action take
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %[P5: Search Spaces]
-The search space for the game of Connect 4 is $10^{12}$ and for chess is $10^{40}$. It is difficult to enumerate each board in such large search spaces using brute search approach such as breadth first or depth first search algorithms. But this was achieved  by IBM’s Deep Blue supercomputer beat the chess world champion Garry Kasparov back in 1996. However, the search space for other games such as Go is significantly larger and brute search approaches do not work. Instead one has to use function approximators and deep learning architectures in particular given the recent success of Convolutional Neural Networks (CNNs) in computer vision. 
+The search space for the game of Connect 4 is $10^{12}$ and for chess is $10^{40}$. It is difficult to enumerate each board in such large search spaces using brute force approach such as breadth first or depth first search algorithms. But this was achieved  by IBM’s Deep Blue super computer beat the chess world champion Garry Kasparov back in 1996. However, the search space for other games such as Go is significantly larger and brute search approaches do not work. Instead one has to use function approximators and deep learning architectures in particular given the recent success of Convolutional Neural Networks (CNNs) in computer vision. 
 
 %it wasn’t until fairly recently that computers were able to reliably perform seemingly trivial tasks such as detecting a puppy in a picture or recognizing spoken words. Why are these tasks so effortless to us humans? The answer lies in the fact that perception largely takes place outside the realm of our consciousness, within specialized visual, auditory, and other sensory modules in our brains. By the time sensory information reaches our consciousness, it is already adorned with high-level features; \textbf{for example, when you look at a picture of a cute puppy, you cannot choose not to see the puppy, not to notice its cuteness. Nor can you explain how you recognize a cute puppy;} it’s just obvious to you. Thus, we cannot trust our subjective experience: perception is not trivial at all, and to understand it we must look at how our sensory modules work. \cite{geron}
 
