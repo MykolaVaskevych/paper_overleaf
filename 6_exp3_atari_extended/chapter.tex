@@ -44,9 +44,9 @@ Before running the experiments, I formed the following expectations:
 \section{Training Summary}
 \label{sec:exp3-training}
 
-30 runs total (2 algorithms $\times$ 3 environments $\times$ 10 seeds). Training timing for the original run was lost due to an instrumentation issue. Reported wall-clock figures are taken from retrained reproducibility runs, which cover all 10 DQN seeds on all three environments. PPO timing is currently incomplete (see Limitations); this affects only the timing analysis, not the evaluation scores, which are complete for all 30 runs.
+30 runs total (2 algorithms $\times$ 3 environments $\times$ 10 seeds). Training timing for the original run was lost due to an instrumentation issue; all reported wall-clock figures come from retrained reproducibility runs. DQN timing is fully recovered (30/30 seeds). PPO timing is 23/30 seeds: Seaquest is complete (10/10), Pong has 7/10 seeds, Breakout has 6/10 seeds (7 seeds permanently lost across both environments). This affects only the timing table; evaluation scores are complete for all 30 runs.
 
-Retrained DQN wall-clock totals per 10 seeds on RTX~4090: approximately 27.7 hours (Pong), 17.4 hours (Breakout), and 27.4 hours (Seaquest), for an aggregate of $\sim$72.5 hours across 30 DQN runs.
+Wall-clock totals on RTX~4090: DQN $\approx$72.5\,h total (27.7\,h Pong, 17.4\,h Breakout, 27.4\,h Seaquest); PPO $\approx$105.9\,h estimated (25.8\,h Pong measured, ${\approx}$32.3\,h Breakout extrapolated, 36.8\,h Seaquest). See Table~\ref{tab:exp3-timing} for per-seed detail.
 
 %% ------------------------------------------------------------------
 \section{Per-Environment Results}
@@ -60,7 +60,7 @@ PPO nearly solves Pong at the 20M-step budget, with a mean raw return of 19.78 (
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/learning_curves_pong.png}
-  \caption{Learning curves on Pong, 10 seeds per algorithm, 20M steps. PPO converges near the
+  \caption[Learning curves on Pong, 20M steps]{Learning curves on Pong, 10 seeds per algorithm, 20M steps. PPO converges near the
            maximum return; DQN shows high per-seed variance.}
   \label{fig:exp3-lc-pong}
 \end{figure}
@@ -73,7 +73,7 @@ DQN dominates Breakout decisively, with a mean return of 229.07 versus PPO's 65.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/learning_curves_breakout.png}
-  \caption{Learning curves on Breakout, 10 seeds per algorithm, 20M steps. DQN achieves a
+  \caption[Learning curves on Breakout, 20M steps]{Learning curves on Breakout, 10 seeds per algorithm, 20M steps. DQN achieves a
            $3.5\times$ mean-return advantage over PPO.}
   \label{fig:exp3-lc-breakout}
 \end{figure}
@@ -86,7 +86,7 @@ PPO wins Seaquest with a mean return of 1173.92 versus DQN's 714.00 (a $1.64\tim
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/learning_curves_seaquest.png}
-  \caption{Learning curves on Seaquest, 10 seeds per algorithm, 20M steps. Both algorithms
+  \caption[Learning curves on Seaquest, 20M steps]{Learning curves on Seaquest, 10 seeds per algorithm, 20M steps. Both algorithms
            plateau after initial rapid improvement; PPO's plateau is higher.}
   \label{fig:exp3-lc-seaquest}
 \end{figure}
@@ -99,7 +99,7 @@ Figure~\ref{fig:exp3-lc-combined} overlays all three environments on a normalise
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/combined_learning_curves.png}
-  \caption{Combined normalised learning curves across Pong, Breakout, and Seaquest, 10 seeds per algorithm.}
+  \caption[Combined learning curves: Pong, Breakout, Seaquest]{Combined normalised learning curves across Pong, Breakout, and Seaquest, 10 seeds per algorithm.}
   \label{fig:exp3-lc-combined}
 \end{figure}
 
@@ -112,7 +112,7 @@ Figures~\ref{fig:exp3-score-dist},~\ref{fig:exp3-heatmap}, and~\ref{fig:exp3-box
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/score_distribution.png}
-  \caption{Distribution of normalised final scores per environment. DQN is concentrated
+  \caption[Score distributions: Pong, Breakout, Seaquest]{Distribution of normalised final scores per environment. DQN is concentrated
            mid-range; PPO is bimodal (high on Pong and Seaquest, low on Breakout).}
   \label{fig:exp3-score-dist}
 \end{figure}
@@ -120,14 +120,14 @@ Figures~\ref{fig:exp3-score-dist},~\ref{fig:exp3-heatmap}, and~\ref{fig:exp3-box
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/per_seed_heatmap.png}
-  \caption{Heatmap of normalised final scores by seed (rows) and environment (columns).}
+  \caption[Per-seed score heatmap: Pong, Breakout, Seaquest]{Heatmap of normalised final scores by seed (rows) and environment (columns).}
   \label{fig:exp3-heatmap}
 \end{figure}
 
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/per_seed_boxswarm.png}
-  \caption{Box-and-swarm plot of per-seed normalised scores across environments.}
+  \caption[Per-seed score spread: Pong, Breakout, Seaquest]{Box-and-swarm plot of per-seed normalised scores across environments.}
   \label{fig:exp3-boxswarm}
 \end{figure}
 
@@ -157,7 +157,7 @@ PPO & $0.277\;[0.247,\;0.309]$ & --- & --- & $0.614\;[0.597,\;0.632]$ \\
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/final_performance.png}
-  \caption{Cross-environment IQM, mean, and median with 95\% bootstrap CIs.
+  \caption[Cross-environment IQM: Pong, Breakout, Seaquest]{Cross-environment IQM, mean, and median with 95\% bootstrap CIs.
            DQN IQM 0.443 vs PPO 0.277 (non-overlapping CIs).}
   \label{fig:exp3-final-perf}
 \end{figure}
@@ -175,7 +175,7 @@ PPO & $0.277\;[0.247,\;0.309]$ & --- & --- & $0.614\;[0.597,\;0.632]$ \\
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=0.7\linewidth]{6_exp3_atari_extended/assets/optimality_gap.png}
-  \caption{Optimality gap. Lower is better. DQN 0.550 (CI [0.500, 0.607]),
+  \caption[Optimality gap: Pong, Breakout, Seaquest]{Optimality gap. Lower is better. DQN 0.550 (CI [0.500, 0.607]),
            PPO 0.614 (CI [0.597, 0.632]).}
   \label{fig:exp3-opt-gap}
 \end{figure}
@@ -188,7 +188,7 @@ Figure~\ref{fig:exp3-poi} shows that $P(\text{DQN}>\text{PPO}) = 0.393$, meaning
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=0.6\linewidth]{6_exp3_atari_extended/assets/poi_heatmap.png}
-  \caption{Pairwise probability of improvement: $P(\text{DQN}>\text{PPO}) = 0.393$.
+  \caption[Probability of improvement: DQN vs PPO, 3 environments]{Pairwise probability of improvement: $P(\text{DQN}>\text{PPO}) = 0.393$.
            PPO wins a majority of pairwise comparisons despite a lower IQM.}
   \label{fig:exp3-poi}
 \end{figure}
@@ -227,7 +227,7 @@ Beyond the algorithm comparison, Experiment~3 yielded a useful secondary result:
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/reproducibility_learning_curves.png}
-  \caption{Original vs retrained learning curves. The two runs of each seed are
+  \caption[Reproducibility: original vs retrained learning curves]{Original vs retrained learning curves. The two runs of each seed are
            indistinguishable within floating-point noise.}
   \label{fig:exp3-repro-lc}
 \end{figure}
@@ -235,7 +235,7 @@ Beyond the algorithm comparison, Experiment~3 yielded a useful secondary result:
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=0.65\linewidth]{6_exp3_atari_extended/assets/reproducibility_scatter.png}
-  \caption{Original vs retrained final scores. Perfect diagonal agreement
+  \caption[Reproducibility: original vs retrained final scores]{Original vs retrained final scores. Perfect diagonal agreement
            ($r^2 \approx 1.0$; residuals at the floating-point noise floor).}
   \label{fig:exp3-repro-scatter}
 \end{figure}
@@ -249,12 +249,50 @@ Future students attempting to reproduce this thesis on an RTX~4090 with the pinn
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/timing_per_seed.png}
-  \caption{Per-seed wall-clock training time for the retrained DQN runs
-           (all 10 seeds on all three environments).}
+  \caption[Per-seed wall-clock training time: Pong, Breakout, Seaquest]{Per-seed wall-clock training time (hours) for all recovered seeds.
+           DQN timing is complete (30/30 seeds); PPO timing covers 23/30 seeds
+           (3 PPO Pong and 4 PPO Breakout seeds permanently lost).}
   \label{fig:exp3-timing}
 \end{figure}
 
-\textcolor{red}{TODO: Update PPO timing once the PPO Pong retraining (currently running) completes. Current data: DQN all 10 seeds completed --- Pong $\approx$27.7h total, Breakout $\approx$17.4h, Seaquest $\approx$27.4h. PPO timing incomplete (original timing lost; retrained recovery ongoing).}
+Table~\ref{tab:exp3-timing} summarises the total wall-clock training time per
+algorithm and environment. DQN trained consistently faster than PPO across all
+three environments: DQN per-seed averages range from 1.7\,h (Breakout) to 2.8\,h
+(Pong), while PPO averages 3.2--3.7\,h per seed. This is somewhat counterintuitive
+--- DQN maintains a large replay buffer and performs off-policy gradient updates,
+whereas PPO's on-policy rollout collection runs across 16 parallel environments ---
+but PPO's rollout collection is more CPU-bound and its update phase runs multiple
+epochs of minibatch SGD per rollout, making it heavier per wall-clock step.
+
+DQN Breakout was the fastest cell in the entire experiment at $\approx$1.7\,h/seed,
+reflecting that Breakout episodes end quickly once the ball falls through. Seaquest
+is the slowest for PPO ($\approx$3.7\,h/seed) due to longer, more complex episodes.
+
+\begin{table}[htbp!]
+\centering
+\caption{Wall-clock training time per algorithm and environment (20M steps/seed).}
+\label{tab:exp3-timing}
+\begin{tabular}{llccc}
+\toprule
+\textbf{Algo} & \textbf{Env} & \textbf{Seeds} & \textbf{Total (h)} & \textbf{Avg/seed (h)} \\
+\midrule
+DQN & Pong     & 10/10 & 27.7 & 2.8 \\
+DQN & Breakout & 10/10 & 17.4 & 1.7 \\
+DQN & Seaquest & 10/10 & 27.4 & 2.7 \\
+PPO & Pong     &  7/10 & 25.8 & 3.7$^*$ \\
+PPO & Breakout &  6/10 & 19.4 & 3.2$^{**}$ \\
+PPO & Seaquest & 10/10 & 36.8 & 3.7 \\
+\midrule
+\multicolumn{2}{l}{DQN total} & 30/30 & 72.5 & --- \\
+\multicolumn{2}{l}{PPO total (est.)} & 23/30 & $\approx$105.9$^{***}$ & --- \\
+\bottomrule
+\end{tabular}
+\vspace{0.5em}
+
+\noindent{\small $^*$ 7-seed average; 3 seeds have no timing data.
+$^{**}$ 6-seed average; 4 seeds have no timing data.
+$^{***}$ Extrapolated: Pong total scaled $\times\frac{10}{7}$, Breakout total scaled $\times\frac{10}{6}$.}
+\end{table}
 
 %% ------------------------------------------------------------------
 \section{Key Findings: Expectations vs Reality}
