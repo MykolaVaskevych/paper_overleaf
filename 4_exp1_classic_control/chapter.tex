@@ -6,14 +6,11 @@
 \label{chap:exp1}
 
 This chapter presents the empirical results of the comparative evaluation.
-I begin with the experimental setup---including the hardware, the
+I began with the experimental setup - including the hardware, the
 rationale for local training, and the algorithms and environments
-under test---before stating the hypotheses that guided my expectations.
+under test - before stating the hypotheses that guided my expectations.
 The per-environment and cross-environment results are then presented
-using all of the metrics defined in Section~\ref{sec:eval-framework}, following the
-recommendations of \citet{agarwal2021precipice}. I close with a
-synthesis of the key findings, a frank assessment of what surprised me,
-and a discussion of the limitations.
+using all of the metrics defined in Section~\ref{sec:eval-framework}, following the recommendations of \citet{agarwal2021precipice}. Chapter concludes with a synthesis of the key findings, a frank assessment of what surprised me, and a discussion of the limitations of my experiments results.
 
 %% ------------------------------------------------------------------
 \section{Experimental Setup}
@@ -24,8 +21,8 @@ and a discussion of the limitations.
 
 All experiments were conducted on the workstation described in
 Table~\ref{tab:hardware}. Although the machine is equipped with a
-high-end GPU, \emph{all training and evaluation ran on CPU only}
-for reasons explained in Section~\ref{sec:why-local}.
+high-end GPU, \emph{this experiment training and evaluation ran on CPU only}
+for reasons explained in Section~\ref{sec:why-local}. The following experiments will utilize the GPU, though.
 
 \begin{table}[htbp!]
 \centering
@@ -35,11 +32,11 @@ for reasons explained in Section~\ref{sec:why-local}.
 \toprule
 \textbf{Component}   & \textbf{Specification} \\
 \midrule
-CPU         & AMD Ryzen 7 7800X3D (8C/16T, Zen 4, 5.05\,GHz boost) \\
-GPU         & NVIDIA RTX 4090 24\,GB (\emph{available but not used}) \\
+CPU         & AMD Ryzen 7 7800X3D \\
+GPU         & NVIDIA RTX 4090 24\,GB \\
 RAM         & 32\,GiB DDR5 \\
-Storage     & WD BLACK SN850X NVMe (4\,TB + 1\,TB) \\
-OS          & Arch Linux, kernel 6.18.7-zen \\
+Storage     & LLVM of WD BLACK SN850X NVMe (4\,TB + 1\,TB) \\
+OS          & Arch Linux, kernel 6.19.11-zen1-1-zen \\
 Framework   & Stable-Baselines3 v2.7.1 \citep{raffin2021sb3} \\
 Backend     & PyTorch 2.10.0, Python 3.10 \\
 \bottomrule
@@ -48,7 +45,7 @@ Backend     & PyTorch 2.10.0, Python 3.10 \\
 
 \begin{table}[htbp!]
 \centering
-\caption[SB3 default hyperparameters used for all algorithms]{SB3 default hyperparameters used for all algorithms. No per-algorithm tuning was performed.}
+\caption[SB3 default hyper-parameters]{Default Stable-Baselines 3 hyper-parameters used for all algorithms. No algorithm-specific tuning was performed to ensure fair comparisons.}
 \label{tab:hyperparams}
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{lccccc}
@@ -70,20 +67,20 @@ Policy                  & MLP  & MLP  & MLP  & MLP  & MLP+LSTM \\
 \end{tabular}}
 \end{table}
 
-\subsection{Why Local Training}
+\subsection{Why Local Training \textcolor{red}{remove?}}
 \label{sec:why-local}
 
 An early design decision was whether to train locally or on Google
 Colab. I chose local training for four reasons:
 
 \begin{enumerate}
-  \item \textbf{RL bottlenecks on CPU, not GPU. (REMOVE?)}
+  \item \textbf{RL bottlenecks on CPU, not GPU.} \textcolor{red}{(REMOVE?)}
         Classic-control environments are simulated entirely on the CPU,
         and the MLP policies used here are small enough that GPU
         offloading provides no throughput benefit---the PCIe transfer
         latency dominates.
 
-  \item \textbf{Deterministic seeding requires CPU-only execution. (REMOVE?)}
+  \item \textbf{Deterministic seeding requires CPU-only execution. \textcolor{red}{(REMOVE?)}}
         PyTorch's deterministic mode guarantees bitwise reproducibility
         only when all computation stays on the CPU; the same seeds
         produce different trajectories on GPU due to non-deterministic
@@ -130,6 +127,7 @@ All algorithms used \texttt{MlpPolicy} except RPPO, which
 used \texttt{MlpLstmPolicy} \citep{raffin2021sb3}.
 Full descriptions of each algorithm family are provided in Chapter~\ref{chap:lit-review}.
 
+
 Three discrete classic-control environments from Gymnasium were selected:
 \begin{itemize}
   \item \textbf{CartPole-v1} --- balance a pole on a cart
@@ -139,66 +137,57 @@ Three discrete classic-control environments from Gymnasium were selected:
   \item \textbf{Acrobot-v1} --- swing a two-link pendulum above the bar
         ($\max G \approx -100$, budget $T = 200{,}000$ steps).
 \end{itemize}
-Each environment was parallelised across $4$ \texttt{DummyVecEnv}
-sub-environments (effective batch size 4).
 
-$N = 15$ independent seeds were derived from a single master seed
-($20260212$) using NumPy's \texttt{SeedSequence}. During training,
-frozen-policy evaluations of $E = 10$ episodes were recorded every
-$1{,}250$ steps (CartPole, Acrobot) or $2{,}500$ steps (LunarLander).
-After training, a separate fresh evaluation of $E = 50$ episodes per seed
-was conducted to compute final scores. All training and evaluation used
-CPU-only deterministic mode.
+Training used 4 parallel \texttt{DummyVecEnv} environments (batch size 4) and $N = 15$ independent seeds generated from a single master seed ($20260212$) via NumPy's \texttt{SeedSequence}. During training, performance was periodically recorded using frozen-policy evaluations ($E = 10$ episodes). After training, the final performance was assessed with a fresh evaluation of $E = 50$ episodes per seed.
 
-Raw returns were normalised to $[0, 1]$ using min--max scaling with
-per-environment random-policy baselines as the floor and the known maximum
-return as the ceiling:
+
+Raw returns were normalized to $[0, 1]$ using Min--Max scaling with
+baselines of random policies per-environment as the floor and the known maximum return as the ceiling:
 \[
   \bar{x}_{m,n} = \frac{x_{m,n} - x^{\text{random}}_m}
                        {x^{\max}_m - x^{\text{random}}_m}.
 \]
-Scores above 1.0 indicate that the agent exceeds the theoretical
-maximum return averaged over evaluation episodes (possible due to
-stochastic episode lengths).
+
+% Scores above 1.0 indicate that the agent exceeds the theoretical
+% maximum return averaged over evaluation episodes (possible due to
+% stochastic episode lengths).
 
 %% ------------------------------------------------------------------
 \section{Hypotheses}
 \label{sec:hypotheses}
 
-Before running the experiments, I formed the following expectations based
-on the literature and the properties of each algorithm:
+Before running the experiments, I formed the following hypotheses to predict results based
+on the literature that I have reviewed and my intuition:
 
 \begin{enumerate}
-  \item \textbf{DQN should handle CartPole.}
-        CartPole is the textbook DQN benchmark \citep{mnih2015human};
-        I expected both DQN and QR-DQN to solve it comfortably within
-        200K steps.
 
-  \item \textbf{QR-DQN should improve over DQN.}
-        Distributional RL is theoretically superior to point-estimate
-        Q-learning \citep{dabney2018qrdqn}, so I expected QR-DQN to
-        match or exceed DQN on every environment.
-
-  \item \textbf{PPO and A2C should be competitive.}
-        As modern on-policy methods with well-tuned defaults in SB3,
-        both were expected to perform well across all three tasks.
-
-  \item \textbf{RPPO's LSTM may help on partially-observable tasks,
-        but these are fully-observed MDPs.}
-        I expected RPPO to match PPO on simple environments but was
-        unsure whether the added LSTM capacity would help or hurt.
-
-  \item \textbf{Difficulty ordering: CartPole $<$ Acrobot $<$
-        LunarLander.}
-        CartPole has the simplest dynamics and the shortest horizon;
-        LunarLander has the highest-dimensional state and requires
-        the most samples.
+    \item \textbf{DQN should handle CartPole.}
+    CartPole is the most common textbook DQN benchmark \citep{mnih2015human};
+    I expected both DQN and QR-DQN to solve it comfortably within
+    200K steps, which were given.
+    
+    \item \textbf{QR-DQN should improve over DQN.}
+    RL is theoretically superior to point-estimate
+    Q-learning \citep{dabney2018qrdqn}, so I expected QR-DQN to
+    match or exceed DQN on every environment.
+    
+    \item \textbf{PPO and A2C should produce competitive results.}
+    As modern on-policy methods with well-tuned defaults from SB3,
+    both were expected to perform well across all three environments.
+    
+    \item \textbf{RPPO's long short-term memory (LSTM) is unlikely to help and may hurt performance.}
+    These environments are fully observable, so the extra memory from the LSTM is probably unnecessary. I expected RPPO to perform about the same as PPO, or worse, because the recurrent model is harder to train and less sample-efficient.
+    
+    \item \textbf{Difficulty ordering: CartPole $<$ Acrobot $<$ LunarLander.}
+    CartPole has the simplest dynamics and the shortest horizon.
+    LunarLander has the highest-dimensional state and requires
+    the most samples.
+    
 \end{enumerate}
+These hypotheses were based on the general findings in the literature reviewed in Chapter~\ref{chap:lit-review}, particularly \citet{mnih2015human} for DQN and \citet{schulman2017ppo} for PPO.
 
-These hypotheses are grounded in the literature reviewed in Chapter~\ref{chap:lit-review}, particularly \citet{mnih2015human} for DQN and \citet{schulman2017ppo} for PPO.
 
-As the results will show, several of these expectations were decisively
-wrong.
+As the results will show, several of these expectations do not hold under the experimental conditions used here.
 
 %% ------------------------------------------------------------------
 \section{Training Summary}
@@ -211,8 +200,7 @@ breaks this down by algorithm and environment.
 
 \begin{table}[htbp!]
 \centering
-\caption{Wall-clock training time (seconds) per algorithm, summed over
-         15 seeds per environment.}
+\caption[EXP1: Training time per algorithm]{Wall-clock training time (seconds) per algorithm, summed over 15 seeds per environment.}
 \label{tab:training-time}
 \begin{tabular}{lrrrrr}
 \toprule
@@ -251,10 +239,8 @@ story.
 
 \begin{figure}[htbp!]
   \centering
-  \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/learning_curves_cartpole-v1.png}
-  \caption[Learning curves for CartPole-v1]{Learning curves for CartPole-v1. PPO and A2C converge to the
-           maximum return of 500 within 100K steps. DQN and QR-DQN fail to
-           learn within the 200K-step budget.}
+  \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/learning_curves_cartpole-v2.png}
+  \caption[Learning curves for CartPole-v1.] {Learning curves for CartPole-v1.PPO and A2C converge to the maximum return of 500 within 100K steps while DQN and QR-DQN fail to learn within the 200K-step budget, with QR-DQN barely moving.}
   \label{fig:lc-cartpole}
 \end{figure}
 
@@ -264,48 +250,33 @@ reaches IQM $1.000$ but with a wider confidence interval
 $[0.926,\;1.000]$, indicating that a few seeds converge more slowly.
 
 The surprise was the DQN family. DQN achieves IQM $0.175$ and QR-DQN
-scores $-0.022$---\emph{below the random baseline}. CartPole is the
+scores $-0.022$, which is \emph{below the random baseline}. CartPole is the
 environment on which DQN was originally demonstrated
 \citep{mnih2015human}, so this failure was unexpected. The explanation
-is straightforward but instructive: with SB3's default hyperparameters,
+is that with SB3's default hyperparameters,
 the replay buffer warm-up phase and $\varepsilon$-greedy exploration
 schedule consume a large fraction of the 200K-step budget, leaving
 insufficient samples for the value network to converge. QR-DQN is worse
 because its distributional head has more parameters to fit with the same
-data.
+data. 
 
-Extending the training budget to confirm this interpretation is left as future work (see Chapter~\ref{chap:conclusions}).
+This highlights how default configurations can lead to suboptimal performance for off-policy methods under limited training budgets, and suggests that while longer training would likely allow convergence comparable to A2C and PPO, it would come at a significantly higher computational cost. This is left as future work (see Chapter~\ref{chap:conclusions}).
 
 \subsection{Acrobot-v1}
 \label{sec:acrobot}
 
-Acrobot requires swinging a two-link pendulum above a bar. Returns are
-negative (closer to zero is better), with the truncation limit at
-$-500$. I expected this to be a moderately difficult task for all
-algorithms. Figure~\ref{fig:lc-acrobot} shows the learning curves.
+Acrobot requires swinging a two-link pendulum above a bar. Returns are negative (closer to zero is better), with the truncation limit at $-500$. I expected this to be a somewhat more difficult task than the previous one for all algorithms. Figure~\ref{fig:lc-acrobot} shows the learning curves.
 
 \begin{figure}[htbp!]
   \centering
-  \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/learning_curves_acrobot-v1.png}
-  \caption[Learning curves for Acrobot-v1]{Learning curves for Acrobot-v1. A2C and PPO both converge
-           near the optimal return ($\approx -85$). RPPO fails entirely
-           (median $\approx -500$, the episode truncation limit).}
+  \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/learning_curves_acrobot-v2(correct).png}
+  \caption{Learning curves for Acrobot-v1. A2C and PPO both converge near the optimal return ($\approx -85$). RPPO and DQN both fail entirely, remaining near the episode truncation limit of $-500$ throughout training.}
   \label{fig:lc-acrobot}
 \end{figure}
 
-PPO and A2C both achieve normalised IQM above 1.0 (PPO: $1.039$,
-A2C: $1.040$), meaning they consistently beat the reference maximum
-return. The real shock was RPPO: it catastrophically fails with IQM
-$-0.001$, and 12 of its 15 seeds remain stuck at the random-policy
-floor ($-500$). This is a fully-observed six-dimensional MDP---the
-LSTM has nothing useful to remember from the past. Instead, the
-additional recurrent parameters create an optimisation landscape that
-gradient descent cannot navigate effectively within 200K steps. More
-capacity does not mean better performance; here, it means strictly
-worse.
+PPO and A2C both achieve normalised IQM above 1.0 (PPO: $1.039$, A2C: $1.040$), meaning they consistently beat the reference maximum return. The real unpleasantness was RPPO: it catastrophically fails with IQM $-0.001$, and 12 of its 15 seeds remain stuck at the random-policy floor ($-500$). DQN fares no better—its median stays pinned at $-500$ for the entire training run, with almost no seeds escaping the floor. Unlike RPPO, whose failure stems from unnecessary recurrent capacity complicating the optimisation landscape, DQN's collapse likely reflects its sample-inefficiency on a task where sparse rewards require many steps of credit assignment before any useful gradient signal emerges. This is a fully-observed six-dimensional MDP—the LSTM has nothing useful to remember from the past. Instead, the additional recurrent parameters create an optimisation landscape that gradient descent cannot navigate effectively within 200K steps. More capacity does not mean better performance here. On the contrary, it means strictly worse.
 
-The RPPO collapse on Acrobot is noted as a failure case and discussed further in the limitations section. Testing RPPO on a POMDP environment where memory is genuinely needed is left as future work.
-
+The RPPO collapse on Acrobot is noted as a failure case and discussed further in the limitations section.
 \subsection{LunarLander-v3}
 \label{sec:lunarlander}
 
@@ -317,7 +288,7 @@ an unexpected twist.
 
 \begin{figure}[htbp!]
   \centering
-  \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/learning_curves_lunarlander-v3.png}
+  \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/learning_curves_lunarlander-v3.2.png}
   \caption[Learning curves for LunarLander-v3]{Learning curves for LunarLander-v3. PPO achieves the highest
            median return ($\approx 230$). A2C learns initially but exhibits
            high variance and eventual performance collapse.}
@@ -348,7 +319,8 @@ across all tasks.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/combined_learning_curves.png}
-  \caption[Combined learning curves: classic-control benchmark]{Combined normalised learning curves across all three
+  \caption[Combined normalized learning curves across all three
+           environments]{Combined normalized learning curves across all three
            environments. PPO and A2C are the only algorithms that
            consistently rise above the random baseline across all tasks.
 }
@@ -371,7 +343,7 @@ baseline.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/score_distribution.png}
-  \caption[Score distributions: classic-control benchmark]{Distribution of normalised scores per environment. PPO is
+  \caption{Distribution of normalised scores per environment. PPO is
            concentrated near 1.0; A2C is bimodal (strong on CartPole and
            Acrobot, weak on LunarLander); DQN and QR-DQN are concentrated
            near zero.
@@ -382,7 +354,7 @@ baseline.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/per_seed_heatmap.png}
-  \caption[Per-seed score heatmap: classic-control benchmark]{Heatmap of normalised final scores by seed and environment.
+  \caption{Heatmap of normalised final scores by seed and environment.
            Each row is one of 15 seeds; columns are environments.
            PPO achieves uniformly high scores. RPPO shows a clear
            environment-dependent failure mode on Acrobot.
@@ -393,7 +365,7 @@ baseline.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/per_seed_boxswarm.png}
-  \caption[Per-seed score spread: classic-control benchmark]{Box-and-swarm plot of per-seed normalised scores. Individual
+  \caption{Box-and-swarm plot of per-seed normalised scores. Individual
            seeds are shown as dots; boxes indicate the IQR. A2C exhibits
            the widest spread on LunarLander; PPO has near-zero variance
            on CartPole and Acrobot. Red crosses mark seeds below the
@@ -441,7 +413,7 @@ the tightest confidence interval and the smallest optimality gap ($0.078$).
 
 \begin{table}[htbp!]
 \centering
-\caption[Cross-environment aggregate metrics]{Cross-environment aggregate metrics (normalised scores). IQM,
+\caption{Cross-environment aggregate metrics (normalised scores). IQM,
          mean, and median are reported with 95\% bootstrap CIs.}
 \label{tab:cross-env}
 \begin{tabular}{lcccc}
@@ -466,7 +438,7 @@ QR-DQN & $0.080\;[0.045,\;0.121]$ & $0.168\;[0.115,\;0.225]$
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/final_performance.png}
-  \caption[Cross-environment IQM: classic-control benchmark]{Cross-environment IQM, mean, and median with 95\% bootstrap
+  \caption{Cross-environment IQM, mean, and median with 95\% bootstrap
            confidence intervals. PPO and A2C clearly separate from the
            remaining algorithms.}
   \label{fig:final-perf}
@@ -483,7 +455,7 @@ drop below 50\% at $\tau = 0.3$.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/performance_profile.png}
-  \caption[Performance profiles: classic-control benchmark]{Performance profiles with 95\% bootstrap CIs. Higher curves
+  \caption{Performance profiles with 95\% bootstrap CIs. Higher curves
            indicate a larger fraction of runs exceeding each score
            threshold $\tau$.}
   \label{fig:perf-profile}
@@ -492,7 +464,7 @@ drop below 50\% at $\tau = 0.3$.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/optimality_gap.png}
-  \caption[Optimality gap: classic-control benchmark]{Optimality gap with 95\% bootstrap CIs. Lower values indicate
+  \caption{Optimality gap with 95\% bootstrap CIs. Lower values indicate
            smaller shortfall from the target. PPO ($0.078$) has the
            smallest gap; QR-DQN ($0.832$) has the largest.}
   \label{fig:opt-gap}
@@ -530,7 +502,7 @@ efficiency as normalised AUC over the training budget.
     \caption{Combined (normalised)}
     \label{fig:se-combined}
   \end{subfigure}
-  \caption[Sample efficiency: classic-control benchmark]{Sample efficiency (normalised AUC) per environment and combined.
+  \caption{Sample efficiency (normalised AUC) per environment and combined.
            PPO and A2C lead on CartPole and Acrobot; all algorithms struggle
            on LunarLander.}
   \label{fig:sample-eff}
@@ -587,7 +559,7 @@ QR-DQN & 0.000 & 0.061 & 0.256 & 0.279 & ---   \\
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=0.8\linewidth]{4_exp1_classic_control/assets/poi_heatmap.png}
-  \caption[Probability of improvement: classic-control benchmark]{Probability-of-improvement heatmap. PPO dominates all pairwise
+  \caption{Probability-of-improvement heatmap. PPO dominates all pairwise
            comparisons. DQN vs QR-DQN is the closest pairing ($0.721$).}
   \label{fig:poi}
 \end{figure}
@@ -598,7 +570,7 @@ QR-DQN & 0.000 & 0.061 & 0.256 & 0.279 & ---   \\
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/timing_analysis.png}
-  \caption[Training time per algorithm: classic-control benchmark]{Wall-clock training time per algorithm and environment. RPPO
+  \caption{Wall-clock training time per algorithm and environment. RPPO
            is $3$--$4\times$ slower than all other algorithms due to the
            recurrent architecture.}
   \label{fig:timing}
