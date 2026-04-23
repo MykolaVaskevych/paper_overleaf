@@ -1,6 +1,8 @@
 
 \chapter{Literature Review}
 \label{chap:lit-review}
+
+
 \ifpdf
     \graphicspath{{2_literature_review/figures/PNG/}{2_literature_review/figures/PDF/}{2_literature_review/figures/}}
 \else
@@ -201,7 +203,7 @@ Two main Dynamic Programming methods are commonly used:
 Both methods are guaranteed to converge to the optimal policy and often converge quickly in small problems. However, Dynamic Programming is not very practical in real-world applications because it requires exact knowledge of the environment dynamics and becomes computationally intense for large state spaces.
 
 
-%\newpage
+
 \subsection{Monte Carlo Methods}
 
 Monte Carlo methods require only experience. \cite{sutton}, without needing a model of the environment, its main difference from Dynamic Programing which requires full environment dynamics $p(s', r \mid s, a)$. 
@@ -543,8 +545,8 @@ For Markov decision processes, the baseline should vary with state. In some stat
 
 One natural choice for the baseline is an estimate of the state value, $\hat v(S_t,w)$, where $w \in \mathbb{R}^m$ is a weight vector learned by one of the methods presented previously. Because REINFORCE is a Monte Carlo method for learning the policy parameters $\theta$, it is natural to also use a Monte Carlo method to learn the state-value weights $w$.
 
-\newpage
-\subsubsection{REINFORCE with Baseline (episodic)}
+% \newpage
+\subsubsection{Episodic REINFORCE with Baseline}
 
 
 Input: a differentiable policy parameterization $\pi(a|s,\theta)$
@@ -584,7 +586,7 @@ This algorithm has two step sizes, $\alpha_\theta$ and $\alpha_w$. Choosing the 
 
 Although the REINFORCE-with-baseline method learns both a policy and a state-value function, we do not consider it to be an actor–critic method because its state-value function is used only as a baseline, not as a critic. That is, it is not used for bootstrapping (updating the value estimate for a state from the estimated values of subsequent states), but only as a baseline for the state whose estimate is being updated \cite{sutton}.
 
-\newpage
+% \newpage
 \subsection{Actor -- Critic Methods}
 
 
@@ -644,7 +646,7 @@ Proximal Policy Optimisation \citep{schulman2017ppo} is an actor-critic method t
 %% ================================================================
 %%  EVALUATION FRAMEWORK
 %% ================================================================
-\newpage
+% \newpage
 \section{Evaluation Framework}
 \label{sec:eval-framework}
 
@@ -699,7 +701,7 @@ Cross-environment metrics summarise the score matrix $X(T)$. With $M \leq 3$ env
 %% ================================================================
 %%  CHAPTER CONCLUSION
 %% ================================================================
-\newpage
+% \newpage
 \section{Conclusion}
 
 

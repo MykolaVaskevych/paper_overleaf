@@ -1,7 +1,7 @@
 % this file is called up by thesis.tex
 % content in this file will be fed into the main document
 
-\chapter{Prototypes (mixed LOL)} % top level followed by section, subsection
+\chapter{Prototypes} % top level followed by section, subsection
 
 \ifpdf
     \graphicspath{{3_prototypes/figures/PNG/}{3_prototypes/figures/PDF/}{3_prototypes/figures/}}
@@ -16,7 +16,7 @@
     For the DQN prototype, I implemented a Deep Q-Network agent to solve the Atari \textit{Breakout} environment. This implementation follows the core ideas presented by DeepMind and uses the \texttt{stable-baselines3} library to ensure a reliable and standardized implementation.
 
 
-\newpage
+% \newpage
 \subsection{Environment Setup}
     
     The Atari environment is created using the \textit{NoFrameskip} version of Breakout to maintain consistency with the original DQN experiments. Multiple parallel environments are instantiated to improve data collection efficiency. Frame stacking is applied so that the agent can observe temporal information across consecutive frames.
