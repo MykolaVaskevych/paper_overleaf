@@ -1,9 +1,0 @@
-
-rewrite why cpu and not gpu parts (also has dubs)
-
-
-regenerate plots to fix nicely
-
-fix red text
-
-

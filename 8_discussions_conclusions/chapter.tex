@@ -1,0 +1,50 @@
+
+\chapter{Discussions \& Conclusions}
+\label{chap:conclusions}
+
+
+
+% \ifpdf
+%     \graphicspath{{7_conclusions/figures/PNG/}{7_conclusions/figures/PDF/}{7_conclusions/figures/}}
+% \else
+%     \graphicspath{{7_conclusions/figures/EPS/}{7_conclusions/figures/}}
+% \fi
+
+
+
+
+\textcolor{red}{
+Add a new Chapter 8: "Discussion and Conclusions" — approximately one page, free prose (no bullet
+lists), structured as three paragraphs:
+Paragraph 1: restate the research question and give the direct answer.
+Paragraph 2: reflect on the difficulty of the project and the key learnings.
+Paragraph 3: future work (moved from Chapter 7).
+}
+
+\section{Future Work}
+
+
+\begin{itemize}
+  \item \textbf{Repeat Experiment~3 with the intended 400K DQN buffer
+  size.} This is the most direct follow-up: the buffer oversight means
+  the Breakout result should be re-verified with the correct
+  configuration.
+  \item \textbf{Longer training budgets.} Running to 50M+ frames on
+  Atari would bring the comparison closer to the original DQN and PPO
+  paper settings, and may further change the per-environment ranking.
+  \item \textbf{Larger $M$.} Adding more Atari environments
+  (SpaceInvaders, MsPacman, BeamRider) and more classic-control
+  environments (MountainCar, Pendulum) would make the cross-environment
+  aggregates more stable and the conclusions more generalisable.
+  \item \textbf{Hyperparameter tuning study.} Tuning one environment
+  per algorithm would quantify the gap between ``default SB3'' and
+  ``best achievable'', giving context to the default-hyperparameter
+  numbers reported here.
+  \item \textbf{Continuous-control extension.} A MuJoCo or
+  continuous-control study would test whether the per-environment
+  pattern seen here generalises beyond discrete-action domains, where
+  policy-gradient methods are typically expected to have a larger
+  advantage.
+\end{itemize}
+
+

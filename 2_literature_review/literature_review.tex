@@ -640,13 +640,24 @@ Proximal Policy Optimisation \citep{schulman2017ppo} is an actor-critic method t
 
 
 
+{\color{red}
+\section{Experimental Frameworks and Tooling}
+\label{sec:tooling}
+
+\subsection{Gymnasium}
+...
+
+\subsection{Stable-Baselines3}
+...
+
+\subsection{Stable-Baselines3 Contrib and Extensions}
+...
+
+\subsection{Reproducibility Considerations}
+...
+}
 
 
-
-%% ================================================================
-%%  EVALUATION FRAMEWORK
-%% ================================================================
-% \newpage
 \section{Evaluation Framework}
 \label{sec:eval-framework}
 
@@ -698,10 +709,7 @@ Cross-environment metrics summarise the score matrix $X(T)$. With $M \leq 3$ env
 \item \textbf{Optimality gap}: $\mathrm{Gap}(\tau) = \tau - \frac{1}{MN}\sum_{m,n}\min(x_{m,n}(T),\tau)$. Measures shortfall from a predefined target while clipping large outliers.
 \end{itemize}
 
-%% ================================================================
-%%  CHAPTER CONCLUSION
-%% ================================================================
-% \newpage
+
 \section{Conclusion}
 
 
