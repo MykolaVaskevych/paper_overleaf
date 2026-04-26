@@ -109,15 +109,7 @@ Figure~\ref{fig:exp3-lc-combined} overlays all three environments on a normalise
 \section{Score Distributions and Per-Seed Analysis}
 \label{sec:exp3-score-dist}
 
-Figures~\ref{fig:exp3-score-dist},~\ref{fig:exp3-heatmap}, and~\ref{fig:exp3-boxswarm} provide three complementary views. DQN scores are concentrated in the mid-range across all three environments. PPO is bimodal, with Pong and Seaquest seeds near their normalised ceilings and Breakout seeds near the floor.
-
-\begin{figure}[htbp!]
-  \centering
-  \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/score_distribution.png}
-  \caption[Score distributions: Pong, Breakout, Seaquest]{Distribution of normalised final scores per environment. DQN is concentrated
-           mid-range; PPO is bimodal (high on Pong and Seaquest, low on Breakout).}
-  \label{fig:exp3-score-dist}
-\end{figure}
+Figures~\ref{fig:exp3-heatmap} and~\ref{fig:exp3-boxswarm} provide two complementary views. PPO dominates Pong (normalised scores $0.82$--$1.00$) while Breakout and Seaquest are both near the floor ($0.04$--$0.31$ and $0.02$--$0.03$ respectively). DQN Breakout occupies the mid-range ($0.38$--$0.84$); DQN Pong is wide-spread; both algorithms are near zero on Seaquest in normalised terms.
 
 \begin{figure}[htbp!]
   \centering
@@ -150,8 +142,8 @@ Table~\ref{tab:exp3-cross-env} and Figure~\ref{fig:exp3-final-perf} report the c
 \toprule
 \textbf{Algorithm} & \textbf{IQM} & \textbf{Mean} & \textbf{Median} & \textbf{Opt.\ Gap} \\
 \midrule
-DQN & $0.443\;[0.369,\;0.521]$ & --- & --- & $0.550\;[0.500,\;0.607]$ \\
-PPO & $0.277\;[0.247,\;0.309]$ & --- & --- & $0.614\;[0.597,\;0.632]$ \\
+DQN & $0.443\;[0.369,\;0.521]$ & $0.450\;[0.393,\;0.500]$ & $0.571\;[0.504,\;0.647]$ & $0.550\;[0.500,\;0.607]$ \\
+PPO & $0.277\;[0.247,\;0.309]$ & $0.386\;[0.368,\;0.403]$ & $0.161\;[0.121,\;0.204]$ & $0.614\;[0.597,\;0.632]$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -219,6 +211,22 @@ Figure~\ref{fig:exp3-poi} shows that $P(\text{DQN}>\text{PPO}) = 0.393$, meaning
   \caption{Sample efficiency (normalised AUC) per environment at the 20M-step budget.}
   \label{fig:exp3-sample-eff}
 \end{figure}
+
+Table~\ref{tab:exp3-sample-eff} reports the normalised AUC values. PPO is dramatically more sample-efficient on Pong ($0.955$ vs $0.359$), reflecting its rapid early convergence. On Breakout, DQN is more efficient ($0.217$ vs $0.117$) --- its value-based learning compounds steadily throughout the budget. On Seaquest, both algorithms are inefficient in normalised terms owing to the environment's extremely high theoretical maximum; DQN ($0.008$) and PPO ($0.024$) both remain far below 1.0 throughout.
+
+\begin{table}[htbp!]
+\centering
+\caption{Sample efficiency (normalised AUC) per environment at the 20M-step budget.}
+\label{tab:exp3-sample-eff}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Algorithm} & \textbf{Pong} & \textbf{Breakout} & \textbf{Seaquest} \\
+\midrule
+PPO & 0.955 & 0.117 & 0.024 \\
+DQN & 0.359 & 0.217 & 0.008 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 %% ------------------------------------------------------------------
 \section{Reproducibility Finding}
