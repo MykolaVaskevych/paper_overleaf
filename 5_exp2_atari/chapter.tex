@@ -152,28 +152,7 @@ Before viewing the results, I formed the following expectations:
 \section{Training Summary}
 \label{sec:atari-training}
 
-Table~\ref{tab:atari-training-time} reports the wall-clock training
-times for all 40 runs (2 algorithms $\times$ 2 environments $\times$
-10 seeds). The total compute was approximately
-\textbf{52~hours}: PPO required $98{,}073$\,s (${\approx}27$\,h)
-and DQN $89{,}031$\,s (${\approx}25$\,h).
-
-\begin{table}[htbp!]
-\centering
-\caption{Wall-clock training time (seconds) per algorithm, summed over
-         10 seeds per environment.}
-\label{tab:atari-training-time}
-\begin{tabular}{lrr}
-\toprule
-\textbf{Environment} & \textbf{PPO} & \textbf{DQN} \\
-\midrule
-Pong      & 59{,}569 & 68{,}542 \\
-Breakout  & 38{,}504 & 20{,}489 \\
-\midrule
-\textbf{Total} & 98{,}073 & 89{,}031 \\
-\bottomrule
-\end{tabular}
-\end{table}
+{\color{red} Wall-clock training times were not fully captured for this experiment. A memory leak in the DQN training script caused instrumentation to fail silently, leaving no training-time records for either DQN environment. PPO Breakout timing was captured in full ($38{,}606$\,s across 10 seeds, ${\approx}10.7$\,h); PPO Pong was only partially recorded (3 of 10 seeds, $17{,}321$\,s for those three). The instrumentation issue was identified and resolved for Experiment~3, where all 60 seeds were re-timed via deterministic retraining; complete wall-clock figures are reported there (Section~\ref{sec:exp3-timing}).}
 
 %% ------------------------------------------------------------------
 \section{Per-Environment Results}
@@ -247,32 +226,23 @@ ahead.
 \subsection{Score Distributions and Per-Seed Analysis}
 \label{sec:atari-score-dist}
 
-Figures~\ref{fig:atari-score-dist},~\ref{fig:atari-heatmap},
-and~\ref{fig:atari-boxswarm} provide three complementary views of the
-per-seed results. The score distribution
-(Figure~\ref{fig:atari-score-dist}) shows PPO's Pong scores
-concentrated near $1.0$ while all Breakout scores cluster near zero.
-The heatmap (Figure~\ref{fig:atari-heatmap}) makes this stark: the
-PPO$\times$Pong column is uniformly green ($0.93$--$1.00$), while
-the Breakout column is uniformly red for both algorithms. The
+Figures~\ref{fig:atari-heatmap} and~\ref{fig:atari-boxswarm} provide
+two complementary views of the per-seed results. The heatmap
+(Figure~\ref{fig:atari-heatmap}) makes the contrast stark:
+PPO$\times$Pong is the only uniformly green column ($0.93$--$1.00$);
+Breakout is uniformly red for both algorithms; and DQN$\times$Pong
+spans the full colour range, reflecting its high seed-to-seed
+variance. The
 box-and-swarm plot (Figure~\ref{fig:atari-boxswarm}) highlights DQN's
 wide spread on both environments.
 
 \begin{figure}[htbp!]
   \centering
-  \includegraphics[width=\linewidth]{5_exp2_atari/assets/score_distribution.png}
-  \caption[Score distributions: Pong and Breakout]{Distribution of normalised scores per environment. PPO Pong
-           scores are concentrated near 1.0; all Breakout scores
-           cluster near zero.}
-  \label{fig:atari-score-dist}
-\end{figure}
-
-\begin{figure}[htbp!]
-  \centering
   \includegraphics[width=\linewidth]{5_exp2_atari/assets/per_seed_heatmap.png}
   \caption[Per-seed score heatmap: Pong and Breakout]{Heatmap of normalised final scores by seed and environment.
-           PPO$\times$Pong is uniformly high; Breakout performance is
-           low for both algorithms.}
+           PPO$\times$Pong is the only uniformly green column
+           ($0.93$--$1.00$); Breakout is red for both algorithms;
+           DQN$\times$Pong shows high seed-to-seed variance.}
   \label{fig:atari-heatmap}
 \end{figure}
 
@@ -431,29 +401,7 @@ deficit, preventing a clear-cut verdict.
 \subsection{Wall-Clock Timing Analysis}
 \label{sec:atari-timing}
 
-Training times are reported in Table~\ref{tab:atari-training-time}
-(Section~\ref{sec:atari-training}). Here I focus on evaluation timing.
-Figure~\ref{fig:atari-timing} shows the evaluation timing breakdown.
-PPO evaluation took $1{,}256$\,s total ($823$\,s Pong, $434$\,s
-Breakout); DQN evaluation took $2{,}133$\,s total ($1{,}704$\,s Pong,
-$429$\,s Breakout). DQN's Pong evaluation is disproportionately slow
-because lower scores mean longer episodes (the opponent scores points
-more slowly when the agent puts up some resistance, but not enough
-to win quickly).
-
-Combining training and evaluation, the total wall-clock cost of
-Experiment~2 was approximately $190{,}462$\,s (${\approx}53$\,h):
-$99{,}329$\,s for PPO and $91{,}164$\,s for DQN. Training dominates
-the budget---evaluation accounts for less than 2\% of the total.
-
-\begin{figure}[htbp!]
-  \centering
-  \includegraphics[width=\linewidth]{5_exp2_atari/assets/timing_analysis.png}
-  \caption[Training time: Pong and Breakout]{Wall-clock evaluation time per algorithm and environment.
-           DQN Pong evaluation is slowest due to longer episodes from
-           intermediate-skill play.}
-  \label{fig:atari-timing}
-\end{figure}
+{\color{red} Training-time records were not fully captured; see Section~\ref{sec:atari-training}. Evaluation timing was recorded successfully for both algorithms: PPO evaluation completed in $1{,}256$\,s total ($823$\,s Pong, $434$\,s Breakout); DQN evaluation required $2{,}133$\,s total ($1{,}704$\,s Pong, $429$\,s Breakout). DQN Pong evaluation is the slowest because low-scoring seeds produce longer episodes --- the agent resists the opponent enough to extend rallies without winning quickly. Full training timing for both algorithms is reported in Chapter~\ref{chap:exp3} (Section~\ref{sec:exp3-timing}).}
 
 %% ------------------------------------------------------------------
 \section{Key Findings: Expectations vs Reality}
