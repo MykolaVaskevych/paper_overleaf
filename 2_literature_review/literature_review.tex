@@ -630,13 +630,13 @@ Compared to pure policy gradient methods, actor-critic has lower variance becaus
 \label{subsec:a2c}
 
 Advantage Actor-Critic (A2C) is a synchronous variant of the Asynchronous Advantage Actor-Critic (A3C) method \citep{mnih2016a3c}, using the advantage function $A(s,a) = Q(s,a) - V(s)$ as the policy gradient signal to reduce variance while maintaining unbiased updates. Unlike A3C, which runs multiple actors in parallel threads with asynchronous gradient updates, A2C collects experience from all parallel environments synchronously before performing a single update, making it simpler to implement and reason about.
-\textcolor{red}{TODO: Expand this subsection with full description of A2C, advantage estimation, generalised advantage estimation (GAE), and comparison with A3C.}
+{\color{red} TODO: Expand this subsection with full description of A2C, advantage estimation, generalised advantage estimation (GAE), and comparison with A3C.}
 
 \subsection{Proximal Policy Optimisation (PPO)}
 \label{subsec:ppo}
 
 Proximal Policy Optimisation \citep{schulman2017ppo} is an actor-critic method that improves on A2C and REINFORCE by using a clipped surrogate objective to prevent excessively large policy updates, achieving stable training without the complexity of second-order trust-region methods (such as TRPO). PPO is currently one of the most widely used deep RL algorithms and serves as the primary actor-critic representative in the experiments of this thesis.
-\textcolor{red}{TODO: Expand this subsection with full description of the PPO clipped objective, generalised advantage estimation, epoch-level minibatch updates, and key hyperparameters.}
+{\color{red} TODO: Expand this subsection with full description of the PPO clipped objective, generalised advantage estimation, epoch-level minibatch updates, and key hyperparameters.}
 
 
 
@@ -645,16 +645,20 @@ Proximal Policy Optimisation \citep{schulman2017ppo} is an actor-critic method t
 \label{sec:tooling}
 
 \subsection{Gymnasium}
-...
+\label{subsec:gymnasium}
+Gymnasium \citep{towers2024gymnasium} is a Python library providing a standardised interface for reinforcement learning environments. It is the maintained successor to OpenAI Gym and is now the de-facto standard for RL research and benchmarking. Gymnasium defines a consistent \texttt{reset}/\texttt{step}/\texttt{render} API that decouples algorithm implementations from environment details, making it straightforward to swap environments without changing training code. It ships with a wide range of reference environments, including the classic-control tasks (CartPole, Acrobot, LunarLander) used in Experiment~1 and, via the Arcade Learning Environment \citep{bellemare2013ale}, the Atari 2600 games used in Experiments~2 and~3. All environments in this thesis are instantiated through the Gymnasium API.
 
 \subsection{Stable-Baselines3}
-...
+\label{subsec:sb3}
+Stable-Baselines3 (SB3, v2.7.1) \citep{raffin2021sb3} is a set of reliable, well-tested PyTorch implementations of standard deep RL algorithms, including DQN, PPO, and A2C. It provides a consistent training API, built-in vectorised environments, evaluation utilities, and callback infrastructure. A key design goal of SB3 is reproducibility: all algorithms ship with carefully chosen default hyperparameters that are documented and stable across releases. This project uses SB3 exclusively for all algorithm implementations. Using a single, shared framework ensures that observed performance differences reflect genuine algorithmic properties rather than implementation quality or incidental hyperparameter choices.
 
 \subsection{Stable-Baselines3 Contrib and Extensions}
-...
+\label{subsec:sb3contrib}
+\texttt{sb3-contrib} is the official extension package for SB3, hosting algorithms that are functional but not yet part of the main stable release. Two algorithms used in Experiment~1 are sourced from this package: QR-DQN, a distributional variant of DQN that models the full return distribution rather than a scalar Q-value, and RecurrentPPO, a variant of PPO augmented with an LSTM layer to handle partial observability. Both are used with their \texttt{sb3-contrib} default hyperparameters under the same fair-comparison protocol as the main SB3 algorithms.
 
 \subsection{Reproducibility Considerations}
-...
+\label{subsec:rliable}
+Statistical evaluation in this thesis follows the \texttt{rliable} methodology of \citet{agarwal2021precipice}, which provides robust aggregate metrics (IQM, optimality gap, performance profiles, and probability of improvement) with stratified bootstrap confidence intervals. These metrics are more reliable than mean scores in the small-sample regime typical of RL research. The full evaluation protocol, including seeding strategy and score normalisation, is defined in Section~\ref{sec:eval-framework}.
 }
 
 

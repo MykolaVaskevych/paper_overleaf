@@ -67,20 +67,20 @@ Policy                  & MLP  & MLP  & MLP  & MLP  & MLP+LSTM \\
 \end{tabular}}
 \end{table}
 
-\subsection{Why Local Training \textcolor{red}{remove?}}
+\subsection{Why Local Training {\color{red} remove?}}
 \label{sec:why-local}
 
 An early design decision was whether to train locally or on Google
 Colab. I chose local training for four reasons:
 
 \begin{enumerate}
-  \item \textbf{RL bottlenecks on CPU, not GPU.} \textcolor{red}{(REMOVE?)}
+  \item \textbf{RL bottlenecks on CPU, not GPU.} {\color{red} (REMOVE?)}
         Classic-control environments are simulated entirely on the CPU,
         and the MLP policies used here are small enough that GPU
         offloading provides no throughput benefit---the PCIe transfer
         latency dominates.
 
-  \item \textbf{Deterministic seeding requires CPU-only execution. \textcolor{red}{(REMOVE?)}}
+  \item \textbf{Deterministic seeding requires CPU-only execution. {\color{red} (REMOVE?)}}
         PyTorch's deterministic mode guarantees bitwise reproducibility
         only when all computation stays on the CPU; the same seeds
         produce different trajectories on GPU due to non-deterministic
@@ -161,24 +161,24 @@ on the literature that I have reviewed and my intuition:
 
 \begin{enumerate}
 
-    \item \textbf{DQN should handle CartPole.}
+    \item {\color{red} \textbf{H1.1 ---}} \textbf{DQN should handle CartPole.}
     CartPole is the most common textbook DQN benchmark \citep{mnih2015human};
     I expected both DQN and QR-DQN to solve it comfortably within
     200K steps, which were given.
-    
-    \item \textbf{QR-DQN should improve over DQN.}
+
+    \item {\color{red} \textbf{H1.2 ---}} \textbf{QR-DQN should improve over DQN.}
     RL is theoretically superior to point-estimate
     Q-learning \citep{dabney2018qrdqn}, so I expected QR-DQN to
     match or exceed DQN on every environment.
-    
-    \item \textbf{PPO and A2C should produce competitive results.}
+
+    \item {\color{red} \textbf{H1.3 ---}} \textbf{PPO and A2C should produce competitive results.}
     As modern on-policy methods with well-tuned defaults from SB3,
     both were expected to perform well across all three environments.
-    
-    \item \textbf{RPPO's long short-term memory (LSTM) is unlikely to help and may hurt performance.}
+
+    \item {\color{red} \textbf{H1.4 ---}} \textbf{RPPO's long short-term memory (LSTM) is unlikely to help and may hurt performance.}
     These environments are fully observable, so the extra memory from the LSTM is probably unnecessary. I expected RPPO to perform about the same as PPO, or worse, because the recurrent model is harder to train and less sample-efficient.
-    
-    \item \textbf{Difficulty ordering: CartPole $<$ Acrobot $<$ LunarLander.}
+
+    \item {\color{red} \textbf{H1.5 ---}} \textbf{Difficulty ordering: CartPole $<$ Acrobot $<$ LunarLander.}
     CartPole has the simplest dynamics and the shortest horizon.
     LunarLander has the highest-dimensional state and requires
     the most samples.
@@ -229,6 +229,8 @@ computational efficiency.
 \section{Per-Environment Results}
 \label{sec:per-env-results}
 
+{\color{red} The following subsections present results for each of the three environments individually. Across all three, actor-critic methods consistently outperform the DQN family at the training budgets used. The picture is unambiguous: PPO and A2C learn reliably, while DQN and QR-DQN fail to make meaningful progress within the allowed steps. The key findings and comparison against hypotheses are synthesised in Section~\ref{sec:key-findings}.}
+
 \subsection{CartPole-v1}
 \label{sec:cartpole}
 
@@ -260,7 +262,7 @@ insufficient samples for the value network to converge. QR-DQN is worse
 because its distributional head has more parameters to fit with the same
 data. 
 
-This highlights how default configurations can lead to suboptimal performance for off-policy methods under limited training budgets, and suggests that while longer training would likely allow convergence comparable to A2C and PPO, it would come at a significantly higher computational cost. This is left as future work (see Chapter~\ref{chap:conclusions}).
+This highlights how default configurations can lead to suboptimal performance for off-policy methods under limited training budgets, and suggests that while longer training would likely allow convergence comparable to A2C and PPO, it would come at a significantly higher computational cost. This is left as future work (see Chapter~\ref{chap:evaluation}).
 
 \subsection{Acrobot-v1}
 \label{sec:acrobot}
@@ -621,12 +623,13 @@ the classic-control literature, and the results reflect what a
 practitioner would observe when running these algorithms
 ``out of the box''.
 
+{\color{red} \paragraph{Comparison with published benchmarks.}
+PPO's dominance on all three environments is consistent with the reliability of on-policy methods reported in the literature \citep{schulman2017ppo}. The failure of DQN and QR-DQN at these budgets aligns with documented sensitivities of off-policy methods to training duration \citep{henderson2018matters}: without sufficient steps to warm up the replay buffer, value-based methods fail to learn regardless of their eventual capability ceiling.}
+
 %% ------------------------------------------------------------------
-\section{Discussion}
-\label{sec:discussion}
+{\color{red} \section{Threats to Validity}}
+\label{sec:threats}
 
-
-\paragraph{Limitations.}
 Several limitations constrain the generalisability of these results:
 \begin{itemize}
   \item \textbf{Small environment suite ($M = 3$).} Cross-environment
@@ -650,7 +653,10 @@ Several limitations constrain the generalisability of these results:
         architectures.
 \end{itemize}
 
-These limitations are addressed further in Chapter~\ref{chap:conclusions}.
+These limitations are addressed further in Chapter~\ref{chap:evaluation}.
+
+\section{Discussion}
+\label{sec:discussion}
 
 \paragraph{Future work.}
 Extending this evaluation to continuous-action environments

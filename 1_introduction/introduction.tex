@@ -12,7 +12,13 @@
 \section{Overview}
 
 
-This Final Year Project (FYP) compares and contrasts two families of Reinforcement Learning algorithms: Policy Gradient approaches and Value-based Functions. A set of gym environments for classic control and Atari are selected based on their properties, and serve as a test suit for the comparision. Metrics are defined that take account of training time,  performance, and ability to generalise. This FYP proposes a set of guidelines for novices to follow when choosing an RL algorithm to solve their specific problem.
+{\color{red} 
+This Final Year Project compares two families of deep reinforcement learning algorithms: value-based methods, which learn by estimating the value of situations, and actor-critic methods, which learn by directly improving the strategy that works. Three experiments of increasing scope and depth test both families under identical conditions --- same framework, same default settings, no per-algorithm tuning --- so that differences in results reflect genuine algorithmic character rather than configuration effort.
+
+The results show that actor-critic methods are the more reliable default: they produce strong, consistent results across all tested settings with no special setup. Value-based methods are not weaker --- they are more demanding. They require more training time, more careful configuration, and greater domain knowledge to reach their potential. This distinction matters for practice: the right question is not which family is better, but which is appropriate given the available budget and expertise.
+
+A secondary finding is methodological: from the same data, different evaluation metrics can produce opposite conclusions about which algorithm family wins. This project demonstrates that a single aggregate number is insufficient --- and potentially misleading --- when comparing reinforcement learning algorithms.
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \textbf{2nd and 3rd paragraphs introduce RL} \\
@@ -130,8 +136,9 @@ The systematic literature review approximation can be broken down into five topi
 
 
 \subsection{Experimental Design}
+\label{subsec:experimental-design}
 
-While there are already studies comparing several reinforcement learning architectures, no research was discovered that directly contrasts Deep Q-Network algorithms with Actor-Critic algorithms under identical experimental conditions. By implementing both approaches in this project, external factors that might influence performance could be maintained at a consistent level. Moreover, implementing both algorithm families facilitated the validation of existing research and the expansion on recent findings. Establishing a basis for future research and fostering transparency were other motivating factors for prototype development.
+{\color{red} While studies comparing these algorithm families exist \citep{defuente2024comparative}, they typically involve per-algorithm hyperparameter tuning, making it difficult to separate algorithmic capability from configuration effort. This project takes a different approach: Stable-Baselines3 default hyperparameters are used for every algorithm across all three experiments, with no tuning of any kind. The importance of this distinction is illustrated by \citet{mnih2015human}, who acknowledge that their published DQN results relied on hyperparameters ``selected by performing an informal search,'' noting that ``it is conceivable that even better results could be obtained by systematically tuning the hyperparameter values.'' All results in this thesis reflect what each algorithm delivers out of the box --- an intentional choice to measure inherent algorithmic behaviour rather than tuning effort.} Moreover, implementing both algorithm families facilitated the validation of existing research and the expansion on recent findings. Establishing a basis for future research and fostering transparency were other motivating factors for prototype development.
 
 In addition to discussing the main implementation components that comprise the DQN and Actor-Critic architectures, Chapter 3 provides a comprehensive overview of the high-level architectural decisions, equipment employed, and problems encountered during experimentation. Chapter 3 can be broken down into four topics:
 
@@ -147,19 +154,11 @@ In addition to discussing the main implementation components that comprise the D
 
 \subsection{Data Collection}
 
-During training of the DQN Atari Breakout agent, several metrics were recorded to monitor learning progress, stability, and performance. Logging was handled automatically through the \texttt{stable-baselines3} framework and TensorBoard integration.
+{\color{red} 
+Data collection followed the same protocol across all three experiments. During training, performance was measured via periodic frozen-policy evaluations rather than live training rewards, since training rewards are algorithm-dependent and not a stable basis for comparison. At fixed step intervals, each agent was evaluated for a fixed number of episodes in a separate environment with no exploration noise, and the mean episodic return was recorded.
 
-The following data were collected:
-
-\begin{itemize}
-\item Reward: The mean episode reward was recorded during training and evaluation phases. This metric provides a direct measure of agent performance and learning progress.
-\item Loss: The training loss associated with Q-value updates was recorded to monitor convergence behavior and training stability.
-\item Evaluation Metrics: At fixed intervals, the agent was evaluated in a separate environment using the evaluation callback. Evaluation reward and episode length were recorded to assess generalization and performance consistency.
-\item Logs: TensorBoard logs were generated throughout training, including reward curves, loss values, and timing information.
-\item Video and Images: During evaluation runs, environment frames were captured and exported as images and short video clips to qualitatively assess agent behavior.
-\end{itemize}
-
-All data were recorded for the full duration of training, which consisted of ten million environment timesteps. These recordings form the basis for the quantitative and qualitative analysis presented in the following sections.
+Across all experiments, training used Stable-Baselines3 (Section~\ref{sec:tooling}) with its built-in \texttt{EvalCallback}, which handles evaluation scheduling and logging automatically. Final performance was assessed with a dedicated post-training evaluation of 50 episodes per seed. All seeds were derived deterministically from a single master seed per experiment using NumPy's \texttt{SeedSequence}, ensuring reproducibility. Full details of evaluation frequency, episode counts, and normalisation are defined in Section~\ref{sec:eval-framework}.
+}
 
 
 
@@ -175,22 +174,25 @@ All data were recorded for the full duration of training, which consisted of ten
 
 \subsection{Data Analysis}
 
-\begin{itemize}
-\item Kernel visualizations: The kernel visualizations gave insight into the effects of gradient descent. Kernel visualizations were compared using the root mean squared error between images.
-\item Reward: Reward fluctuations were visualised using a TensorBoard graph, from which convergence, divergence, training stability, ability to generalize, and duration could be concluded. TensorBoard also plots a smoothed reward, deduced by applying a technique known as Exponential Moving Average.
-\item Loss: Loss fluctuations were also visualised using a TensorBoard graph. Similarly to the reward plot, the loss plot allowed convergence, divergence, training stability, ability to generalize, and duration to be evaluated. TensorBoard also plots a smoothed loss, also deduced by applying the Exponential Moving Average technique.
-\end{itemize}
+{\color{red} 
+Results were analysed using the \texttt{rliable} statistical evaluation framework \citep{agarwal2021precipice} (Section~\ref{sec:eval-framework}). For each experiment, per-environment learning curves show performance over the training budget across all seeds, giving a picture of both speed and consistency. Final performance is summarised using interquartile mean (IQM) and pairwise probability of improvement, each reported with 95\% stratified bootstrap confidence intervals. Cross-environment aggregates are treated as descriptive summaries rather than definitive rankings, given the small number of environments per experiment. Full metric definitions and the normalisation procedure are provided in Section~\ref{sec:eval-framework}.
+}
 
 
 
 \subsection{Contributions}
 
-This project makes two main contributions to the field of Deep Reinforcement Learning.
+{\color{red} 
+This project makes three contributions to the empirical study of deep reinforcement learning.
 
 \begin{enumerate}
-\item This project is one of the few research works explicitly comparing value-based Deep Q-Network algorithms with Actor-Critic reinforcement learning algorithms under controlled experimental conditions.
-\item By evaluating both algorithm families within the same environment and experimental setup, this project contributes empirical insight into the trade-offs between off-policy value-based learning and on-policy actor-critic learning, particularly with respect to training stability and sample efficiency.
+\item A three-experiment benchmark comparing value-based and actor-critic algorithm families, using a single shared framework with default hyperparameters throughout (see Section~\ref{sec:tooling}). Over 80 training runs were conducted across classic-control and Atari environments, with results reproducible and consistent across seeds.
+
+\item Application of the \texttt{rliable} statistical evaluation framework (Section~\ref{sec:eval-framework}) to a student-scale RL study, reporting interquartile mean, probability of improvement, and bootstrap confidence intervals rather than mean scores alone.
+
+\item An observation that cross-environment aggregation metric choice affects the conclusion of the comparison: the same data produces different aggregate rankings under IQM versus pairwise probability of improvement. This is not a flaw in the methodology but a finding about the limits of single-number RL benchmarks.
 \end{enumerate}
+}
 
 
 
@@ -220,30 +222,21 @@ The second semester moved into the main comparison. Three experiments were run i
 
 
 \section{Overview of the Report}
-In this report, I have presented my work in accordance with the submission requirements.
-This first chapter introduced the idea of this project and my goals. Following chapters would cover next things:
 
-In Literature review chapter: Covers basics of AI to make reader familiar with concepts that were used for this project. Including introduction of two RL families with some algorithms from them like PPO and DQN which are mainly used in experiments that were conducted and uppon which this report topic is based. It also covers tool that were used like SB3 and gymansium libraries. 
+{\color{red} 
+Chapter~2 reviews the theoretical foundations of reinforcement learning --- the two algorithm families, the key algorithms from each, and the tools and evaluation framework used throughout. Chapter~3 presents the prototype work from the first semester: a DQN implementation on Atari Breakout that established the technical foundation for the experiments. The project GitHub repository contains the full source code for all experiments, commit history, and development statistics, and is linked in Chapter~3.
 
-In Prototypes chapter: a short example of implementation of algorithms presented to provide a reader with understanding of how implementations were made for experiments of comparison and benchmarking is made. it Includes detailed implementation of DQN prototype algorithm on a game Atary Breakout and with results provided as well as full code implementation. And link to github of this project where reader can find all source code of this project. Including implementation of all algorithms used, scripts to train and evaluate models. Github also serves a purpose of a proof that student worked on this project by himself from Septemer and provides some statistics about the amount of work he has done like commit history and lines of code number. 
+The three experiment chapters were not designed upfront as a fixed plan --- each arose from the findings and open questions of the previous one. Chapter~4 evaluates five algorithms across both families on classic-control environments. Algorithm and environment descriptions are provided in Chapter~\ref{chap:lit-review}. Chapter~5 narrows the comparison to one representative per family and scales to pixel-based Atari games. Chapter~6 extends that comparison to a longer training budget and a wider set of environments. Each chapter follows the same structure: setup, hypotheses, results, key findings, threats to validity, and discussion.
 
-Next three chapters exp1-3 cover actuall expriments that student conducted. and they are a main work of this report which took place from winter break up to the deadline of the submission. give or take a week for polishing final report after they were finished. each experiment chapter has the next structure:
-short summary of what this experiment is about and why it was conducted
+Chapter~7 synthesises the findings across all three experiments and provides a direct answer to the research question. Chapter~8 closes the report: it restates the conclusions plainly, reflects on what made this project difficult, and outlines directions for future work.
+}
 
-experiment setup which gives explanation about which algorithms and enviroments were used including extra details of settings.
 
-following by hypotheses of what was the expected outcomes based on Student understanding and intiution supported by literature review that was made and information from others people benchmarks and papers.
 
-then training summary of what was done
-following by per enviroment and crossenviroment results evaluation where actual ressults are presented  and analised.
 
-then keyfinding where this results are compared with initial expectations and hypotheses to understant how good this experiment was, how expected results were
 
-last subsections of experiments are threats of validity and discussion where student states his thoughs of how valid this experiment was and its results as well as what to do next (what i will do next i guess) or what this experiment gave us 
 
-The chapter Evaluation summarizes findings from experiments, recals questions that this report tried to answer in goal from introduction chapter and tries to answer them.
 
-The last chapter disscussion and conclusion  this finsihes this report with once again answering the questions in more short and powerfull manner, reflects on all work that was made and how difficault it was and states what can be done as a future work.
 
 
 
@@ -272,105 +265,6 @@ The last chapter disscussion and conclusion  this finsihes this report with once
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-% Here you can write you own text . . .  also we can write a footnote like this.\footnote{It is simple to create a footnote.} 
-
-% This document offers few basic examples on how to format tables, insert pictures, format text so that you can start using Latex immediately.
-% The main advantage of Latex is that you do not need to care about the formatting of the entire document because Latex will do the job for you! Nice!
-
-% Latex can be downloaded free here: \url{http://www.latex-project.org/}
-
-% \nomenclature{DAPI}{4',6-diamidino-2-phenylindole; a fluorescent stain that binds strongly to DNA and serves to marks the nucleus in fluorescence microscopy} 
-
-
-% \vspace{10mm}
-
-% Usually, the first Chapter of a Dissertation has the following headings (see below). Your dissertation may have different ones, so change these as you wish.
-
-% % here we declare a new section
-
-% \section{Aims and Objectives} 
-
-% The main question that this dissertation addresses is É 
-% In order to address this question, this work focuses on the following issues in the context of É :
-
-% \begin{itemize}
-
-% \item Firstly, . . .
-
-% \item Secondly, . . . 
-
-% \end{itemize}
-
-
-
-% % here we declare a new section
-% \section{Methodology} 
-
-% In order to address this question the following approach was taken. 
- 
- 
-% % here we declare a new section
-% \section{Research Contribution}
-
-% The primary research contribution is: 
-
-
-
-
-
-% \section{Thesis Outline} 
-
-% The remaining chapters of this dissertation are as follows:
-
-
-% \emph{Chapter Two} is an introductory discussion to . . .
-
-% \emph{Chapter Three} is a historical review of  . . .
-
-% \emph{Chapter Four} presents the  . . . 
-
-% \emph{Chapter Five} describes the . . .
-
-% \emph{Chapter Six} draws conclusions and evaluates the . . .  Lastly, it suggests possible future works. 
-
-% \vspace{5 mm}
-
-% A series of documents have been included in the Appendix section of this dissertation. These are:
-
-% \begin{itemize}
-% \item \emph{Appendix A} outlines . . .
-
-% \item \emph{Appendix B} presents . . .
-
-% \item \emph{Appendix C} includes . . .
-% \end{itemize} 
-
-% \vspace{5 mm}
-
-% Attached to this dissertation is a CD containing the following items:
-
-% \begin{itemize}
-% \item \emph{folder 1}: . . .
-
-% \item \emph{folder 2}: . . .
-
-% \end{itemize}
-
-
-% ----------------------------------------------------------------------
 
 
 

@@ -33,11 +33,11 @@ Hardware and the CnnPolicy / frame-stack / reward-clipping pipeline are identica
 Before running the experiments, I formed the following expectations:
 
 \begin{enumerate}
-  \item \textbf{PPO continues to dominate Pong.} Pong is a policy-gradient-friendly task with a dense reward signal. Extending the budget should not change the ranking.
-  \item \textbf{DQN continues to edge Breakout.} Breakout rewards value-based exploitation of learned state-action values, and Experiment~2 already showed DQN ahead. More training should let DQN widen the gap.
-  \item \textbf{Both algorithms make meaningful progress on Seaquest.} Seaquest was chosen as an environment where both algorithms are known to learn non-trivial policies at Nature-paper budgets.
-  \item \textbf{The PPO-dominance aggregate from Experiment~2 should survive.} Experiment~2 found $P(\text{PPO}>\text{DQN})=0.648$; adding Seaquest and extending the budget should not flip the aggregate.
-  \item \textbf{Cross-environment aggregates will still be fragile at $M=3$.} A single environment can still dominate the profile if its per-environment IQM is much larger than the others.
+  \item {\color{red} \textbf{H3.1 ---}} \textbf{PPO continues to dominate Pong.} Pong is a policy-gradient-friendly task with a dense reward signal. Extending the budget should not change the ranking.
+  \item {\color{red} \textbf{H3.2 ---}} \textbf{DQN continues to edge Breakout.} Breakout rewards value-based exploitation of learned state-action values, and Experiment~2 already showed DQN ahead. More training should let DQN widen the gap.
+  \item {\color{red} \textbf{H3.3 ---}} \textbf{Both algorithms make meaningful progress on Seaquest.} Seaquest was chosen as an environment where both algorithms are known to learn non-trivial policies at Nature-paper budgets.
+  \item {\color{red} \textbf{H3.4 ---}} \textbf{The PPO-dominance aggregate from Experiment~2 should survive.} Experiment~2 found $P(\text{PPO}>\text{DQN})=0.648$; adding Seaquest and extending the budget should not flip the aggregate.
+  \item {\color{red} \textbf{H3.5 ---}} \textbf{Cross-environment aggregates will still be fragile at $M=3$.} A single environment can still dominate the profile if its per-environment IQM is much larger than the others.
 \end{enumerate}
 
 %% ------------------------------------------------------------------
@@ -80,6 +80,8 @@ DQN dominates Breakout decisively, with a mean return of 229.07 versus PPO's 65.
 
 \subsection{Seaquest}
 \label{sec:exp3-seaquest}
+
+{\color{red} Seaquest is the most demanding environment in this study: the agent must manage an oxygen bar, rescue divers, and fight enemies simultaneously, requiring multi-objective decision-making under time pressure.}
 
 PPO wins Seaquest with a mean return of 1173.92 versus DQN's 714.00 (a $1.64\times$ advantage). Both algorithms show the hallmark Seaquest plateau --- rapid initial improvement followed by a long period of minor gains --- but PPO's plateau is higher and tighter across seeds. Both algorithms clearly exceed the random baseline ($\approx68$), confirming Hypothesis~H3.3. Figure~\ref{fig:exp3-lc-seaquest} shows the learning curves.
 
@@ -254,7 +256,7 @@ Future students attempting to reproduce this thesis on an RTX~4090 with the pinn
   \label{fig:exp3-timing}
 \end{figure}
 
-\textcolor{red}{TODO: Update PPO timing once the PPO Pong retraining (currently running) completes. Current data: DQN all 10 seeds completed --- Pong $\approx$27.7h total, Breakout $\approx$17.4h, Seaquest $\approx$27.4h. PPO timing incomplete (original timing lost; retrained recovery ongoing).}
+{\color{red} TODO: Update PPO timing once the PPO Pong retraining (currently running) completes. Current data: DQN all 10 seeds completed --- Pong $\approx$27.7h total, Breakout $\approx$17.4h, Seaquest $\approx$27.4h. PPO timing incomplete (original timing lost; retrained recovery ongoing).}
 
 %% ------------------------------------------------------------------
 \section{Key Findings: Expectations vs Reality}
@@ -268,7 +270,22 @@ Future students attempting to reproduce this thesis on an RTX~4090 with the pinn
   \item \textbf{H3.5 (aggregates fragile at $M=3$) --- confirmed.} The IQM/POI disagreement is direct evidence that $M=3$ is still too small for cross-env aggregates to be robust to the choice of summary statistic.
 \end{itemize}
 
+{\color{red} \paragraph{Comparison with published benchmarks.}
+PPO's Pong score of 19.78 closely matches the approximately 20 reported by \citet{schulman2017ppo}, suggesting the PPO implementation is well-calibrated on this environment. DQN's Breakout score of 229 moves substantially toward the 401.2 from \citet{mnih2015human} --- which used 50 million frames, a 1,000,000-frame replay buffer, and hyperparameters informally tuned on Breakout (see Section~\ref{subsec:experimental-design}) --- confirming that value-based learning continues to compound with additional experience. On Seaquest, PPO's advantage over DQN (1174 vs 714) is consistent with \citet{defuente2024comparative}, who note that policy gradient methods tend to outperform value-based methods on environments requiring deeper exploration and complex strategy. Both scores remain below the levels in the original papers --- \citet{mnih2015human} reports DQN at 5286 and \citet{schulman2017ppo} shows PPO at approximately 1500--1600 --- consistent with Seaquest requiring substantially more than 20 million steps to approach published performance levels. Direct comparison across papers should be treated with caution due to divergent evaluation protocols \citep{machado2018revisiting}.}
+
 %% ------------------------------------------------------------------
+{\color{red} \section{Threats to Validity}}
+\label{sec:exp3-threats}
+
+{\color{red} Several limitations constrain the generalisability of these results:}
+\begin{itemize}
+  \item \textbf{Default hyperparameters.} No per-algorithm or per-environment tuning. The comparison is between out-of-the-box SB3 DQN and PPO at the 20M-step budget.
+  \item \textbf{Seed count.} 10 seeds per cell, matching Experiment~2 but fewer than Experiment~1's 15. Bootstrap CIs are correspondingly wider.
+  \item \textbf{$M=3$ environments.} Still small. The IQM/POI disagreement is direct evidence that $M=3$ is insufficient for robust cross-env aggregates.
+  \item \textbf{DQN buffer size.} 100K instead of the intended 400K (oversight during training-script configuration).
+  \item \textbf{Training timing.} Original wall-clock logs were lost. Retrained runs recovered full DQN timing; PPO timing is partially incomplete. Evaluation scores are complete for all 30 runs.
+\end{itemize}
+
 \section{Discussion}
 \label{sec:exp3-discussion}
 
@@ -280,12 +297,3 @@ IQM is robust to outliers by trimming the top and bottom 25\% of pooled scores; 
 
 \paragraph{Buffer size oversight.}
 The DQN runs used \texttt{buffer\_size=100{,}000} with \texttt{optimize\_memory\_usage=True}. The intended configuration was a 400K buffer (closer to the original Nature DQN paper). All DQN numbers reported here use the 100K buffer. A follow-up study with the intended 400K buffer would quantify how much of DQN's Breakout lead is buffer-size sensitive. I expect the qualitative finding --- DQN wins Breakout, PPO wins Pong and Seaquest --- to survive.
-
-\paragraph{Limitations.}
-\begin{itemize}
-  \item \textbf{Default hyperparameters.} No per-algorithm or per-environment tuning. The comparison is between out-of-the-box SB3 DQN and PPO at the 20M-step budget.
-  \item \textbf{Seed count.} 10 seeds per cell, matching Experiment~2 but fewer than Experiment~1's 15. Bootstrap CIs are correspondingly wider.
-  \item \textbf{$M=3$ environments.} Still small. The IQM/POI disagreement is direct evidence that $M=3$ is insufficient for robust cross-env aggregates.
-  \item \textbf{DQN buffer size.} 100K instead of the intended 400K (oversight during training-script configuration).
-  \item \textbf{Training timing.} Original wall-clock logs were lost. Retrained runs recovered full DQN timing; PPO timing is partially incomplete. Evaluation scores are complete for all 30 runs.
-\end{itemize}

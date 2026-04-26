@@ -122,27 +122,27 @@ evaluations of a uniform-random policy.
 Before viewing the results, I formed the following expectations:
 
 \begin{enumerate}
-  \item \textbf{PPO should dominate Pong.}
+  \item {\color{red} \textbf{H2.1 ---}} \textbf{PPO should dominate Pong.}
         Pong has a simple reward structure ($\pm 1$ per rally). PPO's
         on-policy updates should handle this well, and its strong
         showing in Experiment~1 suggests robust generalisation.
 
-  \item \textbf{DQN should excel on Breakout.}
+  \item {\color{red} \textbf{H2.2 ---}} \textbf{DQN should excel on Breakout.}
         DQN was originally demonstrated on Atari
         \citep{mnih2015human}, and Breakout rewards brick destruction
         with sparse, delayed feedback. DQN's experience replay buffer
         should help by revisiting rare high-reward trajectories.
 
-  \item \textbf{Both should substantially exceed random baselines.}
+  \item {\color{red} \textbf{H2.3 ---}} \textbf{Both should substantially exceed random baselines.}
         5M timesteps is a generous budget for two-environment Atari
         training.
 
-  \item \textbf{PPO should be more sample-efficient.}
+  \item {\color{red} \textbf{H2.4 ---}} \textbf{PPO should be more sample-efficient.}
         On-policy methods typically learn faster in the early phase of
         training, before off-policy methods accumulate enough replay
         data.
 
-  \item \textbf{Higher variance than Experiment~1.}
+  \item {\color{red} \textbf{H2.5 ---}} \textbf{Higher variance than Experiment~1.}
         GPU non-determinism combined with pixel-based observations and
         deeper networks should produce more stochastic outcomes across
         seeds.
@@ -483,11 +483,7 @@ develop the paddle-positioning strategies needed for deep brick
 penetration.
 
 \paragraph{Neither algorithm solves Breakout.}
-Both algorithms' Breakout performance is poor in absolute terms.
-The original DQN paper \citep{mnih2015human} trained for 50M frames
-(approximately $12.5$M steps with frame-skip 4)---$2.5\times$ our
-budget. The low scores suggest both algorithms are still in the
-early stages of learning Breakout's complex dynamics.
+{\color{red} Both algorithms are still learning on Breakout at 5M steps --- neither has converged. DQN reaches 43.62 and PPO reaches 32.51 under SB3 default hyperparameters. \citet{defuente2024comparative} report DQN reaching approximately 280 and PPO approximately 175 at the same budget with tuned configurations, confirming that DQN holds a task-specific advantage on Breakout at this scale --- its experience replay allows direct exploitation of the brick-breaking reward structure that suits Q-value estimation well. The gap between our scores and theirs reflects the cost of default settings, not a fundamental ceiling. \citet{mnih2015human} established the longer-run benchmark at 401.2 using 50 million frames, a replay buffer ten times larger than the SB3 default, and hyperparameters informally tuned on Breakout specifically (see Section~\ref{subsec:experimental-design}).}
 
 \paragraph{POI is not decisive.}
 $P(\text{PPO} > \text{DQN}) = 0.648$ is far less clear-cut than
@@ -505,6 +501,29 @@ score and one very low score---a number that describes neither
 environment accurately.
 
 %% ------------------------------------------------------------------
+{\color{red} \section{Threats to Validity}}
+\label{sec:atari-threats}
+
+Several limitations constrain the generalisability of these results:
+\begin{itemize}
+  \item \textbf{Small environment suite ($M = 2$).} Even fewer
+        environments than Experiment~1's $M = 3$. Cross-environment
+        aggregates are extremely fragile---a single environment swap
+        could reverse the overall ranking
+        \citep{agarwal2021precipice, patterson2024edrl}.
+  \item \textbf{Insufficient training budget.} The original DQN paper
+        \citep{mnih2015human} used 50M frames (${\sim}12.5$M steps);
+        our 5M-step budget may leave both algorithms undertrained,
+        particularly on Breakout.
+  \item \textbf{Default hyperparameters.} No per-algorithm tuning was
+        performed, the same caveat as Experiment~1. DQN's replay buffer
+        size, learning rate, and exploration schedule were all left at
+        SB3 defaults.
+  \item \textbf{GPU non-determinism.} Unlike Experiment~1, bitwise
+        reproducibility is not possible. Results depend on statistical
+        validity from 10~seeds rather than deterministic verification.
+\end{itemize}
+
 \section{Discussion}
 \label{sec:atari-discussion}
 
@@ -531,27 +550,6 @@ uses SB3's \texttt{evaluate\_policy()}, which reads the true episode
 returns from the \texttt{Monitor} wrapper, bypassing
 \texttt{ClipRewardEnv}. This distinction was critical for obtaining
 meaningful Breakout scores.
-
-\paragraph{Limitations.}
-Several limitations constrain the generalisability of these results:
-\begin{itemize}
-  \item \textbf{Small environment suite ($M = 2$).} Even fewer
-        environments than Experiment~1's $M = 3$. Cross-environment
-        aggregates are extremely fragile---a single environment swap
-        could reverse the overall ranking
-        \citep{agarwal2021precipice, patterson2024edrl}.
-  \item \textbf{Insufficient training budget.} The original DQN paper
-        \citep{mnih2015human} used 50M frames (${\sim}12.5$M steps);
-        our 5M-step budget may leave both algorithms undertrained,
-        particularly on Breakout.
-  \item \textbf{Default hyperparameters.} No per-algorithm tuning was
-        performed, the same caveat as Experiment~1. DQN's replay buffer
-        size, learning rate, and exploration schedule were all left at
-        SB3 defaults.
-  \item \textbf{GPU non-determinism.} Unlike Experiment~1, bitwise
-        reproducibility is not possible. Results depend on statistical
-        validity from 10~seeds rather than deterministic verification.
-\end{itemize}
 
 \paragraph{Future work.}
 Several directions would strengthen these findings:
