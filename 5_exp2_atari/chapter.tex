@@ -5,16 +5,10 @@
 
 This chapter scales the comparison from Experiment~1 to pixel-based Atari games, narrowing the algorithm set to DQN and PPO and switching to GPU training with convolutional policies. The evaluation uses the same metrics framework from Section~\ref{sec:eval-framework}. The headline finding is that PPO solves Pong while DQN edges Breakout, but the cross-environment aggregate at $M=2$ environments is fragile and heavily dominated by whichever per-environment gap is larger. This motivates the extended study in Chapter~\ref{chap:exp3}.
 
-The previous chapter evaluated five algorithms on three classic-control
-environments using MLP policies on CPU, with bitwise-reproducible
-deterministic seeding. This chapter scales the comparison to
-pixel-based Atari games, narrowing the algorithm set to the two
-most representative families---DQN (off-policy, value-based) and PPO
-(on-policy, actor--critic)---and training with convolutional neural
-networks on GPU. I wanted to test whether the DQN-vs-PPO
-relationship observed in Experiment~1 holds when the observation space
-shifts from low-dimensional vectors to raw pixel frames processed by
-CNNs. I begin with the experimental setup and hypotheses, then present
+I wanted to test whether the DQN-vs-PPO relationship observed in
+Experiment~1 holds when the observation space shifts from
+low-dimensional vectors to raw pixel frames processed by CNNs.
+I begin with the experimental setup and hypotheses, then present
 per-environment and cross-environment results, and close with a
 discussion of what matched my expectations and what surprised me.
 
@@ -467,9 +461,7 @@ Several limitations constrain the generalisability of these results:
         performed, the same caveat as Experiment~1. DQN's replay buffer
         size, learning rate, and exploration schedule were all left at
         SB3 defaults.
-  \item \textbf{GPU non-determinism.} Unlike Experiment~1, bitwise
-        reproducibility is not possible. Results depend on statistical
-        validity from 10~seeds rather than deterministic verification.
+  \item \textbf{GPU non-determinism.} Unlike Experiment~1, bitwise reproducibility is not possible (see Section~\ref{sec:why-gpu}). Statistical validity rests on the 10-seed ensemble rather than deterministic verification.
 \end{itemize}
 
 \section{Discussion}

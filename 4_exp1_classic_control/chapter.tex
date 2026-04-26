@@ -642,10 +642,7 @@ Several limitations constrain the generalisability of these results:
         may be insufficient for off-policy algorithms that require a
         warm-up phase. A fairer comparison would either extend the budget
         or include a wall-clock normalised analysis.
-  \item \textbf{CPU-only execution.} All experiments ran on CPU. GPU
-        acceleration would reduce absolute training times but would not
-        change the relative algorithmic comparison (deterministic seeding
-        is CPU-only in PyTorch).
+  \item \textbf{CPU-only execution.} All experiments ran on CPU, for the reasons given in Section~\ref{sec:why-local}. Absolute training times would decrease on GPU, but the relative algorithmic comparison would be unaffected.
   \item \textbf{Fully-observed MDPs only.} RPPO's LSTM was never given
         an environment where memory is genuinely needed. Including a
         POMDP task would provide a fairer assessment of recurrent
