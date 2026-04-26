@@ -138,6 +138,7 @@ Table~\ref{tab:exp3-cross-env} and Figure~\ref{fig:exp3-final-perf} report the c
 \centering
 \caption{Cross-environment aggregate metrics for Experiment~3 (normalised scores).}
 \label{tab:exp3-cross-env}
+\resizebox{\linewidth}{!}{
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Algorithm} & \textbf{IQM} & \textbf{Mean} & \textbf{Median} & \textbf{Opt.\ Gap} \\
@@ -145,8 +146,30 @@ Table~\ref{tab:exp3-cross-env} and Figure~\ref{fig:exp3-final-perf} report the c
 DQN & $0.443\;[0.369,\;0.521]$ & $0.450\;[0.393,\;0.500]$ & $0.571\;[0.504,\;0.647]$ & $0.550\;[0.500,\;0.607]$ \\
 PPO & $0.277\;[0.247,\;0.309]$ & $0.386\;[0.368,\;0.403]$ & $0.161\;[0.121,\;0.204]$ & $0.614\;[0.597,\;0.632]$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
+
+
+% \begin{table}[htbp!]
+% \centering
+% \caption{Cross-environment aggregate metrics (normalised scores). IQM,
+%          mean, and median are reported with 95\% bootstrap CIs.}
+% \label{tab:atari-cross-env}
+% \resizebox{\linewidth}{!}{%
+% \begin{tabular}{lcccc}
+% \toprule
+% \textbf{Algorithm} & \textbf{IQM} & \textbf{Mean} & \textbf{Median}
+%                    & \textbf{Opt.\ Gap} \\
+% \midrule
+% PPO & $0.529\;[0.514,\;0.542]$ & $0.528\;[0.518,\;0.537]$
+%     & $0.528\;[0.518,\;0.537]$
+%     & $0.472\;[0.463,\;0.482]$ \\
+% DQN & $0.130\;[0.098,\;0.184]$ & $0.195\;[0.129,\;0.272]$
+%     & $0.195\;[0.129,\;0.272]$
+%     & $0.805\;[0.728,\;0.872]$ \\
+% \bottomrule
+% \end{tabular}}
+% \end{table}
 
 \begin{figure}[htbp!]
   \centering
