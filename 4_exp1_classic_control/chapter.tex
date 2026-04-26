@@ -500,7 +500,7 @@ efficiency as normalised Area Under the Learning Curve (AUC) over the training b
 
 Table~\ref{tab:sample-eff} reports the normalised AUC values. PPO achieves
 the highest sample efficiency on CartPole ($0.910$) and Acrobot ($0.853$).
-On LunarLander, all algorithms achieve similar AUC ($0.17$--$0.24$),
+On LunarLander, all algorithms achieve low AUC ($0.12$--$0.24$),
 reflecting the difficulty of this environment.
 
 \begin{table}[htbp!]
@@ -527,24 +527,24 @@ QR-DQN & $-0.025$ & 0.115 & 0.229 \\
 Table~\ref{tab:poi} and Figure~\ref{fig:poi} report the pairwise probability of improvement $P(A > B)$, averaged across environments. PPO has $P > 0.89$ against every other algorithm.
 
 
-% \begin{table}[htbp!]
-% \centering
-% \caption{Pairwise probability of improvement $P(\text{row} > \text{col})$,
-%          averaged across environments.}
-% \label{tab:poi}
-% \begin{tabular}{lccccc}
-% \toprule
-%          & \textbf{PPO} & \textbf{A2C} & \textbf{RPPO}
-%          & \textbf{DQN} & \textbf{QR-DQN} \\
-% \midrule
-% PPO    & ---   & 0.656 & 0.896 & 1.000 & 1.000 \\
-% A2C    & 0.344 & ---   & 0.642 & 0.830 & 0.939 \\
-% RPPO   & 0.104 & 0.358 & ---   & 0.692 & 0.744 \\
-% DQN    & 0.000 & 0.170 & 0.308 & ---   & 0.721 \\
-% QR-DQN & 0.000 & 0.061 & 0.256 & 0.279 & ---   \\
-% \bottomrule
-% \end{tabular}
-% \end{table}
+\begin{table}[htbp!]
+\centering
+\caption{Pairwise probability of improvement $P(\text{row} > \text{col})$,
+         averaged across environments.}
+\label{tab:poi}
+\begin{tabular}{lccccc}
+\toprule
+         & \textbf{PPO} & \textbf{A2C} & \textbf{RPPO}
+         & \textbf{DQN} & \textbf{QR-DQN} \\
+\midrule
+PPO    & ---   & 0.656 & 0.896 & 1.000 & 1.000 \\
+A2C    & 0.344 & ---   & 0.642 & 0.830 & 0.939 \\
+RPPO   & 0.104 & 0.358 & ---   & 0.692 & 0.744 \\
+DQN    & 0.000 & 0.170 & 0.308 & ---   & 0.721 \\
+QR-DQN & 0.000 & 0.061 & 0.256 & 0.279 & ---   \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{figure}[htbp!]
   \centering
