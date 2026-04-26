@@ -629,14 +629,42 @@ Compared to pure policy gradient methods, actor-critic has lower variance becaus
 \subsection{Advantage Actor-Critic (A2C)}
 \label{subsec:a2c}
 
-Advantage Actor-Critic (A2C) is a synchronous variant of the Asynchronous Advantage Actor-Critic (A3C) method \citep{mnih2016a3c}, using the advantage function $A(s,a) = Q(s,a) - V(s)$ as the policy gradient signal to reduce variance while maintaining unbiased updates. Unlike A3C, which runs multiple actors in parallel threads with asynchronous gradient updates, A2C collects experience from all parallel environments synchronously before performing a single update, making it simpler to implement and reason about.
-{\color{red} TODO: Expand this subsection with full description of A2C, advantage estimation, generalised advantage estimation (GAE)}
+Advantage Actor-Critic (A2C) is a synchronous variant of the Asynchronous Advantage Actor-Critic (A3C) method \citep{mnih2016a3c}. Unlike A3C, which runs multiple actors in parallel threads with asynchronous gradient updates, A2C collects experience from all parallel environments synchronously before performing a single gradient update, making it simpler to implement and reason about.
+
+{\color{red} The core idea is the \emph{advantage function}:
+\[
+  A(s_t, a_t) = Q(s_t, a_t) - V(s_t),
+\]
+which measures how much better action $a_t$ is relative to the average action from state $s_t$. Using $\hat{A}_t$ instead of the raw return $G_t$ as the policy gradient signal reduces variance without introducing bias, because the baseline $V(s_t)$ does not depend on the chosen action.}
+
+{\color{red} A2C approximates the advantage via \emph{Generalised Advantage Estimation} (GAE), controlled by a mixing parameter $\lambda \in [0,1]$:
+\[
+  \hat{A}_t^{\mathrm{GAE}(\gamma,\lambda)} = \sum_{l=0}^{\infty}(\gamma\lambda)^l\,\delta_{t+l},
+  \qquad \delta_t = r_t + \gamma V(s_{t+1}) - V(s_t).
+\]
+$\lambda=0$ gives the one-step TD advantage (low variance, higher bias); $\lambda=1$ gives the full Monte Carlo return (unbiased, higher variance). The policy network is updated by gradient ascent on $\mathbb{E}_t[\nabla_\theta \log\pi_\theta(a_t|s_t)\,\hat{A}_t]$, while the value network minimises the mean-squared TD error. Stable-Baselines3 uses $\lambda=1.0$ by default.}
 
 \subsection{Proximal Policy Optimisation (PPO)}
 \label{subsec:ppo}
 
-Proximal Policy Optimisation \citep{schulman2017ppo} is an actor-critic method that improves on A2C and REINFORCE by using a clipped surrogate objective to prevent excessively large policy updates, achieving stable training without the complexity of second-order trust-region methods (such as TRPO). PPO is currently one of the most widely used deep RL algorithms and serves as the primary actor-critic representative in the experiments of this thesis.
-{\color{red} TODO: Expand this subsection with full description of the PPO clipped objective, generalised advantage estimation, epoch-level minibatch updates, and key hyperparameters.}
+Proximal Policy Optimisation \citep{schulman2017ppo} improves on A2C by limiting how much the policy can change in a single update, achieving stable training without the complexity of second-order trust-region methods such as TRPO. PPO is currently one of the most widely used deep RL algorithms and is the primary actor-critic representative in the experiments of this thesis.
+
+{\color{red} The central contribution of PPO is the \emph{clipped surrogate objective}:
+\[
+  L^{\mathrm{CLIP}}(\theta) = \mathbb{E}_t\!\left[
+    \min\!\left(
+      r_t(\theta)\,\hat{A}_t,\;
+      \mathrm{clip}\!\left(r_t(\theta),\,1{-}\varepsilon,\,1{+}\varepsilon\right)\hat{A}_t
+    \right)
+  \right],
+\]
+where $r_t(\theta) = \pi_\theta(a_t|s_t)/\pi_{\theta_\mathrm{old}}(a_t|s_t)$ is the probability ratio between the new and old policy, and $\varepsilon$ (typically $0.2$) is the clip range. The $\min$ ensures that the objective cannot benefit from moving $r_t$ outside $[1{-}\varepsilon,\,1{+}\varepsilon]$, preventing destructively large updates in either direction.}
+
+{\color{red} Like A2C, PPO uses GAE for advantage estimation. The key operational difference is that PPO collects a fixed rollout buffer of $n$ steps across $K$ parallel environments and then performs \emph{multiple epochs} of minibatch gradient descent on that data before discarding it. This multi-epoch reuse makes PPO more data-efficient than A2C's single-update-per-rollout approach while remaining an on-policy method. The total loss combines the clipped policy objective, a value function MSE term, and an optional entropy bonus to encourage exploration:
+\[
+  L(\theta) = L^{\mathrm{CLIP}}(\theta) - c_1 L^{\mathrm{VF}}(\theta) + c_2 S[\pi_\theta].
+\]
+Stable-Baselines3 defaults: clip range $\varepsilon=0.2$, $n=2048$ rollout steps, $\lambda=0.95$, 10 update epochs per rollout.}
 
 
 
