@@ -1,0 +1,50 @@
+
+\chapter{Discussions \& Conclusions}
+\label{chap:discuss_and_conclus}
+
+
+
+% \ifpdf
+%     \graphicspath{{7_conclusions/figures/PNG/}{7_conclusions/figures/PDF/}{7_conclusions/figures/}}
+% \else
+%     \graphicspath{{7_conclusions/figures/EPS/}{7_conclusions/figures/}}
+% \fi
+
+
+
+
+{\color{red}
+This paper asked how value-based and actor-critic deep reinforcement learning algorithm families compare in discrete-action environments, and whether one family is objectively better. The short answer is no. PPO is the more reliable default: it learns consistently across all tested settings, works well out of the box, and requires no special configuration. DQN is not a weaker algorithm --- it is a more demanding one. Given sufficient training time and the right task, it matches or exceeds PPO. The deeper finding is that even this conclusion depends on how you measure: IQM and pairwise probability of improvement, applied to the same data, point in opposite directions. There is no single answer to the research question --- only answers conditional on the environment, the budget, and the metric.
+
+The hardest part of this project was not the algorithms --- it was time. A single misconfigured parameter or broken pipeline meant retraining from scratch, with some experiments taking weeks to recover from. The work taught that reproducibility is not a nice-to-have in reinforcement learning research: it is the foundation everything else rests on. Building a deterministic, seed-controlled training pipeline and applying professional-grade statistical evaluation --- tools most student projects never reach for --- was the most technically demanding and ultimately most rewarding part of the work.
+
+The most immediate follow-up is re-running Experiment~3 with the intended 400K DQN replay buffer to verify whether the Breakout result holds under the correct configuration. Beyond that, a wider set of environments and longer training budgets would strengthen the generalisability of the conclusions. A systematic hyperparameter sensitivity study would quantify how much of the performance gap between families reflects default settings rather than fundamental capability. Finally, the value-based family in this paper was represented by vanilla DQN and QR-DQN. More modern descendants --- Rainbow \citep{hessel2018rainbow}, IQN \citep{dabney2018iqn}, and R2D2 \citep{kapturowski2019r2d2} --- substantially outperform vanilla DQN but were not available in Stable-Baselines3 at the time of this work; including them in future comparisons would provide a fairer picture of what value-based methods can achieve.
+}
+
+\section{Future Work}
+
+
+\begin{itemize}
+  \item \textbf{Repeat Experiment~3 with the intended 400K DQN buffer
+  size.} This is the most direct follow-up: the buffer oversight means
+  the Breakout result should be re-verified with the correct
+  configuration.
+  \item \textbf{Longer training budgets.} Running to 50M+ frames on
+  Atari would bring the comparison closer to the original DQN and PPO
+  paper settings, and may further change the per-environment ranking.
+  \item \textbf{Larger $M$.} Adding more Atari environments
+  (SpaceInvaders, MsPacman, BeamRider) and more classic-control
+  environments (MountainCar, Pendulum) would make the cross-environment
+  aggregates more stable and the conclusions more generalisable.
+  \item \textbf{Hyperparameter tuning study.} Tuning one environment
+  per algorithm would quantify the gap between ``default SB3'' and
+  ``best achievable'', giving context to the default-hyperparameter
+  numbers reported here.
+  \item \textbf{Continuous-control extension.} A MuJoCo or
+  continuous-control study would test whether the per-environment
+  pattern seen here generalises beyond discrete-action domains, where
+  policy-gradient methods are typically expected to have a larger
+  advantage.
+\end{itemize}
+
+

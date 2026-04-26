@@ -1,0 +1,42 @@
+
+  % Full-width figure
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics{learning_curves.png}
+    \caption{A2C learning curves on CartPole-v1 across 15 seeds. Left: mean $\pm$ standard deviation. Right: median with interquartile range.}
+    \label{fig:learning-curves}
+  \end{figure}
+
+
+
+  % Two half-width figures side by side
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics{final_performance.png}%
+    \hfill
+    \includegraphics{score_distribution.png}
+    \caption{Left: final normalized performance with 95\% bootstrap CI. Right: distribution of final scores across seeds.}
+    \label{fig:final-scores}
+  \end{figure}
+
+
+
+  % Another pair
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics{performance_profile.png}%
+    \hfill
+    \includegraphics{sample_efficiency.png}
+    \caption{Left: performance profile. Right: sample efficiency (IQM over training).}
+    \label{fig:profile-efficiency}
+  \end{figure}
+
+
+
+  % Full-width
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics{per_seed_performance.png}
+    \caption{Per-seed final performance on CartPole-v1.}
+    \label{fig:per-seed}
+  \end{figure}

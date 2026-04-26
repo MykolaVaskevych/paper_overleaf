@@ -67,20 +67,20 @@ Policy                  & MLP  & MLP  & MLP  & MLP  & MLP+LSTM \\
 \end{tabular}}
 \end{table}
 
-\subsection{Why Local Training \textcolor{red}{remove?}}
+\subsection{Why Local Training {\color{red} remove?}}
 \label{sec:why-local}
 
 An early design decision was whether to train locally or on Google
 Colab. I chose local training for four reasons:
 
 \begin{enumerate}
-  \item \textbf{RL bottlenecks on CPU, not GPU.} \textcolor{red}{(REMOVE?)}
+  \item \textbf{RL bottlenecks on CPU, not GPU.} {\color{red} (REMOVE?)}
         Classic-control environments are simulated entirely on the CPU,
         and the MLP policies used here are small enough that GPU
         offloading provides no throughput benefit---the PCIe transfer
         latency dominates.
 
-  \item \textbf{Deterministic seeding requires CPU-only execution. \textcolor{red}{(REMOVE?)}}
+  \item \textbf{Deterministic seeding requires CPU-only execution. {\color{red} (REMOVE?)}}
         PyTorch's deterministic mode guarantees bitwise reproducibility
         only when all computation stays on the CPU; the same seeds
         produce different trajectories on GPU due to non-deterministic
@@ -161,24 +161,24 @@ on the literature that I have reviewed and my intuition:
 
 \begin{enumerate}
 
-    \item \textbf{DQN should handle CartPole.}
+    \item {\color{red} \textbf{H1.1 ---}} \textbf{DQN should handle CartPole.}
     CartPole is the most common textbook DQN benchmark \citep{mnih2015human};
     I expected both DQN and QR-DQN to solve it comfortably within
     200K steps, which were given.
-    
-    \item \textbf{QR-DQN should improve over DQN.}
+
+    \item {\color{red} \textbf{H1.2 ---}} \textbf{QR-DQN should improve over DQN.}
     RL is theoretically superior to point-estimate
     Q-learning \citep{dabney2018qrdqn}, so I expected QR-DQN to
     match or exceed DQN on every environment.
-    
-    \item \textbf{PPO and A2C should produce competitive results.}
+
+    \item {\color{red} \textbf{H1.3 ---}} \textbf{PPO and A2C should produce competitive results.}
     As modern on-policy methods with well-tuned defaults from SB3,
     both were expected to perform well across all three environments.
-    
-    \item \textbf{RPPO's long short-term memory (LSTM) is unlikely to help and may hurt performance.}
+
+    \item {\color{red} \textbf{H1.4 ---}} \textbf{RPPO's long short-term memory (LSTM) is unlikely to help and may hurt performance.}
     These environments are fully observable, so the extra memory from the LSTM is probably unnecessary. I expected RPPO to perform about the same as PPO, or worse, because the recurrent model is harder to train and less sample-efficient.
-    
-    \item \textbf{Difficulty ordering: CartPole $<$ Acrobot $<$ LunarLander.}
+
+    \item {\color{red} \textbf{H1.5 ---}} \textbf{Difficulty ordering: CartPole $<$ Acrobot $<$ LunarLander.}
     CartPole has the simplest dynamics and the shortest horizon.
     LunarLander has the highest-dimensional state and requires
     the most samples.
@@ -229,6 +229,8 @@ computational efficiency.
 \section{Per-Environment Results}
 \label{sec:per-env-results}
 
+{\color{red} The following subsections present results for each of the three environments individually. Across all three, actor-critic methods consistently outperform the DQN family at the training budgets used. The picture is unambiguous: PPO and A2C learn reliably, while DQN and QR-DQN fail to make meaningful progress within the allowed steps. The key findings and comparison against hypotheses are synthesised in Section~\ref{sec:key-findings}.}
+
 \subsection{CartPole-v1}
 \label{sec:cartpole}
 
@@ -260,7 +262,7 @@ insufficient samples for the value network to converge. QR-DQN is worse
 because its distributional head has more parameters to fit with the same
 data. 
 
-This highlights how default configurations can lead to suboptimal performance for off-policy methods under limited training budgets, and suggests that while longer training would likely allow convergence comparable to A2C and PPO, it would come at a significantly higher computational cost. This is left as future work (see Chapter~\ref{chap:conclusions}).
+This highlights how default configurations can lead to suboptimal performance for off-policy methods under limited training budgets, and suggests that while longer training would likely allow convergence comparable to A2C and PPO, it would come at a significantly higher computational cost. This is left as future work (see Chapter~\ref{chap:evaluation}).
 
 \subsection{Acrobot-v1}
 \label{sec:acrobot}
@@ -298,10 +300,7 @@ an unexpected twist.
 PPO leads with IQM $0.768$ $[0.714,\;0.814]$---strong but not
 dominant. The surprise is A2C's collapse: despite matching PPO on the
 other two environments, A2C achieves only IQM $0.303$ here, with an
-IQR of $120.9$ raw-reward units. Some seeds learn well; others fail
-catastrophically. This bimodal behaviour suggests that A2C's single-step
-updates are too noisy for the longer LunarLander horizon, and the
-outcome is highly sensitive to the initial random trajectory.
+IQR of $120.9$ raw-reward units. Some seeds learn well; others fail. This bimodal behavior suggests that A2C's single-step updates are too noisy for the longer LunarLander horizon, and the outcome is highly sensitive to the initial random trajectory.
 
 Interestingly, RPPO ($0.444$) outperforms A2C ($0.303$) and DQN
 ($0.309$) on LunarLander. The LSTM may exploit temporal correlations
@@ -330,30 +329,26 @@ across all tasks.
 \subsection{Score Distributions and Per-Seed Analysis}
 \label{sec:score-dist}
 
-Figures~\ref{fig:score-dist},~\ref{fig:heatmap},
-and~\ref{fig:boxswarm} provide three complementary views of the
-per-seed results. The score distribution (Figure~\ref{fig:score-dist})
-confirms PPO's concentration near 1.0 and reveals A2C's bimodality.
+% Figures~\ref{fig:score-dist},~\ref{fig:heatmap},and~\ref{fig:boxswarm} 
+Figures,~\ref{fig:boxswarm}, and~\ref{fig:heatmap} provide complementary views of the per-seed results. The score distribution (Figure~\ref{fig:boxswarm}) confirms PPO's concentration near 1.0 and reveals A2C's bimodality and highlights anomalous seeds (marked with red crosses) that fall below the random baseline.
 The heatmap (Figure~\ref{fig:heatmap}) exposes RPPO's
 environment-specific failure on Acrobot as a wall of red.
-The box-and-swarm plot (Figure~\ref{fig:boxswarm}) highlights
-anomalous seeds (marked with red crosses) that fall below the random
-baseline.
+
+
+% \begin{figure}[htbp!]
+%   \centering
+%   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/score_distribution.png}
+%   \caption{Distribution of normalised scores per environment. PPO is
+%            concentrated near 1.0; A2C is bimodal (strong on CartPole and
+%            Acrobot, weak on LunarLander); DQN and QR-DQN are concentrated
+%            near zero.
+% }
+%   \label{fig:score-dist}
+% \end{figure}
 
 \begin{figure}[htbp!]
   \centering
-  \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/score_distribution.png}
-  \caption{Distribution of normalised scores per environment. PPO is
-           concentrated near 1.0; A2C is bimodal (strong on CartPole and
-           Acrobot, weak on LunarLander); DQN and QR-DQN are concentrated
-           near zero.
-}
-  \label{fig:score-dist}
-\end{figure}
-
-\begin{figure}[htbp!]
-  \centering
-  \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/per_seed_heatmap.png}
+  \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/per_seed_heatmap2.png}
   \caption{Heatmap of normalised final scores by seed and environment.
            Each row is one of 15 seeds; columns are environments.
            PPO achieves uniformly high scores. RPPO shows a clear
@@ -439,18 +434,14 @@ QR-DQN & $0.080\;[0.045,\;0.121]$ & $0.168\;[0.115,\;0.225]$
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/final_performance.png}
   \caption{Cross-environment IQM, mean, and median with 95\% bootstrap
-           confidence intervals. PPO and A2C clearly separate from the
-           remaining algorithms.}
+           confidence intervals.}
   \label{fig:final-perf}
 \end{figure}
 
 \subsection{Performance Profile and Optimality Gap}
 \label{sec:profile-gap}
 
-The performance profile (Figure~\ref{fig:perf-profile}) shows the
-fraction of runs exceeding normalised score $\tau$. PPO maintains
-$\hat{F}(\tau) > 0.9$ up to $\tau \approx 0.8$, whereas DQN and QR-DQN
-drop below 50\% at $\tau = 0.3$.
+The performance profile (Figure~\ref{fig:perf-profile}) shows the fraction of runs exceeding the normalized score $\tau$. PPO maintains $\hat{F}(\tau) > 0.9$ up to $\tau \approx 0.8$, so most runs stay close to the top. In contrast, DQN and QR-DQN fall below 50\% at $\tau = 0.3$, indicating that, in most cases, they do not even reach moderate performance. Overall, PPO is not just better on average but also much more reliable, whereas the DQN variants are inconsistent and often fail under the same setup.
 
 \begin{figure}[htbp!]
   \centering
@@ -473,38 +464,37 @@ drop below 50\% at $\tau = 0.3$.
 \subsection{Sample Efficiency}
 \label{sec:sample-eff}
 
-Figures~\ref{fig:se-cartpole}--\ref{fig:se-combined} show sample
-efficiency as normalised AUC over the training budget.
+Figures~\ref{fig:se-cartpole}--\ref{fig:se-acrobot} show sample
+efficiency as normalised Area Under the Learning Curve (AUC) over the training budget.
 
 \begin{figure}[htbp!]
   \centering
-  \begin{subfigure}[b]{0.48\linewidth}
+  \begin{subfigure}[b]{0.5\linewidth}
     \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/sample_efficiency_cartpole-v1.png}
     \caption{CartPole-v1}
     \label{fig:se-cartpole}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[b]{0.48\linewidth}
+  \begin{subfigure}[b]{0.5\linewidth}
     \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/sample_efficiency_lunarlander-v3.png}
     \caption{LunarLander-v3}
     \label{fig:se-lunarlander}
   \end{subfigure}
 
   \vspace{0.5em}
-  \begin{subfigure}[b]{0.48\linewidth}
+  \begin{subfigure}[b]{0.5\linewidth}
     \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/sample_efficiency_acrobot-v1.png}
     \caption{Acrobot-v1}
     \label{fig:se-acrobot}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.48\linewidth}
-    \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/combined_sample_efficiency.png}
-    \caption{Combined (normalised)}
-    \label{fig:se-combined}
-  \end{subfigure}
-  \caption{Sample efficiency (normalised AUC) per environment and combined.
-           PPO and A2C lead on CartPole and Acrobot; all algorithms struggle
-           on LunarLander.}
+  % \hfill
+  % \begin{subfigure}[b]{0.48\linewidth}
+  %   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/combined_sample_efficiency.png}
+  %   \caption{Combined (normalised)}
+  %   \label{fig:se-combined}
+  % \end{subfigure}
+  \caption{Sample efficiency (normalized AUC) per environment.
+           PPO clearly leads in all 3 environments.}
   \label{fig:sample-eff}
 \end{figure}
 
@@ -537,30 +527,30 @@ QR-DQN & $-0.025$ & 0.115 & 0.229 \\
 Table~\ref{tab:poi} and Figure~\ref{fig:poi} report the pairwise probability of improvement $P(A > B)$, averaged across environments. PPO has $P > 0.89$ against every other algorithm.
 
 
-\begin{table}[htbp!]
-\centering
-\caption{Pairwise probability of improvement $P(\text{row} > \text{col})$,
-         averaged across environments.}
-\label{tab:poi}
-\begin{tabular}{lccccc}
-\toprule
-         & \textbf{PPO} & \textbf{A2C} & \textbf{RPPO}
-         & \textbf{DQN} & \textbf{QR-DQN} \\
-\midrule
-PPO    & ---   & 0.656 & 0.896 & 1.000 & 1.000 \\
-A2C    & 0.344 & ---   & 0.642 & 0.830 & 0.939 \\
-RPPO   & 0.104 & 0.358 & ---   & 0.692 & 0.744 \\
-DQN    & 0.000 & 0.170 & 0.308 & ---   & 0.721 \\
-QR-DQN & 0.000 & 0.061 & 0.256 & 0.279 & ---   \\
-\bottomrule
-\end{tabular}
-\end{table}
+% \begin{table}[htbp!]
+% \centering
+% \caption{Pairwise probability of improvement $P(\text{row} > \text{col})$,
+%          averaged across environments.}
+% \label{tab:poi}
+% \begin{tabular}{lccccc}
+% \toprule
+%          & \textbf{PPO} & \textbf{A2C} & \textbf{RPPO}
+%          & \textbf{DQN} & \textbf{QR-DQN} \\
+% \midrule
+% PPO    & ---   & 0.656 & 0.896 & 1.000 & 1.000 \\
+% A2C    & 0.344 & ---   & 0.642 & 0.830 & 0.939 \\
+% RPPO   & 0.104 & 0.358 & ---   & 0.692 & 0.744 \\
+% DQN    & 0.000 & 0.170 & 0.308 & ---   & 0.721 \\
+% QR-DQN & 0.000 & 0.061 & 0.256 & 0.279 & ---   \\
+% \bottomrule
+% \end{tabular}
+% \end{table}
 
 \begin{figure}[htbp!]
   \centering
-  \includegraphics[width=0.8\linewidth]{4_exp1_classic_control/assets/poi_heatmap.png}
+  \includegraphics[width=0.8\linewidth]{4_exp1_classic_control/assets/prob_of_imporovement.png}
   \caption{Probability-of-improvement heatmap. PPO dominates all pairwise
-           comparisons. DQN vs QR-DQN is the closest pairing ($0.721$).}
+           comparisons. DQN vs QR-DQN is the closest pairing ($0.72$).}
   \label{fig:poi}
 \end{figure}
 
@@ -633,21 +623,13 @@ the classic-control literature, and the results reflect what a
 practitioner would observe when running these algorithms
 ``out of the box''.
 
+{\color{red} \paragraph{Comparison with published benchmarks.}
+PPO's dominance on all three environments is consistent with the reliability of on-policy methods reported in the literature \citep{schulman2017ppo}. The failure of DQN and QR-DQN at these budgets aligns with documented sensitivities of off-policy methods to training duration \citep{henderson2018matters}: without sufficient steps to warm up the replay buffer, value-based methods fail to learn regardless of their eventual capability ceiling.}
+
 %% ------------------------------------------------------------------
-\section{Discussion}
-\label{sec:discussion}
+{\color{red} \section{Threats to Validity}}
+\label{sec:threats}
 
-\paragraph{Methodological notes.}
-The metrics chapter described two per-environment metrics that were not
-computed in the final evaluation pipeline: \emph{success rate} (omitted
-because none of the three environments define a binary success condition)
-and \emph{CVaR} tail-risk (computed but not visualised separately, as the
-per-seed heatmap and box-swarm plots already expose seed-level failures).
-All other metrics---learning curves, final IQM with bootstrap CIs,
-sample efficiency AUC, performance profiles, optimality gap, and pairwise
-probability of improvement---were computed exactly as defined.
-
-\paragraph{Limitations.}
 Several limitations constrain the generalisability of these results:
 \begin{itemize}
   \item \textbf{Small environment suite ($M = 3$).} Cross-environment
@@ -671,7 +653,10 @@ Several limitations constrain the generalisability of these results:
         architectures.
 \end{itemize}
 
-These limitations are addressed further in Chapter~\ref{chap:conclusions}.
+These limitations are addressed further in Chapter~\ref{chap:evaluation}.
+
+\section{Discussion}
+\label{sec:discussion}
 
 \paragraph{Future work.}
 Extending this evaluation to continuous-action environments
