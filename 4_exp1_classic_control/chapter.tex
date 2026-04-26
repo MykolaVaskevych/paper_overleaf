@@ -67,20 +67,20 @@ Policy                  & MLP  & MLP  & MLP  & MLP  & MLP+LSTM \\
 \end{tabular}}
 \end{table}
 
-\subsection{Why Local Training {\color{red} remove?}}
+\subsection{Why Local Training }
 \label{sec:why-local}
 
 An early design decision was whether to train locally or on Google
 Colab. I chose local training for four reasons:
 
 \begin{enumerate}
-  \item \textbf{RL bottlenecks on CPU, not GPU.} {\color{red} (REMOVE?)}
+  \item \textbf{RL bottlenecks on CPU, not GPU.} 
         Classic-control environments are simulated entirely on the CPU,
         and the MLP policies used here are small enough that GPU
         offloading provides no throughput benefit---the PCIe transfer
         latency dominates.
 
-  \item \textbf{Deterministic seeding requires CPU-only execution. {\color{red} (REMOVE?)}}
+  \item \textbf{Deterministic seeding requires CPU-only execution. 
         PyTorch's deterministic mode guarantees bitwise reproducibility
         only when all computation stays on the CPU; the same seeds
         produce different trajectories on GPU due to non-deterministic

@@ -630,7 +630,7 @@ Compared to pure policy gradient methods, actor-critic has lower variance becaus
 \label{subsec:a2c}
 
 Advantage Actor-Critic (A2C) is a synchronous variant of the Asynchronous Advantage Actor-Critic (A3C) method \citep{mnih2016a3c}, using the advantage function $A(s,a) = Q(s,a) - V(s)$ as the policy gradient signal to reduce variance while maintaining unbiased updates. Unlike A3C, which runs multiple actors in parallel threads with asynchronous gradient updates, A2C collects experience from all parallel environments synchronously before performing a single update, making it simpler to implement and reason about.
-{\color{red} TODO: Expand this subsection with full description of A2C, advantage estimation, generalised advantage estimation (GAE), and comparison with A3C.}
+{\color{red} TODO: Expand this subsection with full description of A2C, advantage estimation, generalised advantage estimation (GAE)}
 
 \subsection{Proximal Policy Optimisation (PPO)}
 \label{subsec:ppo}
