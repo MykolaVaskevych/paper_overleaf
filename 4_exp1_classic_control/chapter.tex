@@ -26,7 +26,7 @@ for reasons explained in Section~\ref{sec:why-local}. The following experiments 
 
 \begin{table}[htbp!]
 \centering
-\caption{Hardware and software configuration.}
+\caption[EXP1: Hardware configuration]{Hardware and software configuration.}
 \label{tab:hardware}
 \begin{tabular}{ll}
 \toprule
@@ -45,7 +45,7 @@ Backend     & PyTorch 2.10.0, Python 3.10 \\
 
 \begin{table}[htbp!]
 \centering
-\caption[SB3 default hyper-parameters]{Default Stable-Baselines 3 hyper-parameters used for all algorithms. No algorithm-specific tuning was performed to ensure fair comparisons.}
+\caption[EXP1: SB3 default hyperparameters]{Default Stable-Baselines3 hyperparameters used for all algorithms. No algorithm-specific tuning was performed to ensure fair comparisons.}
 \label{tab:hyperparams}
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{lccccc}
@@ -200,7 +200,7 @@ breaks this down by algorithm and environment.
 
 \begin{table}[htbp!]
 \centering
-\caption[EXP1: Training time per algorithm]{Wall-clock training time (seconds) per algorithm, summed over 15 seeds per environment.}
+\caption[EXP1: Wall-clock training time]{Wall-clock training time (seconds) per algorithm, summed over 15 seeds per environment.}
 \label{tab:training-time}
 \begin{tabular}{lrrrrr}
 \toprule
@@ -242,7 +242,7 @@ story.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/learning_curves_cartpole-v2.png}
-  \caption[Learning curves for CartPole-v1.] {Learning curves for CartPole-v1.PPO and A2C converge to the maximum return of 500 within 100K steps while DQN and QR-DQN fail to learn within the 200K-step budget, with QR-DQN barely moving.}
+  \caption[EXP1: Learning curves, CartPole-v1]{Learning curves for CartPole-v1.PPO and A2C converge to the maximum return of 500 within 100K steps while DQN and QR-DQN fail to learn within the 200K-step budget, with QR-DQN barely moving.}
   \label{fig:lc-cartpole}
 \end{figure}
 
@@ -272,7 +272,7 @@ Acrobot requires swinging a two-link pendulum above a bar. Returns are negative 
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/learning_curves_acrobot-v2(correct).png}
-  \caption{Learning curves for Acrobot-v1. A2C and PPO both converge near the optimal return ($\approx -85$). RPPO and DQN both fail entirely, remaining near the episode truncation limit of $-500$ throughout training.}
+  \caption[EXP1: Learning curves, Acrobot-v1]{Learning curves for Acrobot-v1. A2C and PPO both converge near the optimal return ($\approx -85$). RPPO and DQN both fail entirely, remaining near the episode truncation limit of $-500$ throughout training.}
   \label{fig:lc-acrobot}
 \end{figure}
 
@@ -291,7 +291,7 @@ an unexpected twist.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/learning_curves_lunarlander-v3.2.png}
-  \caption[Learning curves for LunarLander-v3]{Learning curves for LunarLander-v3. PPO achieves the highest
+  \caption[EXP1: Learning curves, LunarLander-v3]{Learning curves for LunarLander-v3. PPO achieves the highest
            median return ($\approx 230$). A2C learns initially but exhibits
            high variance and eventual performance collapse.}
   \label{fig:lc-lunarlander}
@@ -318,8 +318,7 @@ across all tasks.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/combined_learning_curves.png}
-  \caption[Combined normalized learning curves across all three
-           environments]{Combined normalized learning curves across all three
+  \caption[EXP1: Combined learning curves]{Combined normalized learning curves across all three
            environments. PPO and A2C are the only algorithms that
            consistently rise above the random baseline across all tasks.
 }
@@ -349,7 +348,7 @@ environment-specific failure on Acrobot as a wall of red.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/per_seed_heatmap2.png}
-  \caption{Heatmap of normalised final scores by seed and environment.
+  \caption[EXP1: Per-seed score heatmap]{Heatmap of normalised final scores by seed and environment.
            Each row is one of 15 seeds; columns are environments.
            PPO achieves uniformly high scores. RPPO shows a clear
            environment-dependent failure mode on Acrobot.
@@ -360,7 +359,7 @@ environment-specific failure on Acrobot as a wall of red.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/per_seed_boxswarm.png}
-  \caption{Box-and-swarm plot of per-seed normalised scores. Individual
+  \caption[EXP1: Per-seed score spread]{Box-and-swarm plot of per-seed normalised scores. Individual
            seeds are shown as dots; boxes indicate the IQR. A2C exhibits
            the widest spread on LunarLander; PPO has near-zero variance
            on CartPole and Acrobot. Red crosses mark seeds below the
@@ -374,7 +373,7 @@ IQM with 95\% bootstrap confidence intervals.
 
 \begin{table}[htbp!]
 \centering
-\caption{Per-environment normalised IQM with 95\% bootstrap CIs.}
+\caption[EXP1: Per-environment IQM]{Per-environment normalised IQM with 95\% bootstrap CIs.}
 \label{tab:per-env-iqm}
 \begin{tabular}{lccc}
 \toprule
@@ -408,7 +407,7 @@ the tightest confidence interval and the smallest optimality gap ($0.078$).
 
 \begin{table}[htbp!]
 \centering
-\caption{Cross-environment aggregate metrics (normalised scores). IQM,
+\caption[EXP1: Cross-environment aggregate metrics]{Cross-environment aggregate metrics (normalised scores). IQM,
          mean, and median are reported with 95\% bootstrap CIs.}
 \label{tab:cross-env}
 \begin{tabular}{lcccc}
@@ -433,7 +432,7 @@ QR-DQN & $0.080\;[0.045,\;0.121]$ & $0.168\;[0.115,\;0.225]$
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/final_performance.png}
-  \caption{Cross-environment IQM, mean, and median with 95\% bootstrap
+  \caption[EXP1: Cross-environment IQM]{Cross-environment IQM, mean, and median with 95\% bootstrap
            confidence intervals.}
   \label{fig:final-perf}
 \end{figure}
@@ -446,7 +445,7 @@ The performance profile (Figure~\ref{fig:perf-profile}) shows the fraction of ru
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/performance_profile.png}
-  \caption{Performance profiles with 95\% bootstrap CIs. Higher curves
+  \caption[EXP1: Performance profiles]{Performance profiles with 95\% bootstrap CIs. Higher curves
            indicate a larger fraction of runs exceeding each score
            threshold $\tau$.}
   \label{fig:perf-profile}
@@ -455,7 +454,7 @@ The performance profile (Figure~\ref{fig:perf-profile}) shows the fraction of ru
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/optimality_gap.png}
-  \caption{Optimality gap with 95\% bootstrap CIs. Lower values indicate
+  \caption[EXP1: Optimality gap]{Optimality gap with 95\% bootstrap CIs. Lower values indicate
            smaller shortfall from the target. PPO ($0.078$) has the
            smallest gap; QR-DQN ($0.832$) has the largest.}
   \label{fig:opt-gap}
@@ -493,7 +492,7 @@ efficiency as normalised Area Under the Learning Curve (AUC) over the training b
   %   \caption{Combined (normalised)}
   %   \label{fig:se-combined}
   % \end{subfigure}
-  \caption{Sample efficiency (normalized AUC) per environment.
+  \caption[EXP1: Sample efficiency per environment]{Sample efficiency (normalised AUC) per environment.
            PPO clearly leads in all 3 environments.}
   \label{fig:sample-eff}
 \end{figure}
@@ -505,7 +504,7 @@ reflecting the difficulty of this environment.
 
 \begin{table}[htbp!]
 \centering
-\caption{Sample efficiency (normalised AUC) per environment.}
+\caption[EXP1: Sample efficiency AUC]{Sample efficiency (normalised AUC) per environment.}
 \label{tab:sample-eff}
 \begin{tabular}{lccc}
 \toprule
@@ -529,7 +528,7 @@ Table~\ref{tab:poi} and Figure~\ref{fig:poi} report the pairwise probability of 
 
 \begin{table}[htbp!]
 \centering
-\caption{Pairwise probability of improvement $P(\text{row} > \text{col})$,
+\caption[EXP1: Pairwise probability of improvement]{Pairwise probability of improvement $P(\text{row} > \text{col})$,
          averaged across environments.}
 \label{tab:poi}
 \begin{tabular}{lccccc}
@@ -549,7 +548,7 @@ QR-DQN & 0.000 & 0.061 & 0.256 & 0.279 & ---   \\
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=0.8\linewidth]{4_exp1_classic_control/assets/prob_of_imporovement.png}
-  \caption{Probability-of-improvement heatmap. PPO dominates all pairwise
+  \caption[EXP1: Probability of improvement heatmap]{Probability-of-improvement heatmap. PPO dominates all pairwise
            comparisons. DQN vs QR-DQN is the closest pairing ($0.72$).}
   \label{fig:poi}
 \end{figure}
@@ -560,7 +559,7 @@ QR-DQN & 0.000 & 0.061 & 0.256 & 0.279 & ---   \\
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{4_exp1_classic_control/assets/timing_analysis.png}
-  \caption{Wall-clock training time per algorithm and environment. RPPO
+  \caption[EXP1: Wall-clock training time]{Wall-clock training time per algorithm and environment. RPPO
            is $3$--$4\times$ slower than all other algorithms due to the
            recurrent architecture.}
   \label{fig:timing}

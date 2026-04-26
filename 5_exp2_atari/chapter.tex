@@ -32,7 +32,7 @@ the configuration.
 
 \begin{table}[htbp!]
 \centering
-\caption{Hardware and software configuration for Experiment~2.}
+\caption[EXP2: Hardware configuration]{Hardware and software configuration for Experiment~2.}
 \label{tab:atari-hardware}
 \begin{tabular}{ll}
 \toprule
@@ -176,7 +176,7 @@ Figure~\ref{fig:atari-lc-pong} shows the learning curves.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{5_exp2_atari/assets/learning_curves_pong.png}
-  \caption[Learning curves: Pong (DQN vs PPO)]{Learning curves for Pong. PPO converges near the maximum
+  \caption[EXP2: Learning curves, Pong]{Learning curves for Pong. PPO converges near the maximum
            return of 21 within 3M steps; DQN shows high variance and
            most seeds remain negative.}
   \label{fig:atari-lc-pong}
@@ -201,7 +201,7 @@ Figure~\ref{fig:atari-lc-breakout} shows the learning curves.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{5_exp2_atari/assets/learning_curves_breakout.png}
-  \caption[Learning curves: Breakout (DQN vs PPO)]{Learning curves for Breakout. DQN slightly outperforms PPO,
+  \caption[EXP2: Learning curves, Breakout]{Learning curves for Breakout. DQN slightly outperforms PPO,
            but both remain below 11\% of the maximum score.}
   \label{fig:atari-lc-breakout}
 \end{figure}
@@ -218,7 +218,7 @@ ahead.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{5_exp2_atari/assets/combined_learning_curves.png}
-  \caption[Combined learning curves: Pong and Breakout]{Combined normalised learning curves for Pong and Breakout.
+  \caption[EXP2: Combined learning curves]{Combined normalised learning curves for Pong and Breakout.
            PPO's Pong performance dominates the vertical scale.}
   \label{fig:atari-lc-combined}
 \end{figure}
@@ -239,7 +239,7 @@ wide spread on both environments.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{5_exp2_atari/assets/per_seed_heatmap.png}
-  \caption[Per-seed score heatmap: Pong and Breakout]{Heatmap of normalised final scores by seed and environment.
+  \caption[EXP2: Per-seed score heatmap]{Heatmap of normalised final scores by seed and environment.
            PPO$\times$Pong is the only uniformly green column
            ($0.93$--$1.00$); Breakout is red for both algorithms;
            DQN$\times$Pong shows high seed-to-seed variance.}
@@ -249,7 +249,7 @@ wide spread on both environments.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{5_exp2_atari/assets/per_seed_boxswarm.png}
-  \caption[Per-seed score spread: Pong and Breakout]{Box-and-swarm plot of per-seed normalised scores. DQN
+  \caption[EXP2: Per-seed score spread]{Box-and-swarm plot of per-seed normalised scores. DQN
            exhibits the widest spread on both environments.}
   \label{fig:atari-boxswarm}
 \end{figure}
@@ -259,7 +259,7 @@ normalised IQM with 95\% bootstrap confidence intervals.
 
 \begin{table}[htbp!]
 \centering
-\caption{Per-environment normalised IQM with 95\% bootstrap CIs.}
+\caption[EXP2: Per-environment IQM]{Per-environment normalised IQM with 95\% bootstrap CIs.}
 \label{tab:atari-per-env-iqm}
 \begin{tabular}{lcc}
 \toprule
@@ -285,7 +285,7 @@ near-perfect Pong performance. Both optimality gaps are large.
 
 \begin{table}[htbp!]
 \centering
-\caption{Cross-environment aggregate metrics (normalised scores). IQM,
+\caption[EXP2: Cross-environment aggregate metrics]{Cross-environment aggregate metrics (normalised scores). IQM,
          mean, and median are reported with 95\% bootstrap CIs.}
 \label{tab:atari-cross-env}
 \resizebox{\linewidth}{!}{%
@@ -307,7 +307,7 @@ DQN & $0.130\;[0.098,\;0.184]$ & $0.195\;[0.129,\;0.272]$
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{5_exp2_atari/assets/final_performance.png}
-  \caption[Cross-environment IQM: Pong and Breakout]{Cross-environment IQM, mean, and median with 95\% bootstrap
+  \caption[EXP2: Cross-environment IQM]{Cross-environment IQM, mean, and median with 95\% bootstrap
            confidence intervals.}
   \label{fig:atari-final-perf}
 \end{figure}
@@ -325,7 +325,7 @@ nothing in between. DQN drops below $0.50$ at $\tau = 0.12$.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{5_exp2_atari/assets/performance_profile.png}
-  \caption[Performance profiles: Pong and Breakout]{Performance profiles with 95\% bootstrap CIs. PPO's flat
+  \caption[EXP2: Performance profiles]{Performance profiles with 95\% bootstrap CIs. PPO's flat
            plateau at 0.50 reflects its bimodal Pong/Breakout split.}
   \label{fig:atari-perf-profile}
 \end{figure}
@@ -333,7 +333,7 @@ nothing in between. DQN drops below $0.50$ at $\tau = 0.12$.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{5_exp2_atari/assets/optimality_gap.png}
-  \caption[Optimality gap: Pong and Breakout]{Optimality gap with 95\% bootstrap CIs. Both algorithms
+  \caption[EXP2: Optimality gap]{Optimality gap with 95\% bootstrap CIs. Both algorithms
            have large gaps: PPO $0.472$, DQN $0.805$.}
   \label{fig:atari-opt-gap}
 \end{figure}
@@ -354,7 +354,7 @@ nothing in between. DQN drops below $0.50$ at $\tau = 0.12$.
     \caption{Breakout}
     \label{fig:atari-se-breakout}
   \end{subfigure}
-  \caption[Sample efficiency: Pong and Breakout]{Sample efficiency (normalised AUC) per environment. PPO is
+  \caption[EXP2: Sample efficiency]{Sample efficiency (normalised AUC) per environment. PPO is
            dramatically more sample-efficient on Pong; on Breakout the
            difference is small.}
   \label{fig:atari-sample-eff}
@@ -367,7 +367,7 @@ is much smaller: PPO $0.070$ versus DQN $0.048$.
 
 \begin{table}[htbp!]
 \centering
-\caption{Sample efficiency (normalised AUC) per environment.}
+\caption[EXP2: Sample efficiency AUC]{Sample efficiency (normalised AUC) per environment.}
 \label{tab:atari-sample-eff}
 \begin{tabular}{lcc}
 \toprule
@@ -392,7 +392,7 @@ deficit, preventing a clear-cut verdict.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=0.8\linewidth]{5_exp2_atari/assets/poi_heatmap.png}
-  \caption[Probability of improvement: Pong and Breakout]{Probability-of-improvement heatmap. PPO wins overall
+  \caption[EXP2: Probability of improvement]{Probability-of-improvement heatmap. PPO wins overall
            ($0.648$), but not overwhelmingly---DQN's Breakout edge
            prevents a decisive margin.}
   \label{fig:atari-poi}

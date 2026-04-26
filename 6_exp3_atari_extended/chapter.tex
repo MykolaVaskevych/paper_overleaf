@@ -60,7 +60,7 @@ PPO nearly solves Pong at the 20M-step budget, with a mean raw return of 19.78 (
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/learning_curves_pong.png}
-  \caption[Learning curves on Pong, 20M steps]{Learning curves on Pong, 10 seeds per algorithm, 20M steps. PPO converges near the
+  \caption[EXP3: Learning curves, Pong]{Learning curves on Pong, 10 seeds per algorithm, 20M steps. PPO converges near the
            maximum return; DQN shows high per-seed variance.}
   \label{fig:exp3-lc-pong}
 \end{figure}
@@ -73,7 +73,7 @@ DQN dominates Breakout decisively, with a mean return of 229.07 versus PPO's 65.
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/learning_curves_breakout.png}
-  \caption[Learning curves on Breakout, 20M steps]{Learning curves on Breakout, 10 seeds per algorithm, 20M steps. DQN achieves a
+  \caption[EXP3: Learning curves, Breakout]{Learning curves on Breakout, 10 seeds per algorithm, 20M steps. DQN achieves a
            $3.5\times$ mean-return advantage over PPO.}
   \label{fig:exp3-lc-breakout}
 \end{figure}
@@ -88,7 +88,7 @@ PPO wins Seaquest with a mean return of 1173.92 versus DQN's 714.00 (a $1.64\tim
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/learning_curves_seaquest.png}
-  \caption[Learning curves on Seaquest, 20M steps]{Learning curves on Seaquest, 10 seeds per algorithm, 20M steps. Both algorithms
+  \caption[EXP3: Learning curves, Seaquest]{Learning curves on Seaquest, 10 seeds per algorithm, 20M steps. Both algorithms
            plateau after initial rapid improvement; PPO's plateau is higher.}
   \label{fig:exp3-lc-seaquest}
 \end{figure}
@@ -101,7 +101,7 @@ Figure~\ref{fig:exp3-lc-combined} overlays all three environments on a normalise
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/combined_learning_curves.png}
-  \caption[Combined learning curves: Pong, Breakout, Seaquest]{Combined normalised learning curves across Pong, Breakout, and Seaquest, 10 seeds per algorithm.}
+  \caption[EXP3: Combined learning curves]{Combined normalised learning curves across Pong, Breakout, and Seaquest, 10 seeds per algorithm.}
   \label{fig:exp3-lc-combined}
 \end{figure}
 
@@ -114,14 +114,14 @@ Figures~\ref{fig:exp3-heatmap} and~\ref{fig:exp3-boxswarm} provide two complemen
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/per_seed_heatmap.png}
-  \caption[Per-seed score heatmap: Pong, Breakout, Seaquest]{Heatmap of normalised final scores by seed (rows) and environment (columns).}
+  \caption[EXP3: Per-seed score heatmap]{Heatmap of normalised final scores by seed (rows) and environment (columns).}
   \label{fig:exp3-heatmap}
 \end{figure}
 
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/per_seed_boxswarm.png}
-  \caption[Per-seed score spread: Pong, Breakout, Seaquest]{Box-and-swarm plot of per-seed normalised scores across environments.}
+  \caption[EXP3: Per-seed score spread]{Box-and-swarm plot of per-seed normalised scores across environments.}
   \label{fig:exp3-boxswarm}
 \end{figure}
 
@@ -136,7 +136,7 @@ Table~\ref{tab:exp3-cross-env} and Figure~\ref{fig:exp3-final-perf} report the c
 
 \begin{table}[htbp!]
 \centering
-\caption{Cross-environment aggregate metrics for Experiment~3 (normalised scores).}
+\caption[EXP3: Cross-environment aggregate metrics]{Cross-environment aggregate metrics for Experiment~3 (normalised scores).}
 \label{tab:exp3-cross-env}
 \resizebox{\linewidth}{!}{
 \begin{tabular}{lcccc}
@@ -174,7 +174,7 @@ PPO & $0.277\;[0.247,\;0.309]$ & $0.386\;[0.368,\;0.403]$ & $0.161\;[0.121,\;0.2
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/final_performance.png}
-  \caption[Cross-environment IQM: Pong, Breakout, Seaquest]{Cross-environment IQM, mean, and median with 95\% bootstrap CIs.
+  \caption[EXP3: Cross-environment IQM]{Cross-environment IQM, mean, and median with 95\% bootstrap CIs.
            DQN IQM 0.443 vs PPO 0.277 (non-overlapping CIs).}
   \label{fig:exp3-final-perf}
 \end{figure}
@@ -185,14 +185,14 @@ PPO & $0.277\;[0.247,\;0.309]$ & $0.386\;[0.368,\;0.403]$ & $0.161\;[0.121,\;0.2
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/performance_profile.png}
-  \caption{Performance profiles with 95\% bootstrap CIs.}
+  \caption[EXP3: Performance profiles]{Performance profiles with 95\% bootstrap CIs.}
   \label{fig:exp3-perf-profile}
 \end{figure}
 
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=0.7\linewidth]{6_exp3_atari_extended/assets/optimality_gap.png}
-  \caption[Optimality gap: Pong, Breakout, Seaquest]{Optimality gap. Lower is better. DQN 0.550 (CI [0.500, 0.607]),
+  \caption[EXP3: Optimality gap]{Optimality gap. Lower is better. DQN 0.550 (CI [0.500, 0.607]),
            PPO 0.614 (CI [0.597, 0.632]).}
   \label{fig:exp3-opt-gap}
 \end{figure}
@@ -205,7 +205,7 @@ Figure~\ref{fig:exp3-poi} shows that $P(\text{DQN}>\text{PPO}) = 0.393$, meaning
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=0.6\linewidth]{6_exp3_atari_extended/assets/poi_heatmap.png}
-  \caption[Probability of improvement: DQN vs PPO, 3 environments]{Pairwise probability of improvement: $P(\text{DQN}>\text{PPO}) = 0.393$.
+  \caption[EXP3: Probability of improvement]{Pairwise probability of improvement: $P(\text{DQN}>\text{PPO}) = 0.393$.
            PPO wins a majority of pairwise comparisons despite a lower IQM.}
   \label{fig:exp3-poi}
 \end{figure}
@@ -231,7 +231,7 @@ Figure~\ref{fig:exp3-poi} shows that $P(\text{DQN}>\text{PPO}) = 0.393$, meaning
     \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/sample_efficiency_seaquest.png}
     \caption{Seaquest}
   \end{subfigure}
-  \caption{Sample efficiency (normalised AUC) per environment at the 20M-step budget.}
+  \caption[EXP3: Sample efficiency per environment]{Sample efficiency (normalised AUC) per environment at the 20M-step budget.}
   \label{fig:exp3-sample-eff}
 \end{figure}
 
@@ -239,7 +239,7 @@ Table~\ref{tab:exp3-sample-eff} reports the normalised AUC values. PPO is dramat
 
 \begin{table}[htbp!]
 \centering
-\caption{Sample efficiency (normalised AUC) per environment at the 20M-step budget.}
+\caption[EXP3: Sample efficiency AUC]{Sample efficiency (normalised AUC) per environment at the 20M-step budget.}
 \label{tab:exp3-sample-eff}
 \begin{tabular}{lccc}
 \toprule
@@ -260,7 +260,7 @@ Beyond the algorithm comparison, Experiment~3 yielded a useful secondary result:
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/reproducibility_learning_curves.png}
-  \caption[Reproducibility: original vs retrained learning curves]{Original vs retrained learning curves. The two runs of each seed are
+  \caption[EXP3: Reproducibility learning curves]{Original vs retrained learning curves. The two runs of each seed are
            indistinguishable within floating-point noise.}
   \label{fig:exp3-repro-lc}
 \end{figure}
@@ -268,7 +268,7 @@ Beyond the algorithm comparison, Experiment~3 yielded a useful secondary result:
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=0.65\linewidth]{6_exp3_atari_extended/assets/reproducibility_scatter.png}
-  \caption[Reproducibility: original vs retrained final scores]{Original vs retrained final scores. Perfect diagonal agreement
+  \caption[EXP3: Reproducibility final scores]{Original vs retrained final scores. Perfect diagonal agreement
            ($r^2 \approx 1.0$; residuals at the floating-point noise floor).}
   \label{fig:exp3-repro-scatter}
 \end{figure}
@@ -282,7 +282,7 @@ Future students attempting to reproduce this thesis on an RTX~4090 with the pinn
 \begin{figure}[htbp!]
   \centering
   \includegraphics[width=\linewidth]{6_exp3_atari_extended/assets/timing_per_seed.png}
-  \caption[Per-seed wall-clock training time: Pong, Breakout, Seaquest]{Per-seed wall-clock training time (hours) for all 60 seeds.
+  \caption[EXP3: Per-seed wall-clock training time]{Per-seed wall-clock training time (hours) for all 60 seeds.
            Timing is complete for both algorithms across all three environments.}
   \label{fig:exp3-timing}
 \end{figure}
@@ -302,7 +302,7 @@ is the slowest for PPO ($\approx$3.7\,h/seed) due to longer, more complex episod
 
 \begin{table}[htbp!]
 \centering
-\caption{Wall-clock training time per algorithm and environment (20M steps/seed).}
+\caption[EXP3: Wall-clock training time]{Wall-clock training time per algorithm and environment (20M steps/seed).}
 \label{tab:exp3-timing}
 \begin{tabular}{llccc}
 \toprule
