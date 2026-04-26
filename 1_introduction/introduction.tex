@@ -33,7 +33,7 @@ A secondary finding is methodological: from the same data, different evaluation 
 %By 1949, Donald Hebb introduced the concept of synaptic strengthening, influencing modern neural networks. Finally, the Rescorla-Wagner model (1972) formalized learning dynamics, providing a predictive framework for associative learning. \cite{rlhistoryPod}
 
 %[P3: RL continued]
-Learning how to play chess can be a good example of Reinforcement learning, by making discrete steps in the environment, which are called actions (moving a piece) and getting back a reward (how good your current position), we can determine how good our move was, and vice versa, learn to make better moves. The difference from other methods unique to RL is that we give a score to the actions taken rather than saying correct/incorrect as is done in supervised learning. In RL, you need to balance between exploitation of already learned actions with good reward and exploration to potentially find even better actions to exploit for better reward in the long-term goal.
+Learning how to play chess can be a good example of Reinforcement learning, by making discrete steps in the environment, which are called actions (moving a piece) and getting back a reward (how good your current position), we can determine how good our move was, and vice versa, learn to make better moves. The difference from other methods unique to Reinforcement Learning (RL) is that we give a score to the actions taken rather than saying correct/incorrect as is done in supervised learning. In RL, you need to balance between exploitation of already learned actions with good reward and exploration to potentially find even better actions to exploit for better reward in the long-term goal.
 
 %[P4: RL continued part e]
 Reinforcement Learning is designed to solve problems that can
@@ -46,7 +46,7 @@ Learning to play chess is a sequential decision process, as every action taken b
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %[P5: Search Spaces]
-The search space for the game of Connect 4 is $10^{12}$ and for chess is $10^{40}$. It is difficult to enumerate each board in such large search spaces using brute force approach such as breadth first or depth first search algorithms. But this was achieved  by IBM’s Deep Blue super computer beat the chess world champion Garry Kasparov back in 1996. However, the search space for other games such as Go is significantly larger and brute search approaches do not work. Instead one has to use function approximators and deep learning architectures in particular given the recent success of Convolutional Neural Networks (CNNs) in computer vision. 
+The search space for the game of Connect 4 is $10^{12}$ and for chess is $10^{40}$. It is difficult to enumerate each board in such large search spaces using brute force approach such as breadth first or depth first search algorithms. {\color{red} But this was achieved by IBM’s Deep Blue supercomputer, which beat chess world champion Garry Kasparov in 1996 --- a system that required purpose-built hardware costing millions of dollars and was inaccessible to all but a handful of organisations.} However, the search space for other games such as Go is significantly larger and brute search approaches do not work. Instead one has to use function approximators and deep learning architectures in particular given the recent success of Convolutional Neural Networks (CNNs) in computer vision. 
 
 %it wasn’t until fairly recently that computers were able to reliably perform seemingly trivial tasks such as detecting a puppy in a picture or recognizing spoken words. Why are these tasks so effortless to us humans? The answer lies in the fact that perception largely takes place outside the realm of our consciousness, within specialized visual, auditory, and other sensory modules in our brains. By the time sensory information reaches our consciousness, it is already adorned with high-level features; \textbf{for example, when you look at a picture of a cute puppy, you cannot choose not to see the puppy, not to notice its cuteness. Nor can you explain how you recognize a cute puppy;} it’s just obvious to you. Thus, we cannot trust our subjective experience: perception is not trivial at all, and to understand it we must look at how our sensory modules work. \cite{geron}
 
@@ -70,7 +70,7 @@ For Prototypes developed in this Report I used Gymnasium which is a maintained f
 
 \section{Research Questions}
 
-\textbf{RQ:} How does the performance of value-based Deep Q-Network agents compare to actor-critic agents (specifically PPO and A2C) in discrete action space environments, including their sample efficiency and training consistency during training?
+\textbf{RQ:} How does the performance of value-based Deep Q-Network agents compare to actor-critic agents (specifically Proximal Policy Optimization (PPO) and Advantage Actor-Critic (A2C)) in discrete action space environments, including their sample efficiency and training consistency during training?
 
 
 These algorithms will be compared based on several criteria: 
@@ -138,16 +138,7 @@ The systematic literature review approximation can be broken down into five topi
 \subsection{Experimental Design}
 \label{subsec:experimental-design}
 
-{\color{red} While studies comparing these algorithm families exist \citep{defuente2024comparative}, they typically involve per-algorithm hyperparameter tuning, making it difficult to separate algorithmic capability from configuration effort. This project takes a different approach: Stable-Baselines3 default hyperparameters are used for every algorithm across all three experiments, with no tuning of any kind. The importance of this distinction is illustrated by \citet{mnih2015human}, who acknowledge that their published DQN results relied on hyperparameters ``selected by performing an informal search,'' noting that ``it is conceivable that even better results could be obtained by systematically tuning the hyperparameter values.'' All results in this thesis reflect what each algorithm delivers out of the box --- an intentional choice to measure inherent algorithmic behaviour rather than tuning effort.} Moreover, implementing both algorithm families facilitated the validation of existing research and the expansion on recent findings. Establishing a basis for future research and fostering transparency were other motivating factors for prototype development.
-
-In addition to discussing the main implementation components that comprise the DQN and Actor-Critic architectures, Chapter 3 provides a comprehensive overview of the high-level architectural decisions, equipment employed, and problems encountered during experimentation. Chapter 3 can be broken down into four topics:
-
-\begin{enumerate}
-\item High Level Architecture Decisions: Framework, Program Structure, Implementation Medium.
-\item Code Implementation: Atari Breakout Environment, DQN and Actor-Critic Architectures, Recording Training Progress.
-\item Equipment Employed.
-\item Problems Encountered: GPU Driver Compatibility, Memory Leak.
-\end{enumerate}
+{\color{red} While studies comparing these algorithm families exist \citep{defuente2024comparative}, they typically involve per-algorithm hyperparameter tuning, making it difficult to separate algorithmic capability from configuration effort. This project takes a different approach: Stable-Baselines3 default hyperparameters are used for every algorithm across all three experiments, with no tuning of any kind. The importance of this distinction is illustrated by \citet{mnih2015human}, who acknowledge that their published DQN results relied on hyperparameters ``selected by performing an informal search,'' noting that ``it is conceivable that even better results could be obtained by systematically tuning the hyperparameter values.'' All results in this thesis reflect what each algorithm delivers out of the box --- an intentional choice to measure inherent algorithmic behaviour rather than tuning effort.}
 
 
 
