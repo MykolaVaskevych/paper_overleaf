@@ -75,6 +75,9 @@
 
 % Remove the word "Chapter" from chapter headings — show number + title only
 \renewcommand{\chaptername}{}
+\makeatletter
+\renewcommand{\@chapapp}{}
+\makeatother
 
 % Keep figures close to their in-text references
 \usepackage[section]{placeins}          % \FloatBarrier at every \section
