@@ -134,10 +134,7 @@ and budget, not convention.
   and the determinism finding confirms exact reproducibility, but the
   Breakout lead attributed to DQN may look different with the intended
   buffer.
-  \item \textbf{Timing data incomplete for Experiment~3 PPO.}
-  Evaluation scores are complete for all seeds; only per-seed
-  wall-clock timing has gaps for the PPO Pong runs. The timing section
-  in Chapter~\ref{chap:exp3} uses a placeholder pending completion of
-  the retraining.
+  \item \textbf{Timing data recovered via retraining.}
+  Original wall-clock logs for Experiment~3 were lost due to an instrumentation issue. Per-seed timing was recovered by deterministically retraining all 60 seeds, which is possible because the pipeline is bitwise reproducible on the target hardware. Full timing is reported in Section~\ref{sec:exp3-timing}.
 \end{itemize}
 

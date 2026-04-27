@@ -349,7 +349,7 @@ PPO's Pong score of 19.78 closely matches the approximately 20 reported by \cite
   \item \textbf{Seed count.} 10 seeds per cell, matching Experiment~2 but fewer than Experiment~1's 15. Bootstrap CIs are correspondingly wider.
   \item \textbf{$M=3$ environments.} Still small. The IQM/POI disagreement is direct evidence that $M=3$ is insufficient for robust cross-env aggregates.
   \item \textbf{DQN buffer size.} 100K instead of the intended 400K (oversight during training-script configuration).
-  \item \textbf{Training timing.} Original wall-clock logs were lost. Retrained runs recovered full DQN timing; PPO timing is partially incomplete. Evaluation scores are complete for all 30 runs.
+  \item \textbf{Training timing recovered via retraining.} Original wall-clock logs were lost due to an instrumentation issue. Full timing for all 60 seeds was recovered by deterministically retraining, which is possible because the pipeline is bitwise reproducible on the target hardware (Section~\ref{sec:exp3-reproducibility}). Evaluation scores are complete for all 30 runs.
 \end{itemize}
 
 \section{Discussion}
