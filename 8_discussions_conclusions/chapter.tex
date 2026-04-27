@@ -21,30 +21,6 @@ The hardest part of this project was not the algorithms --- it was time. A singl
 The most immediate follow-up is re-running Experiment~3 with the intended 400K DQN replay buffer to verify whether the Breakout result holds under the correct configuration. Beyond that, a wider set of environments and longer training budgets would strengthen the generalisability of the conclusions. A systematic hyperparameter sensitivity study would quantify how much of the performance gap between families reflects default settings rather than fundamental capability. Finally, the value-based family in this paper was represented by vanilla DQN and QR-DQN. More modern descendants --- Rainbow \citep{hessel2018rainbow}, IQN \citep{dabney2018iqn}, and R2D2 \citep{kapturowski2019r2d2} --- substantially outperform vanilla DQN but were not available in Stable-Baselines3 at the time of this work; including them in future comparisons would provide a fairer picture of what value-based methods can achieve.
 }
 
-\section{Future Work}
-
-
-\begin{itemize}
-  \item \textbf{Repeat Experiment~3 with the intended 400K DQN buffer
-  size.} This is the most direct follow-up: the buffer oversight means
-  the Breakout result should be re-verified with the correct
-  configuration.
-  \item \textbf{Longer training budgets.} Running to 50M+ frames on
-  Atari would bring the comparison closer to the original DQN and PPO
-  paper settings, and may further change the per-environment ranking.
-  \item \textbf{Larger $M$.} Adding more Atari environments
-  (SpaceInvaders, MsPacman, BeamRider) and more classic-control
-  environments (MountainCar, Pendulum) would make the cross-environment
-  aggregates more stable and the conclusions more generalisable.
-  \item \textbf{Hyperparameter tuning study.} Tuning one environment
-  per algorithm would quantify the gap between ``default SB3'' and
-  ``best achievable'', giving context to the default-hyperparameter
-  numbers reported here.
-  % \item \textbf{Continuous-control extension.} A MuJoCo or
-  % continuous-control study would test whether the per-environment
-  % pattern seen here generalises beyond discrete-action domains, where
-  % policy-gradient methods are typically expected to have a larger
-  % advantage.
-\end{itemize}
+The most pressing follow-up is re-running Experiment~3 with the intended 400K DQN replay buffer to verify whether the Breakout lead holds under the correct configuration. Running to 50M+ frames would bring the comparison closer to the original DQN and PPO paper settings, where the per-environment ranking may shift again. Adding more environments --- SpaceInvaders, MsPacman, BeamRider --- would make cross-environment aggregates less fragile to single outliers and the conclusions more generalisable. A hyperparameter sensitivity study tuning one environment per algorithm would also quantify how much of the reported gap reflects default settings rather than fundamental algorithmic differences.
 
 
