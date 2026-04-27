@@ -68,7 +68,6 @@ def main():
 
     model.learn(total_timesteps=10_000_000,
         callback=[checkpoint_callback, eval_callback], progress_bar=True)
-
     model.save("dqn_breakout_final")
     vec_env.close()
     eval_env.close()

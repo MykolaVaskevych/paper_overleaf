@@ -1,5 +1,5 @@
 
-\chapter{Extended Atari Benchmark (Experiment 3)}
+\chapter[EXP3: Extended Atari Benchmark]{Extended Atari Benchmark}
 \label{chap:exp3}
 
 In this chapter I extend the Atari benchmark of Chapter~\ref{chap:exp2} in two ways: the training budget grows from 5M to 20M environment steps per seed, and a third environment (Seaquest) is added to widen the task distribution. The primary finding is that the two aggregation lenses disagree --- the interquartile mean (IQM) says DQN wins the cross-environment aggregate (0.443 vs 0.277), while the pairwise probability of improvement says PPO wins ($P(\text{DQN}>\text{PPO})=0.393$). Beneath both aggregates the per-environment picture is split: DQN dominates Breakout by a factor of 3.5, while PPO wins Pong (1.8$\times$) and Seaquest (1.6$\times$). A secondary finding is that the training pipeline is bitwise deterministic on the target hardware (RTX~4090), allowing retrained seeds to be compared against the originals as a reproducibility check. All evaluation metrics are defined in Section~\ref{sec:eval-framework}.
