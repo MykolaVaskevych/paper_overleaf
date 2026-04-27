@@ -2,7 +2,7 @@
 
 
 
-\chapter{Classic-Control Benchmark (Experiment 1)}
+\chapter[EXP1: Classic-Control Benchmark]{Classic-Control Benchmark}
 \label{chap:exp1}
 
 This chapter presents the empirical results of the comparative evaluation.
@@ -653,6 +653,9 @@ These limitations are addressed further in Chapter~\ref{chap:evaluation}.
 
 \section{Discussion}
 \label{sec:discussion}
+
+{\color{red} \paragraph{What these results do and do not answer.}
+The DQN family's failure here resolves the research question for one specific setting: classic-control environments, MLP policies, 200K--500K step budgets, SB3 default hyperparameters. It does not establish that DQN is generally inferior. The conditions are structurally unfavourable to DQN: SB3's default allocates 50K steps to replay-buffer warm-up (\texttt{learning\_starts}) and 20K steps to $\varepsilon$-annealing (10\% of 200K), leaving only 130K steps of actual learning from a buffer of the same size. PPO starts updating immediately from on-policy rollouts. Classic-control environments were also chosen as the starting point precisely because all five algorithms --- DQN, QR-DQN, A2C, PPO, and RecurrentPPO --- run reliably with MlpPolicy on low-dimensional observations without any special configuration. Scaling to Atari requires CnnPolicy, which narrows the viable field: QR-DQN and RecurrentPPO lack standard Atari support in SB3, and A2C is dominated by PPO in every metric here (cross-env IQM 0.886 vs 0.981, P(PPO$>$A2C)$=$0.656), making PPO the natural actor-critic representative. Experiment~2 therefore carries forward only DQN and PPO --- one from each family --- and tests whether the ranking changes when the environment is one DQN was specifically designed for.}
 
 \paragraph{Future work.}
 Extending this evaluation to continuous-action environments

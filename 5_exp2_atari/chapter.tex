@@ -1,6 +1,6 @@
 
 
-\chapter{Atari Benchmark (Experiment 2)}
+\chapter[EXP2: Atari Benchmark]{Atari Benchmark}
 \label{chap:exp2}
 
 This chapter scales the comparison from Experiment~1 to pixel-based Atari games, narrowing the algorithm set to DQN and PPO and switching to GPU training with convolutional policies. The evaluation uses the same metrics framework from Section~\ref{sec:eval-framework}. The headline finding is that PPO solves Pong while DQN edges Breakout, but the cross-environment aggregate at $M=2$ environments is fragile and heavily dominated by whichever per-environment gap is larger. This motivates the extended study in Chapter~\ref{chap:exp3}.
@@ -145,6 +145,8 @@ Before viewing the results, I formed the following expectations:
 %% ------------------------------------------------------------------
 \section{Training Summary}
 \label{sec:atari-training}
+
+{\color{red} This experiment comprised 40 training runs (2 algorithms $\times$ 2 environments $\times$ 10 seeds), each trained for 5M environment steps, totalling 200M environment interactions. Each run used 16 parallel environments via SB3's \texttt{SubprocVecEnv}, distributing rollout collection across CPU cores while the GPU handled policy updates. DQN's default replay buffer of 1M frames is impractical for Atari at full resolution: storing 1M observations at $84 \times 84 \times 4$ bytes would require approximately 28\,GB of RAM. The buffer was therefore reduced to 100K frames with \texttt{optimize\_memory\_usage=True}, which halves memory use by storing observations as \texttt{uint8} and reconstructing transitions on the fly. Evaluation checkpoints were saved every 25K steps (200 per run), with 10 evaluation episodes per checkpoint, producing 2{,}000 frozen-policy evaluations per algorithm.}
 
 {\color{red} Wall-clock training times were not fully captured for this experiment. A memory leak in the DQN training script caused instrumentation to fail silently, leaving no training-time records for either DQN environment. PPO Breakout timing was captured in full ($38{,}606$\,s across 10 seeds, ${\approx}10.7$\,h); PPO Pong was only partially recorded (3 of 10 seeds, $17{,}321$\,s for those three). The instrumentation issue was identified and resolved for Experiment~3, where all 60 seeds were re-timed via deterministic retraining; complete wall-clock figures are reported there (Section~\ref{sec:exp3-timing}).}
 
